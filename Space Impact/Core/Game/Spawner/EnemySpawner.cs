@@ -11,27 +11,41 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner
 {
-	public class EnemySpawner: AbstractSpawner
+	public class EnemySpawner : AbstractSpawner
 	{
-		//Constant settings
-		private const int REMAINING_ENEMIES = 50;
+		SpawnCallbackDelegate SpawnCallback;
 
-		public EnemySpawner(IField field, float x, float y): base(field, x, y, REMAINING_ENEMIES)
+		public EnemySpawner(float x, float y, int remainingEnemies, SpawnCallbackDelegate spawnCallback) : base(x, y, remainingEnemies)
 		{
-			//Strategies used within the Spawner
-			Strategies.Add(new EveryNActs(this, 100));
-			Strategies.Add(new EveryNPercent(this, 1));
+			SpawnCallback = spawnCallback;
 		}
 
-		protected override void SpawnCallback()
+		public override void AddedToFieldHook()
+		{
+			base.AddedToFieldHook();
+
+			//Strategies used within the Spawner
+			Strategies.Add(new EveryNActs(this, SpawnCallback, interval: 100));
+			Strategies.Add(new EveryNPercent(this, SpawnCallback, percent: 1));
+		}
+
+		public override void DeleteActorHook()
+		{
+			base.DeleteActorHook();
+
+			//Delete strategies from the Spawner
+			Strategies.Clear();
+		}
+
+		/*protected void SpawnCallback()
 		{
 			Log.i(this, "SpawnCallback() called");
-			IEnemy enemy = Utility.RandomBetween(0,1)==1?new Doomday(Field.Player):null;
+			IEnemy enemy = Utility.RandomBetween(0, 1) == 1 ? new Doomday(Field.Player) : null;
 			if (enemy == null) enemy = new Lakebeam();
 			enemy.X = Position.X;
 			enemy.Y = Position.Y;
 			Field.AddActor(enemy);
-		}
+		}*/
 
 		public override void Act()
 		{

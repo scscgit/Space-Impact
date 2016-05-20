@@ -85,7 +85,7 @@ namespace Space_Impact.Core.Graphics.Background.Strategy
 			//Calculating borders
 			LeftMax = (float)field.Size.Width - (float)Background.Width;
 			TopMax = (float)field.Size.Height - (float)Background.Height;
-			Log.i(this, "Background borders: LeftMax = = " + RightMax+ ", TopMax = " + BottomMax);
+			Log.i(this, "Background borders: LeftMax = " + LeftMax + ", TopMax = " + TopMax);
 
 			//Initializing position as a random one
 			Background.X = Utility.RandomBetween((int)LeftMax, (int)RightMax);

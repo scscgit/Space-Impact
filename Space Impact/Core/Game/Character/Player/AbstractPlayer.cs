@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public abstract class AbstractPlayer : AbstractCharacter, IPlayer
+	public abstract class AbstractPlayer : AbstractCharacter, IPlayer, IAngle
 	{
-		protected AbstractPlayer(string name) : base(name)
+		/// <summary>
+		/// Angle in degrees.
+		/// </summary>
+		public float Angle
 		{
-			//Initialization of the default Shooting parameters
-			Shooting = false;
-			ShootingInterval = 10;
-			ShootingCooldown = 0;
+			get; set;
 		}
 
 		//State of shooting (controlled by the user)
@@ -50,7 +50,35 @@ namespace Space_Impact.Core.Game.Player
 			}
 		}
 
-		public abstract bool Shot();
+		protected AbstractPlayer(string name) : base(name)
+		{
+			//Initialization of the default Shooting parameters
+			Shooting = false;
+			ShootingInterval = 10;
+			ShootingCooldown = 0;
+		}
+
+		/// <summary>
+		/// Event of Player dying.
+		/// Field needs to be notified.
+		/// </summary>
+		public override void OnDeath()
+		{
+			Field.GameOver();
+		}
+
+		/// <summary>
+		/// Shoots from the Weapon.
+		/// </summary>
+		/// <returns>true if the shot was successful</returns>
+		protected override bool Shot()
+		{
+			if (Weapon != null)
+			{
+				return Weapon.Shot(this, BulletFocusPosition, Angle);
+			}
+			return false;
+		}
 
 		public override void Act()
 		{
@@ -66,9 +94,11 @@ namespace Space_Impact.Core.Game.Player
 			//If the Player is shooting, 
 			else if (Shooting && ShootingCooldown == 0)
 			{
-				//Creates a new bullet
-				Shot();
-				Log.i(this, "Shot() call has finished");
+				//Creates a new projectile
+				Log.i(this, "Shot() called");
+				//Fired when player is shooting, limited by the ShootingInterval property.
+				bool shotResult = Shot();
+				Log.i(this, "Shot() call has finished, result is " + (shotResult ? "true" : "false"));
 
 				//Resets cooldown
 				ShootingCooldown = ShootingInterval;

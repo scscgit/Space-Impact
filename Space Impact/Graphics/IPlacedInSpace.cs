@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core
+namespace Space_Impact.Graphics
 {
-	public interface IPlacedOnField
+	public interface IPlacedInSpace
 	{
 		float X { get; set; }
 		float Y { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Space_Impact.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,12 @@ namespace Space_Impact.Core.Game.IntersectStrategy
 {
 	public abstract class AbstractIntersectStrategy : IIntersectStrategy
 	{
-		protected IPlacedOnField Actor
+		protected IPlacedInSpace Actor
 		{
 			get; private set;
 		}
 
-		public AbstractIntersectStrategy(IPlacedOnField actor)
+		protected AbstractIntersectStrategy(IPlacedInSpace actor)
 		{
 			Actor = actor;
 		}

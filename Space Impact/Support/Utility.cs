@@ -36,18 +36,28 @@ namespace Space_Impact.Support
 		/// <summary>
 		/// Loads an instance of the Media Player for music, that can be accessed via .Play() and .Stop().
 		/// </summary>
+		/// <param name="additionalPath">path to the location folder of the mp3 file on top of the Assets\Music\</param>
 		/// <param name="mp3">filename of the music without .mp3 postfix</param>
-		/// <returns></returns>
-		public async static Task<MediaElement> GetMusic(string mp3)
+		/// <returns>Instance of the MP3 Music Player</returns>
+		public async static Task<MediaElement> GetMusic(string additionalPath, string mp3)
 		{
 			//Initializing Audio
 			Windows.Storage.StorageFolder folder;
 			Windows.Storage.StorageFile musicFile;
-			folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets\\Music");
+			string path = @"Assets\Music";
+			if(additionalPath != null)
+			{
+				path += @"\" + additionalPath;
+			}
+			folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(path);
 			musicFile = await folder.GetFileAsync(mp3 + ".mp3");
 			MediaElement music = new MediaElement();
 			music.SetSource(await musicFile.OpenAsync(Windows.Storage.FileAccessMode.Read), musicFile.ContentType);
 			return music;
+		}
+		public async static Task<MediaElement> GetMusic(string mp3)
+		{
+			return await GetMusic(null, mp3);
 		}
 
 		//Improvement over Math.pow() and less prone to programming mistakes than multiplying directly imo
@@ -81,6 +91,12 @@ namespace Space_Impact.Support
 		public static Windows.Storage.ApplicationDataContainer LocalSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 		public static Windows.Storage.StorageFolder LocalFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
+		/// <summary>
+		/// Loads a setting from the local configuration.
+		/// </summary>
+		/// <typeparam name="T">Type of the setting</typeparam>
+		/// <param name="name">Name of the setting, that was used when saving</param>
+		/// <returns>Setting with the type T</returns>
 		public static T SettingsLoad<T>(string name)
 		{
 			object value = LocalSettings.Values[name];
@@ -94,6 +110,12 @@ namespace Space_Impact.Support
 			}
 		}
 
+		/// <summary>
+		/// Stores a setting to the local configuration
+		/// </summary>
+		/// <typeparam name="T">Type of the setting</typeparam>
+		/// <param name="name">Name of the setting, that will be used when loading</param>
+		/// <param name="value">Setting value with the type T</param>
 		public static void SettingsSave<T>(string name, T value)
 		{
 			LocalSettings.Values[name] = value;

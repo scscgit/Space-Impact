@@ -9,7 +9,7 @@ namespace Space_Impact.Core.Game
 	/// <summary>
 	/// Adds an ability to be clicked on.
 	/// </summary>
-	interface IClickable
+	public interface IClickable
 	{
 		bool Clicked { get; }
 

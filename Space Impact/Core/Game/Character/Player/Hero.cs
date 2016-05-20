@@ -9,22 +9,23 @@ using Space_Impact.Support;
 using Space_Impact.Core.Game.Player.Bullet;
 using Microsoft.Graphics.Canvas.Effects;
 using Space_Impact.Core.Game.ActorStrategy;
-using Space_Impact.Core.Game.Object.Bomb;
-using Space_Impact.Core.Game.IntersectStrategy;
-using Space_Impact.Core.Game.PartActor;
 using Space_Impact.Core.Game.PartActor.Thrust;
+using Space_Impact.Core.Game.Character.Enemy.Bomb;
+using Space_Impact.Core.Game.IntersectStrategy;
+using Space_Impact.Core.Game.Weapon;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public class Hero : AbstractPlayer, IAngle, IClickable, IAffectedByBombExplosion
+	public class Hero : AbstractPlayer, IClickable, IAffectedByBombExplosion
 	{
 		//Constants
 		public const int HERO_SPEED = 8;
+		public const int HERO_HEALTH = 500;
 
 		//Hero's thrust, class definion
 		public class MovementThrust : AbstractMovementThrust
 		{
-			const int BLINK_PERIOD = 5;
+			public const int BLINK_PERIOD = 5;
 
 			public MovementThrust(Hero player) : base(player, SpaceDirection.VerticalDirection.UP, BLINK_PERIOD)
 			{
@@ -32,8 +33,6 @@ namespace Space_Impact.Core.Game.Player
 			}
 		}
 
-		//Hero's thrust
-		//MovementThrust thrust;
 		int temporary_log_counter = 0;
 
 		//Access to hero's strategy, should be only used for DrawModification purposes of other classes because Act() would collide
@@ -44,14 +43,6 @@ namespace Space_Impact.Core.Game.Player
 
 		//Clickable implementation manager
 		IClickable Clickable;
-
-		/// <summary>
-		/// Angle in degrees.
-		/// </summary>
-		public float Angle
-		{
-			get; set;
-		}
 
 		/// <summary>
 		/// Represents state of being clicked on by mouse, or a different kind of pointer.
@@ -67,20 +58,26 @@ namespace Space_Impact.Core.Game.Player
 		public Hero() : base("Hero")
 		{
 			Animation = TextureSetLoader.SHIP1_BASE;
+			MaxHealth = HERO_HEALTH;
+			Health = HERO_HEALTH;
 			Speed = HERO_SPEED;
 			ShootingInterval = 50;
 
 			AddStrategy(new FlyingRotation(this, SpaceDirection.VerticalDirection.UP, 10, 65));
 
+			//Default weapon
+			Weapon = new MultiBulletShooter(1, 20);
+
 			//Hero uses our implementation of clickable event receiver
 			Clickable = new ClickableImpl(IntersectsOn);
 
-			//Hero has his thrust object
-			//this.thrust = new MovementThrust(this);
-
 			//He is composed of the thrust
-			//ActorComposition.AddLast(this.thrust);
 			new MovementThrust(this);
+
+			//Custom square intersect percentage
+			var squareIntersect = new SquareIntersect(this);
+			squareIntersect.Percent = 60;
+			IntersectStrategy = squareIntersect;
 
 			//TODO fix this, ellipse collision
 			/*IntersectStrategy = new DelegateIntersect
@@ -98,25 +95,9 @@ namespace Space_Impact.Core.Game.Player
 			);*/
 		}
 
-		//Fired when player is shooting, limited by the ShootingInterval property.
-		//return: true if the shot was successful
-		public override bool Shot()
-		{
-			//var up = SpaceDirection.get(SpaceDirection.VerticalDirection.UP)
-			HeroBullet bullet = new HeroBullet(this, Angle);
-			Log.i(this, "new Bullet created");
-
-			Field.AddActor(bullet);
-			return true;
-		}
-
 		public override void Act()
 		{
 			base.Act();
-
-			//Calculates next expected rotation angle values
-			//(this is implemented automatically within a list in the AbstractActor)
-			//RotationStrategy.Act();
 
 			//Periodical logging of a Hero state
 			if (temporary_log_counter < 200)
@@ -139,7 +120,7 @@ namespace Space_Impact.Core.Game.Player
 			//Changes speed based on strong will of the user, he can click on the hero to give him a morale boost
 			if (Clicked)
 			{
-				Speed = 2 * HERO_SPEED;
+				Speed = 1.5f * HERO_SPEED;
 			}
 			else
 			{
@@ -163,7 +144,6 @@ namespace Space_Impact.Core.Game.Player
 
 		public void Click(float x, float y)
 		{
-			//Log.d(this,"Click "+x+" "+y+" "+ IntersectsOn(x, y));
 			Clickable.Click(x, y);
 		}
 		public void ClickMove(float x, float y)
@@ -178,11 +158,6 @@ namespace Space_Impact.Core.Game.Player
 		public void OnBombExplosion(IBomb bomb)
 		{
 			Health -= bomb.Damage;
-		}
-
-		public override void OnDeath()
-		{
-			Field.GameOver();
 		}
 	}
 }

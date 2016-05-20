@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner.Strategy
 {
-	public class EveryNPercent : ISpawnerStrategy
+	public class EveryNPercent : AbstractSpawnerStrategy
 	{
-		ISpawner Spawner;
 		float StartPercent;
 		float IntervalPercent;
 
-		public EveryNPercent(ISpawner spawner, float percent)
+		public EveryNPercent(ISpawner spawner, SpawnCallbackDelegate spawnCallback, float percent): base(spawner, spawnCallback)
 		{
-			this.Spawner = spawner;
 			this.IntervalPercent = percent;
 			this.StartPercent = Spawner.Field.Percent;
 		}
 
-		public void Act()
+		public override void Act()
 		{
+			base.Act();
+
 			if(Spawner.Field.Percent > StartPercent + IntervalPercent)
 			{
 				StartPercent += IntervalPercent;
-				Spawner.Spawn();
+				Spawn();
 			}
 		}
 	}

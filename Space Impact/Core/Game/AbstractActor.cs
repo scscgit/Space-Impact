@@ -47,25 +47,34 @@ namespace Space_Impact.Core
 			get; protected set;
 		}
 
-		//Current intersect strategy of the actor
+		/// <summary>
+		/// Current intersect strategy of the actor.
+		/// </summary>
 		protected IIntersectStrategy IntersectStrategy
 		{
 			private get; set;
 		}
 
-		//Strategies of the Actor
+		/// <summary>
+		/// Strategies of the Actor that have the IActStrategy type.
+		/// </summary>
 		public LinkedList<IActStrategy> ActStrategies
 		{
 			get; private set;
 		}
+		/// <summary>
+		/// Strategies of the Actor that have the IDrawModificationStrategy type.
+		/// </summary>
 		public LinkedList<IDrawModificationStrategy> DrawModificationStrategies
 		{
 			get; private set;
 		}
 
-		//Actor can contain more Actors.
-		//For light-weight operation, lazy initialization is used.
 		LinkedList<IActorCompositePart> actorComposition = null;
+		/// <summary>
+		/// Actor can contain more Actors.
+		//	For more light-weight operation, lazy initialization is used.
+		/// </summary>
 		public LinkedList<IActorCompositePart> ActorComposition
 		{
 			get
@@ -85,23 +94,27 @@ namespace Space_Impact.Core
 			DrawModificationStrategies = new LinkedList<IDrawModificationStrategy>();
 
 			//Default properties of the Actor
-			Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.NONE);
+			Direction = SpaceDirection.None;
 			Speed = DEFAULT_SPEED;
 
-			//Downloads the concrete initialized name choice from the subclass
+			//Downloads the concrete initialization name choice from the subclass
 			Name = name;
 
 			//By default, implements square intersect strategy using the current Animation dimensions
 			IntersectStrategy = new SquareIntersect(this);
 		}
 
-		//Adds a new strategy to the actor's queue of periodically launched event hooks
+		/// <summary>
+		/// Adds a new strategy to the actor's queue of periodically launched event hooks.
+		/// The strategy can be both IActStrategy and IDrawModificationStrategy.
+		/// </summary>
+		/// <param name="strategy">Strategy to be added to the queue</param>
 		protected void AddStrategy(IStrategy strategy)
 		{
 			IActStrategy act = strategy as IActStrategy;
 			IDrawModificationStrategy draw = strategy as IDrawModificationStrategy;
 
-			if(act!= null)
+			if (act != null)
 			{
 				ActStrategies.AddLast(act);
 			}
@@ -112,7 +125,7 @@ namespace Space_Impact.Core
 			}
 		}
 
-		//Checks whether the X/Y movement is legal
+		//Checks whether the X movement is legal
 		protected virtual bool CanMoveX(float x)
 		{
 			//return x > 0 && x < Field.Size.Width - Width;
@@ -122,12 +135,13 @@ namespace Space_Impact.Core
 				return x > 0;
 			}
 			//If moving right
-			else if(x > X)
+			else if (x > X)
 			{
 				return x < Field.Size.Width - Width;
 			}
 			return false;
 		}
+		//Checks whether the Y movement is legal
 		protected virtual bool CanMoveY(float y)
 		{
 			//return y > 0 && y < Field.Size.Height - Height;
@@ -234,7 +248,7 @@ namespace Space_Impact.Core
 		}
 
 		/// <summary>
-		/// Update operation called before each Draw
+		/// Update operation called before each Draw.
 		/// </summary>
 		public virtual void Act()
 		{
@@ -252,7 +266,7 @@ namespace Space_Impact.Core
 			}
 
 			//Acts on all strategies
-			foreach(IActStrategy strategy in ActStrategies)
+			foreach (IActStrategy strategy in ActStrategies)
 			{
 				strategy.Act();
 			}
@@ -274,29 +288,10 @@ namespace Space_Impact.Core
 			Field.RemoveActor(this);
 
 			//Removes all parts too
-			foreach(IActorCompositePart part in ActorComposition)
+			foreach (IActorCompositePart part in ActorComposition)
 			{
 				Field.RemoveActor(part);
 			}
-		}
-
-		public void AddedToField(IField field)
-		{
-			Field = field;
-			AddedToFieldHook();
-
-			//Adds all parts too
-			foreach (IActorCompositePart part in ActorComposition)
-			{
-				field.AddActor(part);
-			}
-		}
-
-		/// <summary>
-		/// Hook callback for initialization operations after being connected to a Field
-		/// </summary>
-		public virtual void AddedToFieldHook()
-		{
 		}
 
 		public bool IntersectsWithin(float x, float width, float y, float height)
@@ -322,13 +317,45 @@ namespace Space_Impact.Core
 			return IntersectStrategy.IntersectsActor(actor);
 		}
 
-		/// <summary>
-		/// Removes the current actor
-		/// </summary>
+		public void AddedToField(IField field)
+		{
+			DeleteActor();
+			Field = field;
+			AddedToFieldHook();
+
+			//Adds all parts too
+			foreach (IActorCompositePart part in ActorComposition)
+			{
+				field.AddActor(part);
+			}
+		}
+		public virtual void AddedToFieldHook()
+		{
+		}
+
 		public virtual void DeleteActor()
 		{
-			Field.RemoveActor(this);
-			Log.i(this, "Removed actor");
+			if (Field != null)
+			{
+				Field.RemoveActor(this);
+				Field = null;
+				DeleteActorHook();
+				Log.i(this, "Removed actor");
+			}
+		}
+		public virtual void DeleteActorHook()
+		{
+		}
+
+		/// <summary>
+		/// AddActor that adds other Actor to the same coordinates on the same Field, centering it in the process.
+		/// </summary>
+		/// <param name="actor">Actor that is to be added to the same coordinates</param>
+		protected void AddActorToSameCoordinates(IActor actor)
+		{
+			actor.X = X + (float)Width / 2 - (float)actor.Width / 2;
+			actor.Y = Y + (float)Height / 2 - (float)actor.Height / 2;
+			Field.AddActor(actor);
 		}
 	}
 }

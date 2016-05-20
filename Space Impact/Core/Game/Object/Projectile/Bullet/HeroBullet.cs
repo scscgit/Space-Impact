@@ -1,4 +1,5 @@
-﻿using Space_Impact.Core.Game.Enemy;
+﻿using Space_Impact.Core.Game.Character;
+using Space_Impact.Core.Game.Enemy;
 using Space_Impact.Core.Game.IntersectStrategy;
 using Space_Impact.Core.Game.Player.Bullet;
 using Space_Impact.Graphics;
@@ -16,16 +17,25 @@ namespace Space_Impact.Core.Game.Player.Bullet
 	/// </summary>
 	public class HeroBullet : AbstractBullet
 	{
-		public HeroBullet(IPlayer player, float angle) : base("Bullet", player, angle)
+		public new const int DEFAULT_SPEED = 50;
+		public const int DEFAULT_DAMAGE = 50;
+
+		public HeroBullet(ICharacter player, Position position, float angle) : base("Bullet", player, position, angle)
 		{
 			Animation = TextureSetLoader.FIRE;
-			Speed = 50;
-			Damage = 50;
+			Speed = DEFAULT_SPEED;
+			Damage = DEFAULT_DAMAGE;
 		}
 
 		public override void Act()
 		{
 			base.Act();
+
+			//If the bullet was removed from the Field during the movement, Act will stop
+			if (Field == null)
+			{
+				return;
+			}
 
 			List<IEnemy> hits = new List<IEnemy>();
 			Field.ForEachActor<IEnemy>
@@ -52,8 +62,6 @@ namespace Space_Impact.Core.Game.Player.Bullet
 				}
 			);
 
-			Log.i(this, "hits " + hits.Count.ToString());
-
 			if (hits.Count > 0)
 			{
 				int damage = Damage / hits.Count;
@@ -62,6 +70,7 @@ namespace Space_Impact.Core.Game.Player.Bullet
 					enemy.Health -= damage;
 				}
 				RemoveFromField();
+				Log.i(this, "Hits: " + hits.Count.ToString() + ", damage to each target: " + damage.ToString());
 			}
 		}
 	}

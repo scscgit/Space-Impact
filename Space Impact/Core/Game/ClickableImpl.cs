@@ -9,7 +9,7 @@ namespace Space_Impact.Core.Game
 	public delegate bool CollidesOn(float x, float y);
 
 	/// <summary>
-	/// Implements clickability support
+	/// Implements clickability support.
 	/// </summary>
 	public class ClickableImpl: IClickable
 	{
@@ -20,7 +20,7 @@ namespace Space_Impact.Core.Game
 		CollidesOn collidesOn;
 
 		/// <summary>
-		/// Implements clickability support for any IPlacedOnField object
+		/// Implements clickability support for any IPlacedInSpace object.
 		/// </summary>
 		/// <param name="collidesOn">Delegate that checks if a click on the coordinates causes the object to become clicked</param>
 		public ClickableImpl(CollidesOn collidesOn)

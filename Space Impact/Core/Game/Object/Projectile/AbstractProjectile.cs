@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Support;
+using Space_Impact.Core.Game.Character;
+using Space_Impact.Graphics;
 
 namespace Space_Impact.Core.Game.Object.Weapon
 {
@@ -34,7 +36,7 @@ namespace Space_Impact.Core.Game.Object.Weapon
 				}
 			}
 		}
-		
+
 		//Projectile reimplements functionality of the Direction field, it would be maybe useful to hide the Direction field for changes.
 		//Angle is in degrees.
 		private float angle;
@@ -52,21 +54,46 @@ namespace Space_Impact.Core.Game.Object.Weapon
 		}
 
 		/// <summary>
+		/// Owner of the projectile.
+		/// </summary>
+		protected ICharacter Character
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// Starting position of the projectile.
+		/// </summary>
+		private Position StartPosition;
+
+		/// <summary>
 		/// Projectile that moves in a certain direction at a certain angle.
 		/// </summary>
-		/// <param name="name">name of the projectile object</param>
-		/// <param name="direction">direction in which the projectile can move</param>
-		/// <param name="angle">angle of the movement in degrees</param>
-		protected AbstractProjectile(string name, float angle) : base(name)
+		/// <param name="name">Name of the projectile object</param>
+		/// <param name="character">Owner of the projectile</param>
+		/// <param name="position">Starting position of the projectile</param>
+		/// <param name="angle">Angle of the movement in degrees</param>
+		protected AbstractProjectile(string name, ICharacter character, Position position, float angle) : base(name)
 		{
+			Character = character;
+			StartPosition = position;
 			Angle = angle;
 		}
 
 		protected override void DrawAbstractModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
 			base.DrawAbstractModification(ref bitmap, draw);
-			
+
 			FlyingRotation.DrawModification(ref bitmap, draw, FlyingRotation.DegreeToRadians(Angle));
+		}
+
+		protected override void OnAnimationSet()
+		{
+			base.OnAnimationSet();
+
+			//Moves to the starting coordinates, then centers itself based on a current new Animation size
+			X = StartPosition.X - (float)Width / 2;
+			Y = StartPosition.Y - (float)Height / 2;
 		}
 	}
 }

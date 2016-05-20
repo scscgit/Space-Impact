@@ -129,6 +129,7 @@ namespace Space_Impact.Screen
 
 		bool FirstDraw = true;
 
+		//Initialization of the class, before any textures are loaded
 		public MainMenu()
 		{
 			Log.i(this, "Constructor initializing");
@@ -142,54 +143,68 @@ namespace Space_Impact.Screen
 			MainMenuMainScreenGrid.Visibility = Visibility.Visible;
 			MainMenuSettingsGrid.Visibility = Visibility.Collapsed;
 
+			//Loading screen resolution settings
 			LoadScreenResolution();
 
-			double? resultVolume = Utility.SettingsLoad<double?>("resultVolume");
-			if(resultVolume == null)
-			{
-				resultVolume = 80;
-			}
-			settingsVolume.Value = resultVolume.Value;
-			settingsVolume.ValueChanged += (a, b) => LoadVolume();
+			//Loading sound volume settings
+			LoadSoundVolume();
 
 			Log.i(this, "Constructor initialized");
 		}
 
+		//Page destructor
+		private void Page_Unloaded(object sender, RoutedEventArgs e)
+		{
+			Log.i(this, "Page is being unloaded, removing events and other associations");
+			Log.i(this, "Music state before stopping was " + Music.CurrentState.ToString());
+
+			Music.Stop();
+
+			//Cleaning up the Page to help the garbage collector
+			canvas.RemoveFromVisualTree();
+			canvas = null;
+			Log.i(this, "Page was fully unloaded");
+		}
+
 		/// <summary>
 		/// Initializes screen resolution view size from settings.
-		/// Loads default values when the settings are not found.
+		/// Loads default values when the settings are not found, width and height are reset both at once to prevent user mistakes.
 		/// Updates corresponding values in the Settings submenu.
+		/// Order:
+		/// First the fullscreen is evaluated so that if it changes, resolution update can follow and will not be ignored.
+		/// After that, width and height sizes get set accordingly.
 		/// </summary>
 		private void LoadScreenResolution()
 		{
+			//Default fullscreen value is false
+			bool resolutionFullscreen = Utility.SettingsLoad<bool>("resolutionFullscreen");
+
 			//Resolution of the game screen
 			int resolutionWidth;
 			int resolutionHeight;
 			string resolutionWidthString = Utility.SettingsLoad<string>("resolutionWidth");
 			string resolutionHeightString = Utility.SettingsLoad<string>("resolutionHeight");
 
-			bool resolutionFullscreen = Utility.SettingsLoad<bool>("resolutionFullscreen");
-
 			//Parsing values from settings, setting both to default on error
 			bool resultWidth = int.TryParse(resolutionWidthString, out resolutionWidth);
 			bool resultHeight = int.TryParse(resolutionHeightString, out resolutionHeight);
+
+			//Default values
 			if (!resultWidth || !resultHeight)
 			{
 				resolutionWidth = 1600;
 				resolutionHeight = 900;
 			}
 
+			Log.i(this, "Loading fullscreen choice from settings: " + (resolutionFullscreen ? "true" : "false"));
 			Log.i(this, "Loading width resolution from settings: " + (resultWidth ? "success" : "failure") + ", used " + resolutionWidth.ToString());
 			Log.i(this, "Loading height resolution from settings: " + (resultHeight ? "success" : "failure") + ", used " + resolutionHeight.ToString());
-			Log.i(this, "Loading fullscreen choice from settings: " + (resolutionFullscreen ? "true" : "false"));
 
 			//Applying the values to the current window
 			Size windowSize = new Size(resolutionWidth, resolutionHeight);
 			var view = ApplicationView.GetForCurrentView();
 
 			//Force-resize on top of the preferred setting in case the function is called again (after settings get changed)
-			ApplicationView.PreferredLaunchViewSize = windowSize;
-			view.TryResizeView(windowSize);
 			if (resolutionFullscreen)
 			{
 				ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
@@ -200,11 +215,27 @@ namespace Space_Impact.Screen
 				ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 				view.ExitFullScreenMode();
 			}
+			ApplicationView.PreferredLaunchViewSize = windowSize;
+			view.TryResizeView(windowSize);
 
 			//Updating values in the Settings submenu
 			settingsResolutionWidth.Text = resolutionWidth.ToString();
 			settingsResolutionHeight.Text = resolutionHeight.ToString();
 			settingsFullscreen.IsChecked = resolutionFullscreen;
+		}
+
+		private void LoadSoundVolume()
+		{
+			double? resultVolume = Utility.SettingsLoad<double?>("resultVolume");
+
+			//Default value
+			if (resultVolume == null)
+			{
+				resultVolume = 80;
+			}
+
+			settingsVolume.Value = resultVolume.Value;
+			settingsVolume.ValueChanged += (a, b) => LoadVolume();
 		}
 
 		private void LoadVolume()
@@ -224,19 +255,6 @@ namespace Space_Impact.Screen
 			}
 
 			BackgroundImage.Draw(args.DrawingSession);
-		}
-
-		private void Page_Unloaded(object sender, RoutedEventArgs e)
-		{
-			Log.i(this, "Page is being unloaded, removing events and other associations");
-			Log.i(this, "Music state before stopping was " + Music.CurrentState.ToString());
-
-			Music.Stop();
-
-			//Cleaning up the Page to help the garbage collector
-			canvas.RemoveFromVisualTree();
-			canvas = null;
-			Log.i(this, "Page was fully unloaded");
 		}
 
 		//First Draw cycle of a Field calls this method
@@ -279,7 +297,7 @@ namespace Space_Impact.Screen
 				//Increases progress bar percentage during loading
 				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
 				//Gets called back after loading gets finished
-				, AfterCreateResourcesAsyncFinished
+				, AfterCreateTexturesAsyncFinished
 				//Only loads the required backgrounds for faster loading time
 				, MainMenuBackground.backgrounds
 			);
@@ -300,11 +318,12 @@ namespace Space_Impact.Screen
 			Log.i(this, "CreateResourcesAsync finished");
 		}
 
-		void AfterCreateResourcesAsyncFinished()
+		//Called from within the TextureSetLoader after the resources fully load
+		void AfterCreateTexturesAsyncFinished()
 		{
 
 
-			Log.i(this, "AfterCreateResourcesAsyncFinished finished");
+			Log.i(this, "AfterCreateTexturesAsyncFinished finished");
 		}
 
 		public void AddActor(IAct actor)
@@ -382,6 +401,19 @@ namespace Space_Impact.Screen
 
 			//Current resolution gets re-evaluated for the immediate feedback
 			LoadScreenResolution();
+		}
+
+		private void settingsResetToDefault_Click(object sender, RoutedEventArgs e)
+		{
+			//Saves invalid data to all fields
+			Utility.SettingsSave<object>("resolutionFullscreen", null);
+			Utility.SettingsSave<object>("resolutionWidth", null);
+			Utility.SettingsSave<object>("resolutionHeight", null);
+			Utility.SettingsSave<object>("resultVolume", null);
+
+			//Reloads all data
+			LoadScreenResolution();
+			LoadSoundVolume();
 		}
 	}
 }

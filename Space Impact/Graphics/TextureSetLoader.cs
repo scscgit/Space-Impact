@@ -11,7 +11,7 @@ namespace Space_Impact.Graphics
 {
 	public sealed class TextureSetLoader
 	{
-		private static object ConstructorLock = new object();
+		static object ConstructorLock = new object();
 
 		//List of all pre-defined texture sets
 
@@ -138,7 +138,7 @@ namespace Space_Impact.Graphics
 		}
 
 		//Mapping texture sets to canvas bitmap sets, main accessor point for bitmaps
-		private IDictionary<string[], CanvasBitmap[]> bitmapDictionary = new Dictionary<string[], CanvasBitmap[]>();
+		IDictionary<string[], CanvasBitmap[]> bitmapDictionary = new Dictionary<string[], CanvasBitmap[]>();
 		public CanvasBitmap[] this[string[] textureSet]
 		{
 			get
@@ -148,7 +148,7 @@ namespace Space_Impact.Graphics
 		}
 
 		//Internal conversion of texture format to a full file name
-		private string TextureToString(string texture)
+		string TextureToString(string texture)
 		{
 			return "Assets/" + texture;
 		}

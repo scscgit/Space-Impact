@@ -13,7 +13,7 @@ namespace Space_Impact.Core.Graphics.Background
 	/// <summary>
 	/// The art of abstraction.
 	/// </summary>
-	public class AbstractBackground : AbstractAnimatedObject, IBackground
+	public abstract class AbstractBackground : AbstractAnimatedObject, IBackground
 	{
 		LinkedList<IBackgroundStrategy> Strategies;
 
@@ -33,7 +33,7 @@ namespace Space_Impact.Core.Graphics.Background
 			get; set;
 		}
 
-		public AbstractBackground(IField field)
+		protected AbstractBackground(IField field)
 		{
 			Strategies = new LinkedList<IBackgroundStrategy>();
 			Field = field;

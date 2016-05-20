@@ -5,7 +5,7 @@ using Microsoft.Graphics.Canvas;
 
 namespace Space_Impact.Graphics
 {
-	public interface IAnimatedObject : IPlacedOnField
+	public interface IAnimatedObject : IPlacedInSpace
 	{
 		int Frame { get; }
 		int AnimationSpeed { set; }

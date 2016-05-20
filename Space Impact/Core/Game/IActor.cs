@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core
 {
-	public interface IActor : IAnimatedObject, IAct
+	public interface IActor : IAnimatedObject, IPlacedInField, IAct
 	{
 		IField Field
 		{
@@ -50,10 +50,5 @@ namespace Space_Impact.Core
 		bool IntersectsOn(float x, float y);
 		bool IntersectsWithin(float x, float width, float y, float height);
 		bool IntersectsActor(IActor actor);
-
-		void AddedToField(IField field);
-		void AddedToFieldHook();
-
-		void DeleteActor();
 	}
 }

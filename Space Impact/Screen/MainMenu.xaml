@@ -48,10 +48,10 @@
 				<!-- MainMenu - Main submenu screen -->
 				<Grid
 				Name="MainMenuMainScreenGrid"
-				Visibility="Collapsed"
+				Visibility="Visible"
 				>
 
-					<Button x:Name="newGameButton" Content="Start a New Game" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" FontSize="96" Width="1000" Height="160" BorderThickness="5" RequestedTheme="Dark" BorderBrush="#FF00C509" FontFamily="Comic Sans MS" Click="newGameButton_Click">
+					<Button x:Name="newGameButton" Content="Start a New Game" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" FontSize="96" Width="1000" Height="160" BorderThickness="5" RequestedTheme="Dark" BorderBrush="#E500FF0C" FontFamily="Comic Sans MS" Click="newGameButton_Click">
 						<Button.Background>
 							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 								<GradientStop Color="#FFA2FF1C"/>
@@ -61,7 +61,13 @@
 						</Button.Background>
 					</Button>
 
-					<Button x:Name="settingsButton" Content="Settings" HorizontalAlignment="Center" Margin="460,545,460,0" VerticalAlignment="Top" FontSize="82.667" Width="860" Height="140" RequestedTheme="Dark" FontFamily="Arial Black" BorderBrush="#FF000083" FontWeight="Bold" Click="settingsButton_Click">
+					<Button x:Name="settingsButton" Content="Settings" HorizontalAlignment="Center" Margin="460,545,460,0" VerticalAlignment="Top" FontSize="82.667" Width="860" Height="140" RequestedTheme="Dark" FontFamily="Arial Black" FontWeight="Bold" Click="settingsButton_Click">
+						<Button.BorderBrush>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FF008906" Offset="0"/>
+								<GradientStop Color="#FF000083" Offset="1"/>
+							</LinearGradientBrush>
+						</Button.BorderBrush>
 						<Button.Background>
 							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 								<GradientStop Color="#B2057800" Offset="0"/>
@@ -70,7 +76,7 @@
 						</Button.Background>
 					</Button>
 
-					<Button x:Name="exitButton" Content="Exit Game" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="600" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="exitButton_Click"/>
+					<Button x:Name="exitButton" Content="Exit Game" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="600" Height="120" FontFamily="Arial Black" BorderBrush="#668B00FF" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="exitButton_Click"/>
 
 				</Grid>
 
@@ -81,7 +87,7 @@
 				>
 
 					<!-- ScrollViewer of Settings options -->
-					<ScrollViewer HorizontalAlignment="Center" Margin="448,192,472,288" VerticalAlignment="Center" Width="1000" Height="600" Padding="80,60" RequestedTheme="Light" BorderThickness="5" BorderBrush="#7F00F3FF">
+					<ScrollViewer HorizontalAlignment="Center" Margin="450,192,450,288" VerticalAlignment="Center" Width="1000" Height="600" Padding="80,60" RequestedTheme="Light" BorderThickness="5" BorderBrush="#7F00F3FF">
 						<ScrollViewer.Background>
 							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 								<GradientStop Color="#B2A3D1FF" Offset="1"/>
@@ -108,12 +114,12 @@
 								<Slider x:Name="settingsVolume" HorizontalAlignment="Center" Width="450" VerticalAlignment="Center" Margin="0,8,0,0" />
 							</StackPanel>
 
-							<Button x:Name="settingsResetToDefault" Content="Reset to Default Settings" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="24"/>
+							<Button x:Name="settingsResetToDefault" Content="Reset to Default Settings" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="24" Click="settingsResetToDefault_Click"/>
 
 						</StackPanel>
 					</ScrollViewer>
 
-					<Button x:Name="settingsReturnButton" Content="Return to Main Menu" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="720" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="settingsReturnButton_Click"/>
+					<Button x:Name="settingsReturnButton" Content="Return to Main Menu" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="720" Height="120" FontFamily="Arial Black" BorderBrush="#668B00FF" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="settingsReturnButton_Click"/>
 
 				</Grid>
 

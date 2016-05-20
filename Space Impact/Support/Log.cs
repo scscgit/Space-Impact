@@ -14,16 +14,27 @@ namespace Space_Impact.Support
 	/// </summary>
 	class Log
 	{
+		static object singletonLock = new object();
+
 		//Singleton
 		static Log log = null;
 		public static Log Instance
 		{
 			get
 			{
-				if (log == null) log = new Log();
-				return log;
+				lock (singletonLock)
+				{
+					if (log == null)
+					{
+						log = new Log();
+					}
+					return log;
+				}
 			}
 		}
+
+		//When an error happens, this flag gets changed to true
+		public bool ErrorReceived;
 
 		LinkedList<string> Queue = new LinkedList<string>();
 
@@ -43,7 +54,7 @@ namespace Space_Impact.Support
 		}
 
 		//Debug - This should be used if the text is not descriptive at all and should be removed after some testing.
-		public static void d(Object context, String message)
+		public static void d(object context, string message)
 		{
 			string debug = "D>" + context.ToString() + ": " + message;
 			Debug.WriteLine(debug);
@@ -51,20 +62,21 @@ namespace Space_Impact.Support
 		}
 
 		//Information - This message provides a control flow information and can be used for filtering, should not be displayed in Release version.
-		public static void i(Object context, String message)
+		public static void i(object context, string message)
 		{
-			string debug = "I>" + context.ToString() + ": " + message;
-			Debug.WriteLine(debug);
-			Instance.Queue.AddLast(debug);
+			string information = "I>" + context.ToString() + ": " + message;
+			Debug.WriteLine(information);
+			Instance.Queue.AddLast(information);
 		}
 
 		//Error - This represents situation that should actually crash the program, so it has to be fixed later.
 		//When the game is distributed, this is a useful information to return to the developer.
-		public static void e(Object context, String message)
+		public static void e(object context, string message)
 		{
-			string debug = "E>" + context.ToString() + ": " + message;
-			Debug.WriteLine(debug);
-			Instance.Queue.AddLast(debug);
+			string error = "E>" + context.ToString() + ": " + message;
+			Debug.WriteLine(error);
+			Instance.Queue.AddLast(error);
+			Instance.ErrorReceived = true;
 		}
 	}
 }

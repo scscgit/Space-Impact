@@ -10,11 +10,6 @@ namespace Space_Impact.Core.Game.Player
 {
 	public interface IPlayer : ICharacter
 	{
-		
-
-		//todo weapon
-
-
 		//Internal game logic
 		bool Shooting { get; set; }
 		Position BulletFocusPosition { get; }

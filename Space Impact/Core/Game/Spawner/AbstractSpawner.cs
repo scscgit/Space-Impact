@@ -1,5 +1,6 @@
 ﻿using Space_Impact.Core.Game.Spawner.Strategy;
 using Space_Impact.Graphics;
+using Space_Impact.Support;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner
 {
-	public abstract class AbstractSpawner : ISpawner, IPlacedOnField
+	public abstract class AbstractSpawner : ISpawner, IPlacedInSpace, IPlacedInField
 	{
 		public IField Field
 		{
-			get; protected set;
+			get; private set;
 		}
 
 		protected List<ISpawnerStrategy> Strategies;
@@ -27,7 +28,7 @@ namespace Space_Impact.Core.Game.Spawner
 			protected set
 			{
 				this.remainingEnemies = value;
-				if(value<=0)
+				if (value <= 0)
 				{
 					NoRemainingEnemies();
 				}
@@ -59,10 +60,7 @@ namespace Space_Impact.Core.Game.Spawner
 			get; set;
 		} = 0;
 
-		/// <summary>
-		/// Returns a current representative target position for the Spawner.
-		/// </summary>
-		protected Position Position
+		public Position Position
 		{
 			get
 			{
@@ -73,20 +71,20 @@ namespace Space_Impact.Core.Game.Spawner
 			}
 		}
 
-		public delegate bool IsActive();
-		private IsActive activeStrategy;
+		public delegate bool IsActiveDelegate();
+		private IsActiveDelegate isActiveStrategy;
 		/// <summary>
 		/// Strategy for dynamical switching of the condition of Active state of the spawner.
 		/// </summary>
-		public IsActive ActiveStrategy
+		public IsActiveDelegate IsActiveStrategy
 		{
 			protected get
 			{
-				return this.activeStrategy;
+				return this.isActiveStrategy;
 			}
 			set
 			{
-				this.activeStrategy = value;
+				this.isActiveStrategy = value;
 			}
 		}
 
@@ -94,13 +92,12 @@ namespace Space_Impact.Core.Game.Spawner
 		{
 			get
 			{
-				return ActiveStrategy();
+				return IsActiveStrategy();
 			}
 		}
 
-		protected AbstractSpawner(IField field, float x, float y, int remainingEnemies)
+		protected AbstractSpawner(float x, float y, int remainingEnemies)
 		{
-			Field = field;
 			X = x;
 			Y = y;
 			Width = 0;
@@ -109,21 +106,22 @@ namespace Space_Impact.Core.Game.Spawner
 			Strategies = new List<ISpawnerStrategy>();
 
 			//By default, Spawner is active only while the round is not finished
-			ActiveStrategy = () => Field.GameRunning;
+			IsActiveStrategy = () => Field.GameRunning;
 		}
 
 		/// <summary>
 		/// Public spawn interface implementation, calls the callback of the subclasses.
 		/// </summary>
-		public void Spawn()
+		/// <param name="spawnCallback">Callback that runs if the conditions for the spawn get fulfilled, e.g. there are remaining enemies.</param>
+		public void Spawn(SpawnCallbackDelegate spawnCallback)
 		{
 			if (UnlimitedEnemies)
 			{
-				SpawnCallback();
+				spawnCallback();
 			}
 			else if (RemainingEnemies > 0)
 			{
-				SpawnCallback();
+				spawnCallback();
 				RemainingEnemies--;
 			}
 		}
@@ -137,11 +135,6 @@ namespace Space_Impact.Core.Game.Spawner
 			Field.RemoveActor(this);
 		}
 
-		/// <summary>
-		/// Callback that runs every time the conditions for the spawn get fulfilled, e.g. there are remaining enemies.
-		/// </summary>
-		protected abstract void SpawnCallback();
-
 		public virtual void Act()
 		{
 			//Run all strategies if the Spawner is currently active
@@ -152,6 +145,30 @@ namespace Space_Impact.Core.Game.Spawner
 					strategy.Act();
 				}
 			}
+		}
+
+		public void AddedToField(IField field)
+		{
+			DeleteActor();
+			Field = field;
+			AddedToFieldHook();
+		}
+		public virtual void AddedToFieldHook()
+		{
+		}
+
+		public void DeleteActor()
+		{
+			if (Field != null)
+			{
+				Field.RemoveActor(this);
+				Field = null;
+				DeleteActorHook();
+				Log.i(this, "Removed actor");
+			}
+		}
+		public virtual void DeleteActorHook()
+		{
 		}
 	}
 }

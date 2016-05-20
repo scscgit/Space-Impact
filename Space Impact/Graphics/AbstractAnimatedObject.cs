@@ -15,12 +15,14 @@ namespace Space_Impact.Graphics
 {
 	public abstract class AbstractAnimatedObject : IAnimatedObject
 	{
+		private const int DEFAULT_ANIMATION_SPEED = 1;
+
 		protected AbstractAnimatedObject()
 		{
-			AnimationSpeed = 1;
+			AnimationSpeed = DEFAULT_ANIMATION_SPEED;
 		}
 		
-		//Location on a field, TODO don't forget C# isn't virtual implicitly
+		//Space coordinate location in a Field, don't forget C# isn't virtual implicitly
 		public float X
 		{
 			get; set;
@@ -158,8 +160,8 @@ namespace Space_Impact.Graphics
 		}
 
 		/// <summary>
-		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas
-		/// Used by abstract classes
+		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas.
+		/// Used by abstract classes.
 		/// </summary>
 		/// <param name="bitmap">Canvas Bitmap supposed to be drawn on the Canvas</param>
 		/// <returns>Canvas Bitmap actually drawn on the Canvas</returns>
@@ -168,7 +170,7 @@ namespace Space_Impact.Graphics
 		}
 
 		/// <summary>
-		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas
+		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas.
 		/// </summary>
 		/// <param name="bitmap">Canvas Bitmap supposed to be drawn on the Canvas</param>
 		/// <returns>Canvas Bitmap actually drawn on the Canvas</returns>

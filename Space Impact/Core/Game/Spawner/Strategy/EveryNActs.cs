@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner.Strategy
 {
-	public class EveryNActs: ISpawnerStrategy
+	public class EveryNActs : AbstractSpawnerStrategy
 	{
-		ISpawner Spawner;
-
 		/// <summary>
 		/// Countdown until the next spawn, automatically executes Spawn() when the time arrives.
 		/// Advised access is by CountDown--.
@@ -27,7 +25,7 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 				if (this.countDown <= 0)
 				{
 					this.countDown = Interval;
-					Spawner.Spawn();
+					Spawn();
 				}
 			}
 		}
@@ -52,16 +50,16 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 			}
 		}
 
-		public EveryNActs(ISpawner spawner, int interval)
+		public EveryNActs(ISpawner spawner, SpawnCallbackDelegate spawnCallback, int interval) : base(spawner, spawnCallback)
 		{
-			Spawner = spawner;
-
 			Interval = interval;
 			CountDown = interval;
 		}
 
-		public void Act()
+		public override void Act()
 		{
+			base.Act();
+
 			CountDown--;
 		}
 	}

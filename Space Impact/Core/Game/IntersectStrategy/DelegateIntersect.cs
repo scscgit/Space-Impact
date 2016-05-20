@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Space_Impact.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,14 +35,14 @@ namespace Space_Impact.Core.Game.IntersectStrategy
 			return false;
 		}
 
-		public DelegateIntersect(IPlacedOnField actor, IntersectsActorDelegate intersectsActor, IntersectsOnDelegate intersectsOn, IntersectsWithinDelegate intersectsWithin) : base(actor)
+		public DelegateIntersect(IPlacedInSpace actor, IntersectsActorDelegate intersectsActor, IntersectsOnDelegate intersectsOn, IntersectsWithinDelegate intersectsWithin) : base(actor)
 		{
 			IntersectsActorCurrent = intersectsActor;
 			IntersectsOnCurrent = intersectsOn;
 			IntersectsWithinCurrent = intersectsWithin;
 		}
 
-		public DelegateIntersect(IPlacedOnField actor, IntersectsOnDelegate intersectsOn): base(actor)
+		public DelegateIntersect(IPlacedInSpace actor, IntersectsOnDelegate intersectsOn): base(actor)
 		{
 			IntersectsActorCurrent = base.IntersectsActor;
 			IntersectsOnCurrent = intersectsOn;

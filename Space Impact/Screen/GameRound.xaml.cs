@@ -180,14 +180,6 @@ namespace Space_Impact.Screen
 		//Lock for concurrent operations on the same ActorList
 		private object ActorListLock = new object();
 
-		//Actions that happen after the end of an animated Draw cycle
-		void AfterDraw()
-		{
-			//todo doesnt work delete but idk maybe do something with resolution
-			if (Window.Current == null) return;
-			Log.d(this, Window.Current.Bounds.Width + "x");
-		}
-
 		//Registering events
 		void RegisterEvents()
 		{
@@ -219,16 +211,32 @@ namespace Space_Impact.Screen
 		//Initialization of the class, before any textures are loaded
 		public GameRound()
 		{
-			Log.i(this, "Initializing");
+			Log.i(this, "Constructor initializing");
 
 			this.InitializeComponent();
+
+			//Initializing loading screen
 			FieldLoaded = false;
 
 			RegisterEvents();
 
 			ActorList = new LinkedList<IAct>();
 
-			Log.i(this, "Initialized");
+			Log.i(this, "Constructor initialized");
+		}
+
+		//Page destructor
+		void Page_Unloaded(object sender, RoutedEventArgs e)
+		{
+			//Removing events
+			Log.i(this, "Page is being unloaded, removing events and other associations");
+			RemoveEvents();
+			Music.Stop();
+
+			//Cleaning up the Page to help the garbage collector
+			canvas.RemoveFromVisualTree();
+			canvas = null;
+			Log.i(this, "Page was fully unloaded");
 		}
 
 		//Reinitialization of all basic user-controlled logic after losing track of inputs
@@ -261,9 +269,10 @@ namespace Space_Impact.Screen
 				return;
 			}
 
+			//The event is handled
 			args.Handled = true;
-			//await was not used in documentation
 
+			//await was not used in documentation
 			await KeyUp_GameLoopThread(args.VirtualKey);
 			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyUp_GameLoopThread(args.VirtualKey));
 		}
@@ -276,9 +285,10 @@ namespace Space_Impact.Screen
 				return;
 			}
 
+			//The event is handled
 			args.Handled = true;
-			//await was not used in documentation
 
+			//await was not used in documentation
 			await KeyDown_GameLoopThread(args.VirtualKey);
 			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey)); //Problem s volanim ShowExitDialog() z herneho vlakna
 		}
@@ -416,23 +426,10 @@ namespace Space_Impact.Screen
 			}*/
 		}
 
-		void Page_Unloaded(object sender, RoutedEventArgs e)
-		{
-			//Removing events
-			Log.i(this, "Page is being unloaded, removing events and other associations");
-			RemoveEvents();
-			Music.Stop();
-
-			//Cleaning up the Page to help the garbage collector
-			canvas.RemoveFromVisualTree();
-			canvas = null;
-			Log.i(this, "Page was fully unloaded");
-		}
-
 		//First Draw cycle of a Field calls this method
-		void OnFirstDraw()
+		void BeforeFirstDraw()
 		{
-			Log.i(this, "First draw has started");
+			Log.i(this, "BeforeFirstDraw has started");
 
 			//Instance of a background image
 			Log.i(this, "Creating instance of background image");
@@ -444,7 +441,7 @@ namespace Space_Impact.Screen
 			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
 			//Initializing spawner
-			ISpawner spawner = new EnemySpawner(this, 600, 400);
+			ISpawner spawner = new DualSymmetrySpawner(y: 0);
 			AddActor(spawner);
 
 			//Also objects adhoc
@@ -453,11 +450,22 @@ namespace Space_Impact.Screen
 			//doomday.Y = 400;
 			//AddActor(doomday);
 
-			//The game starts running after the map is loaded with all characters
+			//The gameflow starts running after the map is loaded with all characters
 			GameRunning = true;
 
 			//Resetting user input for avoiding possible start glitches that would require user to alt+tab for a hotfix instead
 			ResetUserInput();
+
+			Log.i(this, "BeforeFirstDraw has ended");
+		}
+
+		void AfterFirstDraw()
+		{
+			Log.i(this, "AfterFirstDraw has started");
+
+			//todo this would be ideal place for switching texture loading screen, BUT it is in a different thread!!!
+
+			Log.i(this, "AfterFirstDraw has ended");
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -495,7 +503,7 @@ namespace Space_Impact.Screen
 				//Increases progress bar percentage during loading
 				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
 				//Gets called back after loading gets finished
-				, AfterCreateResourcesAsyncFinished
+				, AfterCreateTexturesAsyncFinished
 				//Loads all textures implicitly
 				);
 
@@ -516,20 +524,21 @@ namespace Space_Impact.Screen
 			Log.i(this, "CreateResourcesAsync finished");
 		}
 
-		void AfterCreateResourcesAsyncFinished()
+		//Called from within the TextureSetLoader after the resources fully load
+		void AfterCreateTexturesAsyncFinished()
 		{
 
 
-			Log.i(this, "AfterCreateResourcesAsyncFinished finished");
+			Log.i(this, "AfterCreateTexturesAsyncFinished finished");
 		}
 
 		//Main game loop, should be fired 60 times per second
 		void canvas_DrawAnimated(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
+			//Calling actions expected before first draw starts
 			if (FirstDraw)
 			{
-				FirstDraw = false;
-				OnFirstDraw();
+				BeforeFirstDraw();
 			}
 
 			//Exception during Act is fatal. We encapsulate it as a plain text and throw it.
@@ -547,6 +556,7 @@ namespace Space_Impact.Screen
 			catch (Exception e)
 			{
 				Log.e(this, "Exception happened during Act on an Actor.\n" + e.ToString());
+				//sender.RunOnGameLoopThreadAsync(async() => { await Utility.GetMusic("Sounds", "alarm_to_the_extreme"); }).AsTask();
 				//throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
 			}
 
@@ -597,7 +607,12 @@ namespace Space_Impact.Screen
 				MessageBroadcastCounter++;
 			}
 
-			AfterDraw();
+			//Calling actions expected after first draw finishes
+			if (FirstDraw)
+			{
+				FirstDraw = false;
+				AfterFirstDraw();
+			}
 		}
 
 		void DrawErrorLog(CanvasDrawingSession drawingSession)
@@ -654,9 +669,9 @@ namespace Space_Impact.Screen
 			Log.i(this, "Adding actor " + actor.ToString());
 			if (actor != null)
 			{
-				if (actor is IActor)
+				if (actor is IPlacedInField)
 				{
-					((IActor)actor).AddedToField(this);
+					((IPlacedInField)actor).AddedToField(this);
 					ActorList.AddLast(actor);
 				}
 				else
@@ -707,7 +722,7 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "User clicked on New Game Button");
 			string message = "Are you sure you want to start a new game?";
-			if(GameRunning)
+			if (GameRunning)
 			{
 				message += "\nYou will lose all of the current progress!";
 			}
@@ -723,10 +738,10 @@ namespace Space_Impact.Screen
 		public delegate void PopupDialogActionDelegate();
 		async Task ShowPopupDialog(string question, string yes, PopupDialogActionDelegate actionYes, string no, PopupDialogActionDelegate actionNo, bool defaultYes, string third, PopupDialogActionDelegate actionThird)
 		{
-			var dialog = new Windows.UI.Popups.MessageDialog(question==null?"<NO TEXT AVAILABLE>":question);
+			var dialog = new Windows.UI.Popups.MessageDialog(question == null ? "<NO TEXT AVAILABLE>" : question);
 
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand(yes==null?"Yes":yes) { Id = 0 });
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand(no==null?"No":no) { Id = 1 });
+			dialog.Commands.Add(new Windows.UI.Popups.UICommand(yes == null ? "Yes" : yes) { Id = 0 });
+			dialog.Commands.Add(new Windows.UI.Popups.UICommand(no == null ? "No" : no) { Id = 1 });
 
 			if (third != null && actionThird != null && Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
 			{
