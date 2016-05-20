@@ -15,7 +15,7 @@
 	<!-- Entire screen -->
 	<SplitView Name="SplitView"
 			   DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="51" OpenPaneLength="250">
+               CompactPaneLength="51" OpenPaneLength="250" PaneClosing="SplitView_PaneClosing">
 		<SplitView.Pane>
 
 			<!-- Left Stack Panel -->
@@ -50,6 +50,7 @@
 			<!-- Main grid for canvases -->
 			<Grid
 				Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+				PointerPressed="Grid_PointerPressed" PointerReleased="Grid_PointerReleased" PointerMoved="Grid_PointerMoved"
 				>
 				<Viewbox Stretch="Fill">
 					<canvas:CanvasAnimatedControl x:Name="canvas"
@@ -59,11 +60,6 @@
 									  CreateResources="canvas_CreateResources"
 									  />
 				</Viewbox>
-
-				<canvas:CanvasControl x:Name="canvasTouchpad"
-							  Draw="canvasTouchpad_Draw"
-							  RenderTransformOrigin="0.686,0.503" Width="50" Height="200"
-							  />
 			</Grid>
 
 		</SplitView.Content>

@@ -104,13 +104,16 @@
     <Compile Include="Core\Game\ActorStrategy\IDrawModificationStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\IStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\Rotation.cs" />
+    <Compile Include="Core\Game\ClickableImpl.cs" />
     <Compile Include="Core\Game\Enemy\AbstractEnemy.cs" />
     <Compile Include="Core\Game\Enemy\IEnemy.cs" />
     <Compile Include="Core\Game\IActorCompositePart.cs" />
+    <Compile Include="Core\Game\IAngle.cs" />
+    <Compile Include="Core\Game\IClickable.cs" />
     <Compile Include="Core\Game\Object\AbstractObject.cs" />
     <Compile Include="Core\Game\Object\Doomday.cs" />
     <Compile Include="Core\Game\Object\IObject.cs" />
-    <Compile Include="Core\Game\Player\AbstractPartActor.cs" />
+    <Compile Include="Core\Game\AbstractPartActor.cs" />
     <Compile Include="Core\Game\Player\Bullet\HeroBullet.cs" />
     <Compile Include="Core\Game\Player\Bullet\AbstractBullet.cs" />
     <Compile Include="Core\Game\Player\Bullet\IBullet.cs" />
@@ -120,7 +123,7 @@
     <Compile Include="Core\Game\Player\IPlayer.cs" />
     <Compile Include="Core\Graphics\Position.cs" />
     <Compile Include="Core\Graphics\IPlacedOnField.cs" />
-    <Compile Include="Core\Game\Player\AbstractPlayer.cs" />
+    <Compile Include="Core\Game\AbstractPlayer.cs" />
     <Compile Include="Core\Game\Player\Hero.cs" />
     <Compile Include="Core\Graphics\AnimatedObject.cs" />
     <Compile Include="Core\Graphics\IAnimatedObject.cs" />

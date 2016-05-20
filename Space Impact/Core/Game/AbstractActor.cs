@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Space_Impact.Core.Game;
 using Space_Impact.Support;
+using Space_Impact.Core.Game.Player;
 
 namespace Space_Impact.Core
 {
@@ -36,7 +37,7 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
-		public int Speed
+		public float Speed
 		{
 			get; set;
 		}
@@ -64,13 +65,102 @@ namespace Space_Impact.Core
 		}
 
 		//Checks whether the X/Y movement is legal
-		protected virtual bool CanMoveX(int x)
+		protected virtual bool CanMoveX(float x)
 		{
 			return x > 0 && x < Field.Size.Width - Width;
 		}
-		protected virtual bool CanMoveY(int y)
+		protected virtual bool CanMoveY(float y)
 		{
 			return y > 0 && y < Field.Size.Height - Height;
+		}
+
+		//Current speed in a chosen direction based on angular calculations
+		float HorizontalSpeed(float Angle)
+		{
+			return Speed * (float)Math.Sin((Angle / Math.PI) * 180);
+		}
+		float VerticalSpeed(float Angle)
+		{
+			return Speed * (float)Math.Sin((Angle / Math.PI) * 180);
+		}
+
+		void MoveHorizontalAndVertical()
+		{
+			//Updating X coordinate if within bounds
+			if (Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT)
+			{
+				if (this is IAngle)
+				{
+					float angle = ((IAngle)this).Angle;
+					if (CanMoveX(X - HorizontalSpeed(angle)))
+					{
+						X = X - HorizontalSpeed(angle);
+					}
+				}
+				else
+				{
+					if (CanMoveX(X - Speed))
+					{
+						X = X - Speed;
+					}
+				}
+			}
+			else if (Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT)
+			{
+				if (this is IAngle)
+				{
+					float angle = ((IAngle)this).Angle;
+					if (CanMoveX(X + HorizontalSpeed(angle)))
+					{
+						X = X + HorizontalSpeed(angle);
+					}
+				}
+				else
+				{
+					if (CanMoveX(X + Speed))
+					{
+						X = X + Speed;
+					}
+				}
+			}
+
+			//Updating Y coordinate if within bounds
+			if (Direction.Vertical == SpaceDirection.VerticalDirection.UP)
+			{
+				if (this is IAngle)
+				{
+					float angle = ((IAngle)this).Angle;
+					if (CanMoveY(Y - VerticalSpeed(angle)))
+					{
+						Y = Y - VerticalSpeed(angle);
+					}
+				}
+				else
+				{
+					if (CanMoveY(Y - Speed))
+					{
+						Y = Y - Speed;
+					}
+				}
+			}
+			else if (Direction.Vertical == SpaceDirection.VerticalDirection.DOWN)
+			{
+				if (this is IAngle)
+				{
+					float angle = ((IAngle)this).Angle;
+					if (CanMoveY(Y + VerticalSpeed(angle)))
+					{
+						Y = Y + VerticalSpeed(angle);
+					}
+				}
+				else
+				{
+					if (CanMoveY(Y + Speed))
+					{
+						Y = Y + Speed;
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -78,37 +168,7 @@ namespace Space_Impact.Core
 		/// </summary>
 		public virtual void Act()
 		{
-			//Updating X coordinate if within bounds
-			if (Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT)
-			{
-				if (CanMoveX(X - Speed))
-				{
-					X = X - Speed;
-				}
-			}
-			else if (Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT)
-			{
-				if (CanMoveX(X + Speed))
-				{
-					X = X + Speed;
-				}
-			}
-
-			//Updating Y coordinate if within bounds
-			if (Direction.Vertical == SpaceDirection.VerticalDirection.UP)
-			{
-				if (CanMoveY(Y - Speed))
-				{
-					Y = Y - Speed;
-				}
-			}
-			else if (Direction.Vertical == SpaceDirection.VerticalDirection.DOWN)
-			{
-				if (CanMoveY(Y + Speed))
-				{
-					Y = Y + Speed;
-				}
-			}
+			MoveHorizontalAndVertical();
 
 			//Moving hero's objects together with him.
 			//All actors that this actor is composed of always get their coordinates updated to be the same.
@@ -149,9 +209,9 @@ namespace Space_Impact.Core
 		/// <param name="x">X coordinate</param>
 		/// <param name="y">Y coordinate</param>
 		/// <returns>true if the actor can collide on x, y coordinates</returns>
-		public virtual bool CollidesOn(int x, int y)
+		public virtual bool CollidesOn(float x, float y)
 		{
-			if(x > X && x < X+Width && y > Y && y < Y+Width)
+			if (x > X && x < X + Width && y > Y && y < Y + Width)
 			{
 				return true;
 			}

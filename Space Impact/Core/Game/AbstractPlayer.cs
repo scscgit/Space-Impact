@@ -43,8 +43,8 @@ namespace Space_Impact.Core.Game.Player
 			{
 				Position position = new Position();
 				//Moves to the player's center coordinates
-				position.X = X + (int)Width / 2;
-				position.Y = Y + (int)Height / 2;
+				position.X = X + (float)Width / 2;
+				position.Y = Y + (float)Height / 2;
 				return position;
 			}
 		}

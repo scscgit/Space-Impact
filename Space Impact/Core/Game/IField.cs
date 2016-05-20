@@ -9,6 +9,8 @@ using Windows.Foundation;
 
 namespace Space_Impact.Core
 {
+	public delegate void ActorAction(IActor actor);
+
 	public interface IField
 	{
 		CanvasAnimatedControl FieldControl { get; }
@@ -18,5 +20,6 @@ namespace Space_Impact.Core
 
 		void AddActor(IActor actor);
 		void RemoveActor(IActor actor);
+		void ForEachActor(ActorAction action);
 	}
 }

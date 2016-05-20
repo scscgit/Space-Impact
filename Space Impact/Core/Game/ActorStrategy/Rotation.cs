@@ -125,6 +125,12 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			{
 				ChangeAngleTowards(0);
 			}
+
+			//Update the angle of the actor, but only if he is compatible
+			if(Owner is IAngle)
+			{
+				((IAngle)Owner).Angle = CurrentAngleDegrees;
+			}
 		}
 
 		public void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)

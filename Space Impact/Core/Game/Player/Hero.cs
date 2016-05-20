@@ -12,7 +12,7 @@ using Space_Impact.Core.Game.ActorStrategy;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public class Hero : AbstractPlayer
+	public class Hero : AbstractPlayer, IAngle, IClickable
 	{
 		//Hero's thrust, class definion
 		public class MovementThrust : AbstractPartActor
@@ -20,6 +20,7 @@ namespace Space_Impact.Core.Game.Player
 			//Ower of the Thrust
 			Hero Player;
 
+			//Variables
 			bool blinkState = false;
 			int blinkCounter = 0;
 			int blinkPeriod = 5;
@@ -37,7 +38,7 @@ namespace Space_Impact.Core.Game.Player
 				{
 					blinkCounter = 0;
 					blinkState = !blinkState;
-					if(!blinkState)
+					if (!blinkState)
 					{
 						bitmap = null;
 						return;
@@ -52,11 +53,19 @@ namespace Space_Impact.Core.Game.Player
 		//Hero's thrust
 		MovementThrust thrust;
 		int temporary_log_counter = 0;
-		
+
 		//Access to hero's strategy, should be only used for DrawModification purposes of other classes because Act() would collide
 		public Rotation RotationStrategy
 		{
 			get; private set;
+		}
+
+		//Clickable implementation manager
+		IClickable Clickable;
+
+		public float Angle
+		{
+			get; set;
 		}
 
 		public Hero() : base("Hero")
@@ -65,6 +74,8 @@ namespace Space_Impact.Core.Game.Player
 			Speed = 8;
 			ShootingInterval = 50;
 			RotationStrategy = new Rotation(this, 10, 65);
+
+			Clickable = new ClickableImpl(CollidesOn);
 
 			//Hero has his thrust object
 			this.thrust = new MovementThrust(this);
@@ -99,6 +110,7 @@ namespace Space_Impact.Core.Game.Player
 			else
 			{
 				Log.i(this, "X=" + X + " Y=" + Y +
+					" Angle=" + Angle +
 					" Horizontal=" +
 					(Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT ? "Left" : (Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT ? "Right" : ".")) +
 					" Vertical=" +
@@ -111,16 +123,27 @@ namespace Space_Impact.Core.Game.Player
 		{
 			Field.AddActor(this.thrust);
 		}
-
 		protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
 			//Rotates the player in the direction where he is moving
 			RotationStrategy.DrawModification(ref bitmap, draw);
 		}
-
 		protected override void DrawHook(CanvasDrawingSession draw)
 		{
 
+		}
+
+		public void Click(float x, float y)
+		{
+			Clickable.Click(x, y);
+		}
+		public void ClickMove(float x, float y)
+		{
+			Clickable.ClickMove(x, y);
+		}
+		public void ClickRelease()
+		{
+			Clickable.ClickRelease();
 		}
 	}
 }

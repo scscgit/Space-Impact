@@ -26,11 +26,11 @@ namespace Space_Impact.Core.Game.Player.Bullet
 		}
 
 		//Removes all movement limitations, instead verifies in the Act whether the object needs to be destroyed
-		protected override bool CanMoveX(int x)
+		protected override bool CanMoveX(float x)
 		{
 			return true;
 		}
-		protected override bool CanMoveY(int y)
+		protected override bool CanMoveY(float y)
 		{
 			return true;
 		}

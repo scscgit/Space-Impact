@@ -8,7 +8,7 @@ namespace Space_Impact.Graphics
 {
 	public struct Position
 	{
-		public int X;
-		public int Y;
+		public float X;
+		public float Y;
 	}
 }

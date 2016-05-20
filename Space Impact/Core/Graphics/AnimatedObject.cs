@@ -19,13 +19,13 @@ namespace Space_Impact.Graphics
 		{
 			AnimationSpeed = 1;
 		}
-
+		
 		//Location on a field, TODO don't forget C# isnt virtual implicitly
-		public int X
+		public float X
 		{
 			get; set;
 		} = 0;
-		public int Y
+		public float Y
 		{
 			get; set;
 		} = 0;
@@ -44,10 +44,9 @@ namespace Space_Impact.Graphics
 			get; protected set;
 		} = 0;
 
-
 		//Speed (duration) of animation, lower is faster
-		private int FrameIndex = 0;
-		private int animationSpeed;
+		int FrameIndex = 0;
+		int animationSpeed;
 		public int AnimationSpeed
 		{
 			protected get
@@ -66,8 +65,8 @@ namespace Space_Impact.Graphics
 		/// </summary>
 		/// <param name="textureSet">Texture set containing names (paths) of .png files inside Assets directory without .png.
 		/// Supported null for no animation.</param>
-		private string[] textures = null;
-		private CanvasBitmap[] bitmaps = null;
+		string[] textures = null;
+		CanvasBitmap[] bitmaps = null;
 		public string[] Animation
 		{
 			set

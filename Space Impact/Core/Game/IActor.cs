@@ -25,7 +25,7 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
-		int Speed
+		float Speed
 		{
 			get; set;
 		}
@@ -35,7 +35,7 @@ namespace Space_Impact.Core
 			get;
 		}
 
-		bool CollidesOn(int x, int y);
+		bool CollidesOn(float x, float y);
 		bool IntersectsActor(IActor actor);
 
 		void Act();

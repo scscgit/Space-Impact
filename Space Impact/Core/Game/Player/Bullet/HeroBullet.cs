@@ -16,7 +16,7 @@ namespace Space_Impact.Core.Game.Player.Bullet
 			Speed = 50;
 		}
 
-		public override bool CollidesOn(int x, int y)
+		public override bool CollidesOn(float x, float y)
 		{
 			//todo lambda square static utility new static method
 			return true;

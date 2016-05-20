@@ -84,6 +84,31 @@ namespace Space_Impact.src
 			}
 		}
 
+		//Screen debug logging
+		int LastLogCounter { get; set; } = 0;
+		int LastLogCountTime { get; set; } = 20;
+		int LastLogCountLimit { get; set; } = 20;
+
+		//Message for user
+		public int MessageBroadcastCounter { get; set; } = 220;
+		public int MessageBroadcastTime { get; set; } = 220;
+		string messageBroadcastText = "";
+		public string MessageBroadcastText
+		{
+			get
+			{
+				return this.messageBroadcastText;
+			}
+
+			set
+			{
+				this.messageBroadcastText = value;
+				MessageBroadcastCounter = 0;
+			}
+		}
+
+		string LastLog = "";
+
 		bool FirstDraw = true;
 
 		//List of all actors that will receive Draw and Act callbacks
@@ -92,6 +117,7 @@ namespace Space_Impact.src
 		//Actions that happen after the end of an animated Draw cycle
 		void AfterDraw()
 		{
+			//todo doesnt work delete but idk maybe do something with resolution
 			if (Window.Current == null) return;
 			Log.d(this, Window.Current.Bounds.Width + "x");
 		}
@@ -151,7 +177,7 @@ namespace Space_Impact.src
 				Player.Shooting = false;
 			}
 		}
-		
+
 		void Current_Activated(object sender, WindowActivatedEventArgs e)
 		{
 			Log.i(this, "Event Window.Current.Activated, resetting user-controlled (input) logic");
@@ -168,17 +194,21 @@ namespace Space_Impact.src
 		{
 			args.Handled = true;
 			//await was not used in documentation
-			await FieldControl.RunOnGameLoopThreadAsync(() => KeyUp_GameLoopThread(args.VirtualKey));
+
+			await KeyUp_GameLoopThread(args.VirtualKey);
+			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyUp_GameLoopThread(args.VirtualKey));
 		}
 
 		async void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
 		{
 			args.Handled = true;
 			//await was not used in documentation
-			await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey));
+
+			await KeyDown_GameLoopThread(args.VirtualKey);
+			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey));
 		}
 
-		void KeyDown_GameLoopThread(VirtualKey virtualKey)
+		async Task KeyDown_GameLoopThread(VirtualKey virtualKey)
 		{
 			//const SpaceDirection.HorizontalDirection left = SpaceDirection.HorizontalDirection.LEFT;
 			//const SpaceDirection.HorizontalDirection right = SpaceDirection.HorizontalDirection.RIGHT;
@@ -218,14 +248,14 @@ namespace Space_Impact.src
 
 				//Game lifecycle alteration
 				case VirtualKey.Escape:
-					Log.i(this, "Escape buttom pressed, opening dialog asynchronously");
-					//TODO fix
-					showExitDialog();
+					Log.i(this, "Escape button pressed, opening dialog asynchronously");
+					await showExitDialog();
 					break;
 
 				//Debug
 				case VirtualKey.L:
 					Log.d(this, "New player added");
+					MessageBroadcastText = "Hello world";
 					AddActor(new Hero());
 					break;
 
@@ -245,7 +275,7 @@ namespace Space_Impact.src
 			}
 		}
 
-		void KeyUp_GameLoopThread(VirtualKey virtualKey)
+		async Task KeyUp_GameLoopThread(VirtualKey virtualKey)
 		{
 			switch (virtualKey)
 			{
@@ -296,13 +326,15 @@ namespace Space_Impact.src
 		{
 			Log.i(this, "First draw has started");
 
-			//Loading players ad-hoc
+			//Loading player ad-hoc
 			Player = new Hero();
+			Player.X = (float)Size.Width / 2 - (float)Player.Width / 2;
+			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
 			//Also objects adhoc;
 			IObject doomday = new Doomday(Player);
-			doomday.X = 100;
-			doomday.Y = 150;
+			doomday.X = 600;
+			doomday.Y = 400;
 			AddActor(doomday);
 
 			//Position position = new Position();
@@ -316,7 +348,7 @@ namespace Space_Impact.src
 			//On losing device (the GPU one, not your cheap Windows Phone), resources gotta get reloaded
 			if (args.Reason == CanvasCreateResourcesReason.NewDevice)
 			{
-				Log.i(this, "Hey a new device");
+				Log.i(this, "Hey, a new device!");
 				//sender.Device.DeviceLost += Device_DeviceLost; //or maybe not
 			}
 			//If the reason is other, e.g. DPI change, we have to reload our textures too
@@ -348,7 +380,7 @@ namespace Space_Impact.src
 				FirstDraw = false;
 				OnFirstDraw();
 			}
-			
+
 			//Exception during Act is fatal. We encapsulate it as plain text and throw it.
 			try
 			{
@@ -375,38 +407,76 @@ namespace Space_Impact.src
 				{
 					actor.Draw(args.DrawingSession);
 				}
+
+				//Draw last error log
+				DrawErrorLog(args.DrawingSession);
+
 			}
 			catch (Exception e)
 			{
-				Log.e(this, e.ToString());
+				Log.e(this, "Problem happened during Draw.\n" + e.ToString());
+			}
+
+			//Draws a broadcast message, if there is any
+			if (MessageBroadcastCounter < MessageBroadcastTime)
+			{
+				var format = new Microsoft.Graphics.Canvas.Text.CanvasTextFormat();
+				format.FontSize = 150;
+				format.FontStyle = Windows.UI.Text.FontStyle.Oblique;
+				format.FontFamily = "Comic Sans";
+				args.DrawingSession.DrawText(MessageBroadcastText, new Vector2(500, 200), Colors.Beige, format);
+				MessageBroadcastCounter++;
 			}
 
 			AfterDraw();
-
-			// args.DrawingSession.DrawText("hello", new System.Numerics.Vector2(100, 50), Windows.UI.Colors.Aqua);
-			//args.DrawingSession.DrawImage(this.playerImage, new Vector2(a, 5));
 		}
 
-		void canvasTouchpad_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+		void DrawErrorLog(CanvasDrawingSession drawingSession)
 		{
-			//args.DrawingSession.DrawCircle(new Vector2(10, 10), 5, Colors.Cyan);
-		}
+			//Kym neskoncil odpocet, tak pocitame a cakame
+			if (LastLogCounter < LastLogCountTime)
+			{
+				LastLogCounter++;
+			}
+			//Ked nastal cas na novu spravu, napise sa
+			else
+			{
+				//Vytiahne si z logu dalsiu spravu
+				string message = Log.NextMessage;
 
-		/// <summary>
-		/// Pointer capture event
-		/// </summary>
-		//private void canvasTouchpad_PointerPressed(object sender, PointerRoutedEventArgs e)
-		//{
-		//	Pointer pointer = e.Pointer;
-		//	if (pointer.IsInContact)
-		//	{
-		//		canvas.Foreground = new SolidColorBrush(Colors.AliceBlue);
-		//	}
-		//	else
-		//	{
-		//		canvas.Foreground = new SolidColorBrush(Colors.Black);
-		//	}
-		//}
+				//Ak prisla nova sprava, stara sa nou nahradi a zacne odpocet odznovu
+				if (message != null)
+				{
+					LastLog = message;
+					LastLogCounter = 0;
+
+					//Dalsi odpocet bude trvat kratsie z dovodu rychlejsieho vypisu velkeho poctu hodnot
+					if (LastLogCountTime > 1)
+					{
+						LastLogCountTime = (int)(LastLogCountTime * 0.85);
+					}
+				}
+				//Ak neprisla nova sprava, tak zacneme spomalovat interval medzi vypismi pre lepsiu prehladnost
+				else if (LastLogCountTime < LastLogCountLimit)
+				{
+					LastLogCountTime++;
+				}
+			}
+
+			drawingSession.DrawText
+				(
+				LastLog,
+				(float)Size.Width - 100 - 9.40f * LastLog.Length,
+				(float)Size.Height - 50,
+				LastLogCountTime == 1 ?
+					Colors.Tomato
+					:
+					LastLogCountTime < LastLogCountLimit / 2 ?
+						Colors.Indigo
+						:
+						Colors.DarkGreen
+				);
+		}
 
 		//Manipulation with available actors that are currently registered using Observer pattern for receiving events
 		public void AddActor(IActor actor)
@@ -424,12 +494,20 @@ namespace Space_Impact.src
 			ActorList.Remove(actor);
 		}
 
+		public void ForEachActor(ActorAction action)
+		{
+			foreach (IActor actor in ActorList)
+			{
+				action(actor);
+			}
+		}
+
 		//Button for opening left menu
 		void MenuButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Hamburger");
 			SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
-			
+
 			//SplitView.Focus(FocusState.Unfocused);
 		}
 
@@ -476,6 +554,63 @@ namespace Space_Impact.src
 					//No action when user decides to keep playing
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Pointer position capture event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e">Position is located in e.GetCurrentPoint(this).Position</param>
+		void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
+		{
+			Vector2 vector = e.GetCurrentPoint(this).Position.ToVector2();
+
+			//Clicks on all clickable actors
+			ForEachActor(a =>
+			{
+				IClickable actor = a as IClickable;
+				if (actor != null)
+				{
+					actor.Click(vector.X, vector.Y);
+				}
+			}
+			);
+		}
+		void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
+		{
+			Vector2 vector = e.GetCurrentPoint(this).Position.ToVector2();
+
+			//Event on all clickable actors
+			ForEachActor(a =>
+			{
+				IClickable actor = a as IClickable;
+				if (actor != null)
+				{
+					actor.ClickMove(vector.X, vector.Y);
+				}
+			}
+			);
+		}
+		void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
+		{
+			//Event on all clickable actors
+			ForEachActor(a =>
+			{
+				IClickable actor = a as IClickable;
+				if (actor != null)
+				{
+					actor.ClickRelease();
+				}
+			}
+			);
+		}
+
+		void SplitView_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
+		{
+			Log.i(this, "Closing panel, overriding focus");
+
+			//Takes focus away from the Panel
+			this.Focus(FocusState.Keyboard);
 		}
 	}
 }
