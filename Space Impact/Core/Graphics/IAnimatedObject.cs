@@ -9,8 +9,7 @@ namespace Space_Impact.Graphics
 	{
 		int Frame { get; }
 		int AnimationSpeed { set; }
-
-		void setAnimation(string[] textures);
+		string[] Animation { set; }
 		
 		void Draw(CanvasDrawingSession draw);
 	}

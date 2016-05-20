@@ -60,28 +60,34 @@ namespace Space_Impact.Graphics
 			}
 		}
 
-		private string[] textures = null;
-		private CanvasBitmap[] bitmaps = null;
-
 		/// <summary>
 		/// Prepares a texture set to be loaded as bitmaps for representing an animated object.
 		/// Only relative path from Assets folder is required, .png is automatically added.
 		/// </summary>
 		/// <param name="textureSet">Texture set containing names (paths) of .png files inside Assets directory without .png.
 		/// Supported null for no animation.</param>
-		public void setAnimation(string[] textureSet)
+		private string[] textures = null;
+		private CanvasBitmap[] bitmaps = null;
+		public string[] Animation
 		{
-			this.textures = textureSet;
-
-			//Null parameter disables animation
-			if(textureSet == null)
+			set
 			{
-				this.bitmaps = null;
-				return;
-			}
+				this.textures = value;
 
-			this.bitmaps = TextureSetLoader.Instance[textureSet];
-			Frame = 0;
+				//Null parameter disables animation
+				if (value == null)
+				{
+					this.bitmaps = null;
+					return;
+				}
+
+				this.bitmaps = TextureSetLoader.Instance[value];
+				Frame = 0;
+			}
+			protected get
+			{
+				return textures;
+			}
 		}
 
 		/// <summary>
@@ -103,9 +109,12 @@ namespace Space_Impact.Graphics
 				}
 			}
 
+			//Prepares the bitmap to be drawn
+			ICanvasImage bitmap = this.bitmaps[Frame];
+
 			//Lets subclasses hook the bitmap modification
-			CanvasBitmap bitmap = DrawModification(this.bitmaps[Frame]);
-			if(bitmap== null)
+			DrawModification(ref bitmap, draw);
+			if (bitmap == null)
 			{
 				return;
 			}
@@ -135,9 +144,8 @@ namespace Space_Impact.Graphics
 		/// </summary>
 		/// <param name="bitmap">Canvas Bitmap supposed to be drawn on the Canvas</param>
 		/// <returns>Canvas Bitmap actually drawn on the Canvas</returns>
-		protected virtual CanvasBitmap DrawModification(CanvasBitmap bitmap)
+		protected virtual void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
-			return bitmap;
 		}
 	}
 }

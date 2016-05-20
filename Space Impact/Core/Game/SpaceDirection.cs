@@ -81,6 +81,16 @@ namespace Space_Impact.Core.Game
 			}
 		}
 
+		//Overloads for convenience
+		public static SpaceDirection get(HorizontalDirection horizontal)
+		{
+			return get(horizontal, VerticalDirection.NONE);
+		}
+		public static SpaceDirection get(VerticalDirection vertical)
+		{
+			return get(HorizontalDirection.NONE, vertical);
+		}
+
 		public static SpaceDirection operator +(SpaceDirection direction, HorizontalDirection horizontal)
 		{
 			//Opposite directions cancel out

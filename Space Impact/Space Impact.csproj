@@ -99,18 +99,32 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Game\AbstractActor.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Follower.cs" />
+    <Compile Include="Core\Game\ActorStrategy\IActStrategy.cs" />
+    <Compile Include="Core\Game\ActorStrategy\IDrawModificationStrategy.cs" />
+    <Compile Include="Core\Game\ActorStrategy\IStrategy.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Rotation.cs" />
+    <Compile Include="Core\Game\Enemy\AbstractEnemy.cs" />
+    <Compile Include="Core\Game\Enemy\IEnemy.cs" />
     <Compile Include="Core\Game\IActorCompositePart.cs" />
+    <Compile Include="Core\Game\Object\AbstractObject.cs" />
+    <Compile Include="Core\Game\Object\Doomday.cs" />
+    <Compile Include="Core\Game\Object\IObject.cs" />
     <Compile Include="Core\Game\Player\AbstractPartActor.cs" />
+    <Compile Include="Core\Game\Player\Bullet\HeroBullet.cs" />
+    <Compile Include="Core\Game\Player\Bullet\AbstractBullet.cs" />
+    <Compile Include="Core\Game\Player\Bullet\IBullet.cs" />
     <Compile Include="Core\Game\SpaceDirection.cs" />
     <Compile Include="Core\Game\IActor.cs" />
     <Compile Include="Core\Game\IField.cs" />
     <Compile Include="Core\Game\Player\IPlayer.cs" />
-    <Compile Include="Graphics\IPlacedOnField.cs" />
+    <Compile Include="Core\Graphics\Position.cs" />
+    <Compile Include="Core\Graphics\IPlacedOnField.cs" />
     <Compile Include="Core\Game\Player\AbstractPlayer.cs" />
     <Compile Include="Core\Game\Player\Hero.cs" />
-    <Compile Include="Graphics\AnimatedObject.cs" />
-    <Compile Include="Graphics\IAnimatedObject.cs" />
-    <Compile Include="Graphics\TextureSetLoader.cs" />
+    <Compile Include="Core\Graphics\AnimatedObject.cs" />
+    <Compile Include="Core\Graphics\IAnimatedObject.cs" />
+    <Compile Include="Core\Graphics\TextureSetLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen\GameRound.xaml.cs">
       <DependentUpon>GameRound.xaml</DependentUpon>
@@ -126,7 +140,19 @@
     <None Include="Space Impact_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Player.png" />
+    <Content Include="Assets\black_old_face.png" />
+    <Content Include="Assets\doomday_1.png" />
+    <Content Include="Assets\doomday_2.png" />
+    <Content Include="Assets\doomday_3.png" />
+    <Content Include="Assets\fire_1.png" />
+    <Content Include="Assets\fire_2.png" />
+    <Content Include="Assets\hot_side_object.png" />
+    <Content Include="Assets\ship10_base.png" />
+    <Content Include="Assets\ship10_thrust.png" />
+    <Content Include="Assets\ship11_base.png" />
+    <Content Include="Assets\ship11_thrust.png" />
+    <Content Include="Assets\ship12_base.png" />
+    <Content Include="Assets\ship12_thrust.png" />
     <Content Include="Assets\ship1_base.png" />
     <Content Include="Assets\ship1_thrust.png" />
     <Content Include="Assets\ship2_base.png" />
@@ -134,6 +160,17 @@
     <Content Include="Assets\ship3_base.png" />
     <Content Include="Assets\ship3_thrust.png" />
     <Content Include="Assets\ship4_base.png" />
+    <Content Include="Assets\ship4_thrust.png" />
+    <Content Include="Assets\ship5_base.png" />
+    <Content Include="Assets\ship5_thrust.png" />
+    <Content Include="Assets\ship6_base.png" />
+    <Content Include="Assets\ship6_thrust.png" />
+    <Content Include="Assets\ship7_base.png" />
+    <Content Include="Assets\ship7_thrust.png" />
+    <Content Include="Assets\ship8_base.png" />
+    <Content Include="Assets\ship8_thrust.png" />
+    <Content Include="Assets\ship9_base.png" />
+    <Content Include="Assets\ship9_thrust.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -153,9 +190,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Game\Enemy\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

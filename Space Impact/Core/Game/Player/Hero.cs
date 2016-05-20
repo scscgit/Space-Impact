@@ -6,45 +6,65 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Space_Impact.Support;
+using Space_Impact.Core.Game.Player.Bullet;
+using Microsoft.Graphics.Canvas.Effects;
+using Space_Impact.Core.Game.ActorStrategy;
 
 namespace Space_Impact.Core.Game.Player
 {
 	public class Hero : AbstractPlayer
 	{
-		//Hero's thrust
+		//Hero's thrust, class definion
 		public class MovementThrust : AbstractPartActor
 		{
-			IPlayer player;
+			//Ower of the Thrust
+			Hero Player;
 
 			bool blinkState = false;
 			int blinkCounter = 0;
 			int blinkPeriod = 5;
 
-			public MovementThrust(IPlayer player) : base(player.Name + "'s Thrust")
+			public MovementThrust(Hero player) : base(player.Name + "'s Thrust")
 			{
-				setAnimation(TextureSetLoader.SHIP1_THRUST);
-				this.player = player;
+				Animation = TextureSetLoader.SHIP1_THRUST;
+				Player = player;
 				RegisterPartIn(player);
 			}
 
-			protected override CanvasBitmap DrawModification(CanvasBitmap bitmap)
+			protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 			{
 				if (++blinkCounter > blinkPeriod)
 				{
 					blinkCounter = 0;
 					blinkState = !blinkState;
+					if(!blinkState)
+					{
+						bitmap = null;
+						return;
+					}
 				}
 
-				return blinkState ? bitmap : null;
+				//Uses same rotation as Player
+				Player.RotationStrategy.DrawModification(ref bitmap, draw);
 			}
 		}
 
+		//Hero's thrust
 		MovementThrust thrust;
+		int temporary_log_counter = 0;
+		
+		//Access to hero's strategy, should be only used for DrawModification purposes of other classes because Act() would collide
+		public Rotation RotationStrategy
+		{
+			get; private set;
+		}
 
 		public Hero() : base("Hero")
 		{
-			setAnimation(TextureSetLoader.SHIP1_BASE);
+			Animation = TextureSetLoader.SHIP1_BASE;
 			Speed = 8;
+			ShootingInterval = 50;
+			RotationStrategy = new Rotation(this, 10, 65);
 
 			//Hero has his thrust object
 			this.thrust = new MovementThrust(this);
@@ -53,11 +73,23 @@ namespace Space_Impact.Core.Game.Player
 			ActorComposition.AddLast(this.thrust);
 		}
 
-		int temporary_log_counter = 0;
+		//Fired when player is shooting, limited by the ShootingInterval property.
+		//return: true if shot was successful
+		public override bool Shot()
+		{
+			HeroBullet bullet = new HeroBullet(this, SpaceDirection.get(SpaceDirection.VerticalDirection.UP));
+			Log.i(this, "new Bullet created");
+
+			Field.AddActor(bullet);
+			return true;
+		}
 
 		public override void Act()
 		{
 			base.Act();
+
+			//Calculates next expected rotation angle values
+			RotationStrategy.Act();
 
 			//Periodical logging of a Hero state
 			if (temporary_log_counter < 100)
@@ -80,9 +112,15 @@ namespace Space_Impact.Core.Game.Player
 			Field.AddActor(this.thrust);
 		}
 
+		protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
+		{
+			//Rotates the player in the direction where he is moving
+			RotationStrategy.DrawModification(ref bitmap, draw);
+		}
+
 		protected override void DrawHook(CanvasDrawingSession draw)
 		{
-			
+
 		}
 	}
 }

@@ -30,6 +30,7 @@ using Space_Impact.Support;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Space_Impact.Core.Game;
+using Space_Impact.Core.Game.Object;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -105,6 +106,8 @@ namespace Space_Impact.src
 			//Instead of losing/gaining focus (which doesn't work properly),
 			//reinitialization of some aspects like KeyUp/KeyDown are best handled in Window Activated Event
 			Window.Current.Activated += Current_Activated;
+			//SizeChanged does cancel the focus without triggering Activation
+			Window.Current.SizeChanged += Current_SizeChanged;
 			//LostFocus += GameRound_LostFocus;
 			//Window.Current.Content.LostFocus += Content_LostFocus;
 		}
@@ -139,16 +142,26 @@ namespace Space_Impact.src
 		}
 
 		//Reinitialization of all basic user-controlled logic after losing track of inputs
-		void Current_Activated(object sender, WindowActivatedEventArgs e)
+		void resetUserInput()
 		{
-			Log.i(this, "Event Window.Current.Activated, resetting user-controlled (input) logic");
-
 			//Window.Current events can happen during game initialization
 			if (Player != null)
 			{
 				Player.Direction = SpaceDirection.None;
 				Player.Shooting = false;
 			}
+		}
+		
+		void Current_Activated(object sender, WindowActivatedEventArgs e)
+		{
+			Log.i(this, "Event Window.Current.Activated, resetting user-controlled (input) logic");
+			resetUserInput();
+		}
+
+		void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
+		{
+			Log.i(this, "Event Window.Current.SizeChanged, resetting user-controlled (input) logic");
+			resetUserInput();
 		}
 
 		async void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
@@ -201,6 +214,13 @@ namespace Space_Impact.src
 						Log.i(this, "Player is shooting");
 						Player.Shooting = true;
 					}
+					break;
+
+				//Game lifecycle alteration
+				case VirtualKey.Escape:
+					Log.i(this, "Escape buttom pressed, opening dialog asynchronously");
+					//TODO fix
+					showExitDialog();
 					break;
 
 				//Debug
@@ -278,6 +298,15 @@ namespace Space_Impact.src
 
 			//Loading players ad-hoc
 			Player = new Hero();
+
+			//Also objects adhoc;
+			IObject doomday = new Doomday(Player);
+			doomday.X = 100;
+			doomday.Y = 150;
+			AddActor(doomday);
+
+			//Position position = new Position();
+			//position.X = (int)Width / 2;
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -400,6 +429,8 @@ namespace Space_Impact.src
 		{
 			Log.i(this, "User clicked on Hamburger");
 			SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
+			
+			//SplitView.Focus(FocusState.Unfocused);
 		}
 
 		void NewGameButton_Click(object sender, RoutedEventArgs e)
@@ -412,6 +443,11 @@ namespace Space_Impact.src
 		async void ExitGameButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Exit Game Button");
+			await showExitDialog();
+		}
+
+		async Task showExitDialog()
+		{
 			var dialog = new Windows.UI.Popups.MessageDialog("Are you sure you don't want to keep playing?");
 
 			dialog.Commands.Add(new Windows.UI.Popups.UICommand("Yes, I am") { Id = 0 });
@@ -431,7 +467,8 @@ namespace Space_Impact.src
 				case 0:
 					//User decided to exit the game
 					Log.i(this, "User has confirmed his choice to end the game via Exit Button");
-					Window.Current.CoreWindow.Close();
+					//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
+					Application.Current.Exit();
 					break;
 				case 1:
 				default:

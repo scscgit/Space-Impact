@@ -35,8 +35,13 @@ namespace Space_Impact.Core
 			get;
 		}
 
+		bool CollidesOn(int x, int y);
+		bool IntersectsActor(IActor actor);
+
 		void Act();
 		void AddedToField(IField field);
 		void AddedToFieldHook();
+
+		void DeleteActor();
 	}
 }
