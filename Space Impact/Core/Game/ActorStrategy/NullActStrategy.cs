@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace Space_Impact.Core.Game.ActorStrategy
 {
 	/// <summary>
-	/// Supports modification of the Act content.
+	/// Does nothing. Null pattern. Looks nice.
 	/// </summary>
-	public interface IActStrategy: IStrategy
+	class NullActStrategy : IActStrategy
 	{
-		void Act();
+		public void Act()
+		{
+		}
 	}
 }

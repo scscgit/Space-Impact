@@ -8,7 +8,7 @@ namespace Space_Impact.Core.Game.Object
 {
 	public abstract class AbstractObject: AbstractActor, IObject
 	{
-		public AbstractObject(string name): base(name)
+		protected AbstractObject(string name): base(name)
 		{
 
 		}

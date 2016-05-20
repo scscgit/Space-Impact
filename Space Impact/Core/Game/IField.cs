@@ -9,17 +9,21 @@ using Windows.Foundation;
 
 namespace Space_Impact.Core
 {
-	public delegate void ActorAction(IActor actor);
+	public delegate bool ActorAction(IActor actor);
 
 	public interface IField
 	{
 		CanvasAnimatedControl FieldControl { get; }
 		IPlayer Player { get; }
-		Size Size
-		{ get; }
+		Size Size { get; }
+		string MessageBroadcastText { get; set; }
 
+		//Actor management
 		void AddActor(IActor actor);
 		void RemoveActor(IActor actor);
 		void ForEachActor(ActorAction action);
+
+		//Gameplay flow management
+		void GameOver();
 	}
 }

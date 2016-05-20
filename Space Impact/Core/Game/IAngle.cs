@@ -9,7 +9,7 @@ namespace Space_Impact.Core.Game
 	/// <summary>
 	/// Supports angular movement.
 	/// </summary>
-	interface IAngle
+	public interface IAngle
 	{
 		float Angle
 		{

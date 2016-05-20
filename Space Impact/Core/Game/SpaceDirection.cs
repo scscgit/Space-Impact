@@ -184,5 +184,10 @@ namespace Space_Impact.Core.Game
 			return direction1.Horizontal != direction2.Horizontal || direction1.Vertical != direction2.Vertical;
 		}
 		*/
+
+		public override string ToString()
+		{
+			return Horizontal.ToString() + " " + Vertical.ToString();
+		}
 	}
 }

@@ -35,7 +35,8 @@ namespace Space_Impact.Core
 			get;
 		}
 
-		bool CollidesOn(float x, float y);
+		bool IntersectsOn(float x, float y);
+		bool IntersectsWithin(float x, float width, float y, float height);
 		bool IntersectsActor(IActor actor);
 
 		void Act();

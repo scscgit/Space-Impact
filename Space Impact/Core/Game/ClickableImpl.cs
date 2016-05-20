@@ -20,9 +20,9 @@ namespace Space_Impact.Core.Game
 		CollidesOn collidesOn;
 
 		/// <summary>
-		/// Implements clickability support
+		/// Implements clickability support for any IPlacedOnField object
 		/// </summary>
-		/// <param name="collidesOn">Delegate that checks if click on coordinates causes the object to become clicked</param>
+		/// <param name="collidesOn">Delegate that checks if a click on the coordinates causes the object to become clicked</param>
 		public ClickableImpl(CollidesOn collidesOn)
 		{
 			this.collidesOn = collidesOn;

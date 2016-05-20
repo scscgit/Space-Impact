@@ -9,21 +9,31 @@ using Space_Impact.Support;
 using Space_Impact.Core.Game.Player.Bullet;
 using Microsoft.Graphics.Canvas.Effects;
 using Space_Impact.Core.Game.ActorStrategy;
+using Space_Impact.Core.Game.Object.Bomb;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public class Hero : AbstractPlayer, IAngle, IClickable
+	public class Hero : AbstractPlayer, IAngle, IClickable, IAffectedByBombExplosion
 	{
+		//Constants
+		public const int HERO_SPEED = 8;
+
 		//Hero's thrust, class definion
 		public class MovementThrust : AbstractPartActor
 		{
+			//State
+			//public bool State
+			//{
+			//	get; set;
+			//}
+
 			//Ower of the Thrust
 			Hero Player;
 
 			//Variables
 			bool blinkState = false;
 			int blinkCounter = 0;
-			int blinkPeriod = 5;
+			int blinkPeriod = 3;
 
 			public MovementThrust(Hero player) : base(player.Name + "'s Thrust")
 			{
@@ -34,14 +44,31 @@ namespace Space_Impact.Core.Game.Player
 
 			protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 			{
-				if (++blinkCounter > blinkPeriod)
+				//If there is a movement backwards, no movement actually happens
+				if (Player.Direction.Vertical == SpaceDirection.VerticalDirection.DOWN && Player.Direction.Horizontal == SpaceDirection.HorizontalDirection.NONE)
 				{
-					blinkCounter = 0;
-					blinkState = !blinkState;
-					if (!blinkState)
+					bitmap = null;
+					return;
+				}
+
+				//If there is no relative movement, or a weak backwards movement with a sideways movement, thrust will blink
+				//(it is always implicitly moving forward... this may be wrong in a boss battle in the case of a static background)
+				if
+					(
+					Player.Direction == SpaceDirection.None
+					||
+					Player.Direction.Vertical == SpaceDirection.VerticalDirection.DOWN && Player.Direction.Horizontal != SpaceDirection.HorizontalDirection.NONE
+					)
+				{
+					if (++blinkCounter > blinkPeriod)
 					{
-						bitmap = null;
-						return;
+						blinkCounter = 0;
+						blinkState = !blinkState;
+						if (!blinkState)
+						{
+							bitmap = null;
+							return;
+						}
 					}
 				}
 
@@ -68,14 +95,23 @@ namespace Space_Impact.Core.Game.Player
 			get; set;
 		}
 
+		public bool Clicked
+		{
+			get
+			{
+				return Clickable.Clicked;
+			}
+		}
+
 		public Hero() : base("Hero")
 		{
 			Animation = TextureSetLoader.SHIP1_BASE;
-			Speed = 8;
+			Speed = HERO_SPEED;
 			ShootingInterval = 50;
 			RotationStrategy = new Rotation(this, 10, 65);
 
-			Clickable = new ClickableImpl(CollidesOn);
+			//Hero uses our implementation of clickable event receiver
+			Clickable = new ClickableImpl(IntersectsOn);
 
 			//Hero has his thrust object
 			this.thrust = new MovementThrust(this);
@@ -85,10 +121,11 @@ namespace Space_Impact.Core.Game.Player
 		}
 
 		//Fired when player is shooting, limited by the ShootingInterval property.
-		//return: true if shot was successful
+		//return: true if the shot was successful
 		public override bool Shot()
 		{
-			HeroBullet bullet = new HeroBullet(this, SpaceDirection.get(SpaceDirection.VerticalDirection.UP));
+			//var up = SpaceDirection.get(SpaceDirection.VerticalDirection.UP)
+			HeroBullet bullet = new HeroBullet(this, SpaceDirection.get(Direction.Horizontal, SpaceDirection.VerticalDirection.UP), Angle);
 			Log.i(this, "new Bullet created");
 
 			Field.AddActor(bullet);
@@ -103,19 +140,31 @@ namespace Space_Impact.Core.Game.Player
 			RotationStrategy.Act();
 
 			//Periodical logging of a Hero state
-			if (temporary_log_counter < 100)
+			if (temporary_log_counter < 200)
 			{
 				temporary_log_counter++;
 			}
 			else
 			{
+				Health--; //debug todo remove
 				Log.i(this, "X=" + X + " Y=" + Y +
+					" HP=" + Health + "/" + MaxHealth +
 					" Angle=" + Angle +
 					" Horizontal=" +
-					(Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT ? "Left" : (Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT ? "Right" : ".")) +
+					(Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT ? "Left" : (Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT ? "Right" : "None")) +
 					" Vertical=" +
-					(Direction.Vertical == SpaceDirection.VerticalDirection.UP ? "Up" : (Direction.Vertical == SpaceDirection.VerticalDirection.DOWN ? "Down" : ".")));
+					(Direction.Vertical == SpaceDirection.VerticalDirection.UP ? "Up" : (Direction.Vertical == SpaceDirection.VerticalDirection.DOWN ? "Down" : "None")));
 				temporary_log_counter = 0;
+			}
+
+			//Changes speed based on strong will of the user, he can click on the hero to give him a morale boost
+			if (Clicked)
+			{
+				Speed = 2 * HERO_SPEED;
+			}
+			else
+			{
+				Speed = HERO_SPEED;
 			}
 		}
 
@@ -135,6 +184,7 @@ namespace Space_Impact.Core.Game.Player
 
 		public void Click(float x, float y)
 		{
+			//Log.d(this,"Click "+x+" "+y+" "+ IntersectsOn(x, y));
 			Clickable.Click(x, y);
 		}
 		public void ClickMove(float x, float y)
@@ -144,6 +194,16 @@ namespace Space_Impact.Core.Game.Player
 		public void ClickRelease()
 		{
 			Clickable.ClickRelease();
+		}
+
+		public void OnBombExplosion(IBomb bomb)
+		{
+			Health -= bomb.Damage;
+		}
+
+		public override void OnDeath()
+		{
+			Field.GameOver();
 		}
 	}
 }

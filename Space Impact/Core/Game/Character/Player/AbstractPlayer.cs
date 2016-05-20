@@ -1,4 +1,5 @@
-﻿using Space_Impact.Graphics;
+﻿using Space_Impact.Core.Game.Character;
+using Space_Impact.Graphics;
 using Space_Impact.Support;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public abstract class AbstractPlayer : AbstractActor, IPlayer
+	public abstract class AbstractPlayer : AbstractCharacter, IPlayer
 	{
-		public AbstractPlayer(string name) : base(name)
+		protected AbstractPlayer(string name) : base(name)
 		{
-			//Initialization of default Shooting parameters
+			//Initialization of the default Shooting parameters
 			Shooting = false;
 			ShootingInterval = 10;
 			ShootingCooldown = 0;
@@ -37,7 +38,7 @@ namespace Space_Impact.Core.Game.Player
 		}
 
 		//Getter that a Bullet uses to see where it should be created
-		public Position BulletFocusPosition
+		public virtual Position BulletFocusPosition
 		{
 			get
 			{
@@ -67,7 +68,7 @@ namespace Space_Impact.Core.Game.Player
 			{
 				//Creates a new bullet
 				Shot();
-				Log.i(this, "Shot() called");
+				Log.i(this, "Shot() call has finished");
 
 				//Resets cooldown
 				ShootingCooldown = ShootingInterval;

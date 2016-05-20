@@ -10,13 +10,13 @@ namespace Space_Impact.Core.Game.Player.Bullet
 {
 	public class HeroBullet : AbstractBullet
 	{
-		public HeroBullet(IPlayer player, SpaceDirection direction) : base("Bullet", player, direction)
+		public HeroBullet(IPlayer player, SpaceDirection direction, float angle) : base("Bullet", player, direction, angle)
 		{
 			Animation = TextureSetLoader.FIRE;
 			Speed = 50;
 		}
 
-		public override bool CollidesOn(float x, float y)
+		public override bool IntersectsOn(float x, float y)
 		{
 			//todo lambda square static utility new static method
 			return true;

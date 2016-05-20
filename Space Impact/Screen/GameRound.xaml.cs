@@ -31,6 +31,7 @@ using Windows.System;
 using Windows.UI.ViewManagement;
 using Space_Impact.Core.Game;
 using Space_Impact.Core.Game.Object;
+using Space_Impact.Core.Game.Character;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -40,13 +41,19 @@ var bounds = Window.Current.Bounds
 TimeSpan.FromMilliseconds
 */
 
-namespace Space_Impact.src
+namespace Space_Impact.Screen
 {
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
 	public sealed partial class GameRound : Page, IField
 	{
+		//The game should be running only after the map is loaded with all characters and no null problems can happen
+		bool GameRunning
+		{
+			get; set;
+		} = false;
+
 		//Accessor point of the Field Canvas Animated Control
 		public CanvasAnimatedControl FieldControl
 		{
@@ -86,7 +93,7 @@ namespace Space_Impact.src
 
 		//Screen debug logging
 		int LastLogCounter { get; set; } = 0;
-		int LastLogCountTime { get; set; } = 20;
+		int LastLogCountTime { get; set; } = 0;
 		int LastLogCountLimit { get; set; } = 20;
 
 		//Message for user
@@ -113,6 +120,8 @@ namespace Space_Impact.src
 
 		//List of all actors that will receive Draw and Act callbacks
 		LinkedList<IActor> ActorList;
+		//Lock for concurrent operations on the same ActorList
+		private object ActorListLock = new object();
 
 		//Actions that happen after the end of an animated Draw cycle
 		void AfterDraw()
@@ -168,7 +177,7 @@ namespace Space_Impact.src
 		}
 
 		//Reinitialization of all basic user-controlled logic after losing track of inputs
-		void resetUserInput()
+		void ResetUserInput()
 		{
 			//Window.Current events can happen during game initialization
 			if (Player != null)
@@ -181,17 +190,22 @@ namespace Space_Impact.src
 		void Current_Activated(object sender, WindowActivatedEventArgs e)
 		{
 			Log.i(this, "Event Window.Current.Activated, resetting user-controlled (input) logic");
-			resetUserInput();
+			ResetUserInput();
 		}
 
 		void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
 		{
 			Log.i(this, "Event Window.Current.SizeChanged, resetting user-controlled (input) logic");
-			resetUserInput();
+			ResetUserInput();
 		}
 
 		async void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
 		{
+			if (!GameRunning)
+			{
+				return;
+			}
+
 			args.Handled = true;
 			//await was not used in documentation
 
@@ -201,11 +215,16 @@ namespace Space_Impact.src
 
 		async void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
 		{
+			if (!GameRunning)
+			{
+				return;
+			}
+
 			args.Handled = true;
 			//await was not used in documentation
 
 			await KeyDown_GameLoopThread(args.VirtualKey);
-			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey));
+			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey)); //Problem s volanim ShowExitDialog() z herneho vlakne
 		}
 
 		async Task KeyDown_GameLoopThread(VirtualKey virtualKey)
@@ -214,6 +233,11 @@ namespace Space_Impact.src
 			//const SpaceDirection.HorizontalDirection right = SpaceDirection.HorizontalDirection.RIGHT;
 			//const SpaceDirection.VerticalDirection up = SpaceDirection.VerticalDirection.UP;
 			//const SpaceDirection.VerticalDirection down = SpaceDirection.VerticalDirection.DOWN;
+
+			if (Player == null)
+			{
+				Log.e(this, "There is no Player and yet, KeyDown event was run");
+			}
 
 			//Movement keys
 			switch (virtualKey)
@@ -249,7 +273,7 @@ namespace Space_Impact.src
 				//Game lifecycle alteration
 				case VirtualKey.Escape:
 					Log.i(this, "Escape button pressed, opening dialog asynchronously");
-					await showExitDialog();
+					await ShowExitDialog();
 					break;
 
 				//Debug
@@ -277,6 +301,11 @@ namespace Space_Impact.src
 
 		async Task KeyUp_GameLoopThread(VirtualKey virtualKey)
 		{
+			if (Player == null)
+			{
+				Log.e(this, "There is no Player and yet, KeyUp event was run");
+			}
+
 			switch (virtualKey)
 			{
 				//Movement keys
@@ -331,11 +360,17 @@ namespace Space_Impact.src
 			Player.X = (float)Size.Width / 2 - (float)Player.Width / 2;
 			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
-			//Also objects adhoc;
-			IObject doomday = new Doomday(Player);
+			//Also objects adhoc
+			ICharacter doomday = new Doomday(Player);
 			doomday.X = 600;
 			doomday.Y = 400;
 			AddActor(doomday);
+
+			//The game starts running after the map is loaded with all characters
+			GameRunning = true;
+
+			//Resetting user input for avoiding possible start glitches that would require user to alt+tab for a hotfix instead
+			ResetUserInput();
 
 			//Position position = new Position();
 			//position.X = (int)Width / 2;
@@ -381,22 +416,21 @@ namespace Space_Impact.src
 				OnFirstDraw();
 			}
 
-			//Exception during Act is fatal. We encapsulate it as plain text and throw it.
+			//Exception during Act is fatal. We encapsulate it as a plain text and throw it.
 			try
 			{
-				//Iterate over list and act on all actors
-				LinkedListNode<IActor> actor = ActorList.First;
-				while (actor != null)
-				{
-					//We allow the actor to remove himself from the list by taking care of a possible concurrent list modification problem
-					IActor currentActor = actor.Value;
-					actor = actor.Next;
-					currentActor.Act();
-				}
+				ForEachActor
+				(
+					a =>
+					{
+						a.Act();
+						return false;
+					}
+				);
 			}
 			catch (Exception e)
 			{
-				throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString());
+				throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
 			}
 
 			//No problem should happen, but this makes debugging easier, plus any error during a single frame Draw is irrelevant anyway
@@ -421,10 +455,13 @@ namespace Space_Impact.src
 			if (MessageBroadcastCounter < MessageBroadcastTime)
 			{
 				var format = new Microsoft.Graphics.Canvas.Text.CanvasTextFormat();
-				format.FontSize = 150;
+				format.FontSize = 120;
 				format.FontStyle = Windows.UI.Text.FontStyle.Oblique;
 				format.FontFamily = "Comic Sans";
-				args.DrawingSession.DrawText(MessageBroadcastText, new Vector2(500, 200), Colors.Beige, format);
+
+				//If I ever implement multi-line messages, this calculation has to take the longest line instead of length
+				int moveToLeft = MessageBroadcastText.Length * 5;
+				args.DrawingSession.DrawText(MessageBroadcastText, new Vector2(500 - moveToLeft, 200), Colors.Aquamarine, format);
 				MessageBroadcastCounter++;
 			}
 
@@ -463,6 +500,7 @@ namespace Space_Impact.src
 				}
 			}
 
+			//Samotny vypis hlasky na obrazovku, cim dlhsi text, tym viac dolava sa musi posunut jeho zaciatok
 			drawingSession.DrawText
 				(
 				LastLog,
@@ -494,18 +532,30 @@ namespace Space_Impact.src
 			ActorList.Remove(actor);
 		}
 
+		//Performs an operation on each actor on the Field.
+		//If the operation returns true, iteration will stop.
 		public void ForEachActor(ActorAction action)
 		{
-			foreach (IActor actor in ActorList)
+			//This operation is synchronized
+			lock (ActorListLock)
 			{
-				action(actor);
+				//Iterate over the list and Act on all actors
+				LinkedListNode<IActor> actor = ActorList.First;
+				while (actor != null)
+				{
+					//We allow the actor to remove himself from the list by taking care of a possible concurrent list modification problem
+					IActor currentActor = actor.Value;
+					actor = actor.Next;
+					//Action returns true if it intends to modify the list, but we don't use that value
+					action(currentActor);
+				}
 			}
 		}
 
 		//Button for opening left menu
 		void MenuButton_Click(object sender, RoutedEventArgs e)
 		{
-			Log.i(this, "User clicked on Hamburger");
+			Log.i(this, "User clicked on the Hamburger");
 			SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
 
 			//SplitView.Focus(FocusState.Unfocused);
@@ -521,10 +571,10 @@ namespace Space_Impact.src
 		async void ExitGameButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Exit Game Button");
-			await showExitDialog();
+			await ShowExitDialog();
 		}
 
-		async Task showExitDialog()
+		async Task ShowExitDialog()
 		{
 			var dialog = new Windows.UI.Popups.MessageDialog("Are you sure you don't want to keep playing?");
 
@@ -545,8 +595,7 @@ namespace Space_Impact.src
 				case 0:
 					//User decided to exit the game
 					Log.i(this, "User has confirmed his choice to end the game via Exit Button");
-					//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
-					Application.Current.Exit();
+					ExitScreen();
 					break;
 				case 1:
 				default:
@@ -556,52 +605,72 @@ namespace Space_Impact.src
 			}
 		}
 
+		//Converts the position representing a point on a Window to a point on the Field
+		Point WindowToFieldPosition(Point WindowPosition)
+		{
+			Point FieldPosition = new Point();
+			var WindowBounds = Window.Current.CoreWindow.Bounds;
+			FieldPosition.X = WindowPosition.X / WindowBounds.Width * Size.Width;
+			FieldPosition.Y = WindowPosition.Y / WindowBounds.Height * Size.Height;
+			return FieldPosition;
+		}
+
 		/// <summary>
 		/// Pointer position capture event.
 		/// </summary>
 		/// <param name="sender"></param>
-		/// <param name="e">Position is located in e.GetCurrentPoint(this).Position</param>
+		/// <param name="e">Position is located in e.GetCurrentPoint(this).Position in Window format, conversion via WindowToFieldPosition() is advised</param>
 		void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
 		{
-			Vector2 vector = e.GetCurrentPoint(this).Position.ToVector2();
+			Point point = WindowToFieldPosition(e.GetCurrentPoint(this).Position);
 
 			//Clicks on all clickable actors
-			ForEachActor(a =>
-			{
-				IClickable actor = a as IClickable;
-				if (actor != null)
+			ForEachActor
+			(
+				a =>
 				{
-					actor.Click(vector.X, vector.Y);
+					IClickable actor = a as IClickable;
+					if (actor != null)
+					{
+						actor.Click(point.ToVector2().X, point.ToVector2().Y);
+					}
+					return false;
 				}
-			}
 			);
 		}
 		void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
 		{
-			Vector2 vector = e.GetCurrentPoint(this).Position.ToVector2();
+			Point point = WindowToFieldPosition(e.GetCurrentPoint(this).Position);
 
 			//Event on all clickable actors
-			ForEachActor(a =>
-			{
-				IClickable actor = a as IClickable;
-				if (actor != null)
+			ForEachActor
+			(
+				a =>
 				{
-					actor.ClickMove(vector.X, vector.Y);
+					IClickable actor = a as IClickable;
+					if (actor != null)
+					{
+						//Log.d(this, "Trying to ClickMove on IClickable actor " + actor.ToString() + "."); todo delete, just testing for a certain type of crash
+						actor.ClickMove(point.ToVector2().X, point.ToVector2().Y);
+					}
+					return false;
 				}
-			}
 			);
 		}
 		void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
 		{
 			//Event on all clickable actors
-			ForEachActor(a =>
-			{
-				IClickable actor = a as IClickable;
-				if (actor != null)
+			ForEachActor
+			(
+				a =>
 				{
-					actor.ClickRelease();
+					IClickable actor = a as IClickable;
+					if (actor != null)
+					{
+						actor.ClickRelease();
+					}
+					return false;
 				}
-			}
 			);
 		}
 
@@ -611,6 +680,22 @@ namespace Space_Impact.src
 
 			//Takes focus away from the Panel
 			this.Focus(FocusState.Keyboard);
+		}
+
+		public void GameOver()
+		{
+			//Display a message and stop the gameflow
+			MessageBroadcastText = "Game Over,\nYou've lost!";
+			GameRunning = false;
+			ResetUserInput();
+
+			//todo pause and then get back to previous screen, TODO HOW TO PREVIOUS SCREEN (will use ExitScreen method)
+		}
+
+		void ExitScreen()
+		{
+			//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
+			Application.Current.Exit();
 		}
 	}
 }

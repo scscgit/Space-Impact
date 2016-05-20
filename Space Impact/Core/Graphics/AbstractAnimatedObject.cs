@@ -13,9 +13,9 @@ using Windows.Foundation;
 
 namespace Space_Impact.Graphics
 {
-	public class AnimatedObject : IAnimatedObject
+	public abstract class AbstractAnimatedObject : IAnimatedObject
 	{
-		public AnimatedObject()
+		protected AbstractAnimatedObject()
 		{
 			AnimationSpeed = 1;
 		}
@@ -82,11 +82,21 @@ namespace Space_Impact.Graphics
 
 				this.bitmaps = TextureSetLoader.Instance[value];
 				Frame = 0;
+
+				//Lets subclasses hook some event after a new animation is set
+				OnAnimationSet();
 			}
 			protected get
 			{
 				return textures;
 			}
+		}
+
+		/// <summary>
+		/// Lets subclasses hook some event after a new animation is set
+		/// </summary>
+		protected virtual void OnAnimationSet()
+		{
 		}
 
 		/// <summary>
@@ -111,8 +121,13 @@ namespace Space_Impact.Graphics
 			//Prepares the bitmap to be drawn
 			ICanvasImage bitmap = this.bitmaps[Frame];
 
+			//Lets abstract clases hook the bitmap modification for general purposes
+			DrawAbstractModification(ref bitmap, draw);
+
 			//Lets subclasses hook the bitmap modification
 			DrawModification(ref bitmap, draw);
+
+
 			if (bitmap == null)
 			{
 				return;
@@ -135,6 +150,16 @@ namespace Space_Impact.Graphics
 		/// </summary>
 		/// <param name="draw">Session for drawing on the current frame</param>
 		protected virtual void DrawHook(CanvasDrawingSession draw)
+		{
+		}
+
+		/// <summary>
+		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas
+		/// Used by abstract classes
+		/// </summary>
+		/// <param name="bitmap">Canvas Bitmap supposed to be drawn on the Canvas</param>
+		/// <returns>Canvas Bitmap actually drawn on the Canvas</returns>
+		protected virtual void DrawAbstractModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
 		}
 

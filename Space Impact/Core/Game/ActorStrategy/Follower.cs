@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Space_Impact.Core.Game.ActorStrategy
 {
 	/// <summary>
-	/// Strategy of following the target
+	/// Strategy of following the target.
 	/// </summary>
 	public class Follower : IActStrategy
 	{

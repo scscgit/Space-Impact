@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Space_Impact.Core.Game;
 using Space_Impact.Support;
 using Space_Impact.Core.Game.Player;
+using Windows.UI.Xaml.Shapes;
 
 namespace Space_Impact.Core
 {
-	public abstract class AbstractActor : AnimatedObject, IActor
+	public abstract class AbstractActor : AbstractAnimatedObject, IActor
 	{
 		public const int DEFAULT_SPEED = 1;
 
@@ -67,21 +68,43 @@ namespace Space_Impact.Core
 		//Checks whether the X/Y movement is legal
 		protected virtual bool CanMoveX(float x)
 		{
-			return x > 0 && x < Field.Size.Width - Width;
+			//return x > 0 && x < Field.Size.Width - Width;
+			//If moving left
+			if (x < X)
+			{
+				return x > 0;
+			}
+			//If moving right
+			else if(x > X)
+			{
+				return x < Field.Size.Width - Width;
+			}
+			return false;
 		}
 		protected virtual bool CanMoveY(float y)
 		{
-			return y > 0 && y < Field.Size.Height - Height;
+			//return y > 0 && y < Field.Size.Height - Height;
+			//If moving up
+			if (y < Y)
+			{
+				return y > 0;
+			}
+			//If moving down
+			else if (y > Y)
+			{
+				return y < Field.Size.Height - Height;
+			}
+			return false;
 		}
 
 		//Current speed in a chosen direction based on angular calculations
 		float HorizontalSpeed(float Angle)
 		{
-			return Speed * (float)Math.Sin((Angle / Math.PI) * 180);
+			return Speed * (float)Math.Sin((Angle / 180) * Math.PI);
 		}
 		float VerticalSpeed(float Angle)
 		{
-			return Speed * (float)Math.Sin((Angle / Math.PI) * 180);
+			return Speed * (float)Math.Cos((Angle / 180) * Math.PI);
 		}
 
 		void MoveHorizontalAndVertical()
@@ -92,9 +115,9 @@ namespace Space_Impact.Core
 				if (this is IAngle)
 				{
 					float angle = ((IAngle)this).Angle;
-					if (CanMoveX(X - HorizontalSpeed(angle)))
+					if (CanMoveX(X + HorizontalSpeed(angle)))
 					{
-						X = X - HorizontalSpeed(angle);
+						X = X + HorizontalSpeed(angle);
 					}
 				}
 				else
@@ -209,9 +232,18 @@ namespace Space_Impact.Core
 		/// <param name="x">X coordinate</param>
 		/// <param name="y">Y coordinate</param>
 		/// <returns>true if the actor can collide on x, y coordinates</returns>
-		public virtual bool CollidesOn(float x, float y)
+		public virtual bool IntersectsOn(float x, float y)
 		{
-			if (x > X && x < X + Width && y > Y && y < Y + Width)
+			if (x >= X && x <= X + Width && y >= Y && y <= Y + Width)
+			{
+				return true;
+			}
+			return false;
+		}
+		public virtual bool IntersectsWithin(float x, float width, float y, float height)
+		{
+			if (x + width >= this.X && x <= this.X + this.Width &&
+				y + height >= this.Y && y <= this.Y + this.Height)
 			{
 				return true;
 			}
@@ -220,7 +252,7 @@ namespace Space_Impact.Core
 
 		public bool IntersectsActor(IActor actor)
 		{
-			return actor.CollidesOn(X, Y);
+			return actor.IntersectsWithin(X, (float)Width, Y, (float)Height);
 		}
 
 		/// <summary>

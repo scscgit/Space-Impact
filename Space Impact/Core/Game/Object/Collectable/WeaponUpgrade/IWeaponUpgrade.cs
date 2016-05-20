@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core.Game.Player.Bullet
+namespace Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade
 {
-	public interface IBullet
+	public interface IWeaponUpgrade
 	{
 	}
 }

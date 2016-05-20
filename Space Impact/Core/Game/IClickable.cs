@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace Space_Impact.Core.Game
 {
 	/// <summary>
-	/// Adds ability to be clicked on.
+	/// Adds an ability to be clicked on.
 	/// </summary>
 	interface IClickable
 	{
+		bool Clicked { get; }
+
 		void Click(float x, float y);
 		void ClickMove(float x, float y);
 		void ClickRelease();

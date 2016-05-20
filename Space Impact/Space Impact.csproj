@@ -92,6 +92,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -103,29 +104,41 @@
     <Compile Include="Core\Game\ActorStrategy\IActStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\IDrawModificationStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\IStrategy.cs" />
+    <Compile Include="Core\Game\ActorStrategy\NullActStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\Rotation.cs" />
+    <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
+    <Compile Include="Core\Game\Character\ICharacter.cs" />
     <Compile Include="Core\Game\ClickableImpl.cs" />
-    <Compile Include="Core\Game\Enemy\AbstractEnemy.cs" />
-    <Compile Include="Core\Game\Enemy\IEnemy.cs" />
+    <Compile Include="Core\Game\Character\Enemy\AbstractEnemy.cs" />
+    <Compile Include="Core\Game\Character\Enemy\IEnemy.cs" />
     <Compile Include="Core\Game\IActorCompositePart.cs" />
     <Compile Include="Core\Game\IAngle.cs" />
     <Compile Include="Core\Game\IClickable.cs" />
     <Compile Include="Core\Game\Object\AbstractObject.cs" />
-    <Compile Include="Core\Game\Object\Doomday.cs" />
+    <Compile Include="Core\Game\Object\Collectable\AbstractCollectable.cs" />
+    <Compile Include="Core\Game\Object\Collectable\WeaponUpgrade\AbstractWeaponUpgrade.cs" />
+    <Compile Include="Core\Game\Object\Collectable\ICollectable.cs" />
+    <Compile Include="Core\Game\Object\Collectable\WeaponUpgrade\IWeaponUpgrade.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Bomb\AbstractBomb.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Bomb\IBomb.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Bomb\Doomday.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Bomb\IAffectedByBombExplosion.cs" />
     <Compile Include="Core\Game\Object\IObject.cs" />
     <Compile Include="Core\Game\AbstractPartActor.cs" />
-    <Compile Include="Core\Game\Player\Bullet\HeroBullet.cs" />
-    <Compile Include="Core\Game\Player\Bullet\AbstractBullet.cs" />
-    <Compile Include="Core\Game\Player\Bullet\IBullet.cs" />
+    <Compile Include="Core\Game\Object\Projectile\Bullet\HeroBullet.cs" />
+    <Compile Include="Core\Game\Object\Projectile\Bullet\AbstractBullet.cs" />
+    <Compile Include="Core\Game\Object\Projectile\Bullet\IBullet.cs" />
+    <Compile Include="Core\Game\Object\Projectile\AbstractProjectile.cs" />
+    <Compile Include="Core\Game\Object\Projectile\IProjectile.cs" />
     <Compile Include="Core\Game\SpaceDirection.cs" />
     <Compile Include="Core\Game\IActor.cs" />
     <Compile Include="Core\Game\IField.cs" />
-    <Compile Include="Core\Game\Player\IPlayer.cs" />
+    <Compile Include="Core\Game\Character\Player\IPlayer.cs" />
     <Compile Include="Core\Graphics\Position.cs" />
     <Compile Include="Core\Graphics\IPlacedOnField.cs" />
-    <Compile Include="Core\Game\AbstractPlayer.cs" />
-    <Compile Include="Core\Game\Player\Hero.cs" />
-    <Compile Include="Core\Graphics\AnimatedObject.cs" />
+    <Compile Include="Core\Game\Character\Player\AbstractPlayer.cs" />
+    <Compile Include="Core\Game\Character\Player\Hero.cs" />
+    <Compile Include="Core\Graphics\AbstractAnimatedObject.cs" />
     <Compile Include="Core\Graphics\IAnimatedObject.cs" />
     <Compile Include="Core\Graphics\TextureSetLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,8 +18,8 @@ namespace Space_Impact.Core.Game.ActorStrategy
 		{
 			get
 			{
-				//Return only half (*45) because we only hold half the value in the CurrentAngle
-				return CurrentAngle * ((AngleDeltaCount / DeltaAngle) / MaxAngleDegrees) * 45;
+				//Return only half within the conversion (*45) because we only hold half the value in the CurrentAngle
+				return CurrentHalfAngle * ((AngleDeltaCount / DeltaAngle) / MaxAngleDegrees) * 45;
 			}
 		}
 
@@ -27,7 +27,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 		IActor Owner;
 
 		//Angle at which the hero is rotated
-		float CurrentAngle = 0;
+		float CurrentHalfAngle = 0;
 		//Difference between each angle update
 		float DeltaAngle;
 		//Maximum rotation angle in absolute value
@@ -67,28 +67,28 @@ namespace Space_Impact.Core.Game.ActorStrategy
 
 		void ChangeAngleTowards(float angle)
 		{
-			if (CurrentAngle < angle)
+			if (CurrentHalfAngle < angle)
 			{
 				//Increase value up to the needed value, but not after that
-				if (CurrentAngle + DeltaAngle > angle)
+				if (CurrentHalfAngle + DeltaAngle > angle)
 				{
-					CurrentAngle = angle;
+					CurrentHalfAngle = angle;
 				}
 				else
 				{
-					CurrentAngle += DeltaAngle;
+					CurrentHalfAngle += DeltaAngle;
 				}
 			}
-			else if(CurrentAngle> angle)
+			else if(CurrentHalfAngle> angle)
 			{
 				//Decrease value down to the needed value, but not after that
-				if (CurrentAngle - DeltaAngle < angle)
+				if (CurrentHalfAngle - DeltaAngle < angle)
 				{
-					CurrentAngle = angle;
+					CurrentHalfAngle = angle;
 				}
 				else
 				{
-					CurrentAngle -= DeltaAngle;
+					CurrentHalfAngle -= DeltaAngle;
 				}
 			}
 		}
@@ -133,16 +133,27 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			}
 		}
 
-		public void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
+		//Caution, before using this function, verify whether you also need to multiply or divide by two
+		public static float DegreeToRadians(float degree)
+		{
+			return ((float)Math.PI / 4) / ((float)90 / degree);
+		}
+
+		public static void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw, float halfAngleRadians)
 		{
 			//Uses effect twice to allow for up to 90 degree rotation
 			StraightenEffect firstEffect = new StraightenEffect();
 			firstEffect.Source = bitmap;
-			firstEffect.Angle = CurrentAngle;
+			firstEffect.Angle = halfAngleRadians;
 			StraightenEffect secondEffect = new StraightenEffect();
 			secondEffect.Source = firstEffect;
-			secondEffect.Angle = CurrentAngle;
+			secondEffect.Angle = halfAngleRadians;
 			bitmap = secondEffect;
+		}
+
+		public void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
+		{
+			DrawModification(ref bitmap, draw, CurrentHalfAngle);
 		}
 	}
 }

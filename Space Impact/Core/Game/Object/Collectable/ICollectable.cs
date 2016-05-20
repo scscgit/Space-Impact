@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core.Game.Enemy
+namespace Space_Impact.Core.Game.Object.Collectable
 {
-	public interface IEnemy: IActor
+	public interface ICollectable
 	{
 	}
 }

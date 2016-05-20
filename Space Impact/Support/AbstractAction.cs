@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Support
 {
-	/**
-	 * Ready, set, action!
-	 * Chain of responsibility superclass.
-	 * Supports input type (that each action receives) and output type (that only gets returned once after chain
-	 * execution).
-	 * <p/>
-	 * Created by Steve on 23.11.2015.
-	 */
+	/// <summary>
+	/// Ready, set, action!
+	/// Chain of responsibility superclass.
+	/// Supports input type (that each action receives) and output type
+	/// (that only gets returned once after chain execution).
+	/// 
+	/// Created by Steve on 23.11.2015.
+	/// </summary>
+	/// <typeparam name="Input"></typeparam>
+	/// <typeparam name="Output"></typeparam>
 	public abstract class AbstractAction<Input, Output>
 	{
 		/*protected*/
