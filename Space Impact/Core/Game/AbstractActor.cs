@@ -22,12 +22,19 @@ namespace Space_Impact.Core
 			}
 		}
 
-		protected AbstractActor()
+		public string Name
 		{
-
+			get; set;
 		}
 
+		protected AbstractActor(string name)
+		{
+			Name = name;
+		}
 		
+		/// <summary>
+		/// Update operation called before each Draw
+		/// </summary>
 		public virtual void Act()
 		{
 
@@ -43,6 +50,9 @@ namespace Space_Impact.Core
 			Field = field;
 		}
 
+		/// <summary>
+		/// Hook callback for initialization operations after being connected to a Field
+		/// </summary>
 		public virtual void AddedToFieldHook()
 		{
 

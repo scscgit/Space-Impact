@@ -27,6 +27,7 @@ using Space_Impact.Core.Game.Player;
 using Space_Impact.Core;
 using Space_Impact.Graphics;
 using Space_Impact.Support;
+using Windows.System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,9 +38,19 @@ namespace Space_Impact.src
 	/// </summary>
 	public sealed partial class GameRound : Page, IField
 	{
+		//Accessor point of the Field Canvas Animated Control
+		public CanvasAnimatedControl FieldControl
+		{
+			get
+			{
+				return this.canvas;
+			}
+		}
+
 		//List of all actors that will receive Draw and Act callbacks
 		LinkedList<IActor> ActorList;
 
+		//Initialization
 		public GameRound()
 		{
 			this.InitializeComponent();
@@ -47,28 +58,35 @@ namespace Space_Impact.src
 
 			Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
+			//AddActor(new MovementThrust());
 			//AddActor(new Hero());
 		}
 
-		private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
+		private async void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
 		{
-			
-			switch (args.VirtualKey)
+			args.Handled = true;
+			//await was not used in documentation
+			await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey));
+		}
+
+		private void KeyDown_GameLoopThread(VirtualKey virtualKey)
+		{
+			switch (virtualKey)
 			{
-				case Windows.System.VirtualKey.A:
-				case Windows.System.VirtualKey.Left:
+				case VirtualKey.A:
+				case VirtualKey.Left:
 					AddActor(new Hero());
 					break;
-				case Windows.System.VirtualKey.D:
-				case Windows.System.VirtualKey.Right:
+				case VirtualKey.D:
+				case VirtualKey.Right:
 					Log.i("R");
 					break;
-				case Windows.System.VirtualKey.W:
-				case Windows.System.VirtualKey.Up:
+				case VirtualKey.W:
+				case VirtualKey.Up:
 
 					break;
-				case Windows.System.VirtualKey.S:
-				case Windows.System.VirtualKey.Down:
+				case VirtualKey.S:
+				case VirtualKey.Down:
 
 					break;
 			}
@@ -82,21 +100,17 @@ namespace Space_Impact.src
 
 		private void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
 		{
-			//Asynchronne vytvarame resources
+			//We create resources asynchronously
 			args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
 		}
 
 		//Loads all resources asynchronously
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
-			foreach (IActor actor in ActorList)
-			{
-				await actor.CreateResourcesAsync();
-			}
-
-			//this.playerImage = await CanvasBitmap.LoadAsync(sender, "Assets/Player.png");
+			await TextureSetLoader.Instance.CreateResourcesAsync(sender);
 		}
 
+		//Main game loop, should be fired 60 times per second
 		private void canvas_DrawAnimated(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
 			{
@@ -113,12 +127,10 @@ namespace Space_Impact.src
 				//Draw all actors
 				foreach (IActor actor in ActorList)
 				{
-					actor.CanvasControlSender = sender;
-					actor.DrawingSession = args.DrawingSession;
-					actor.Draw();
+					actor.Draw(args.DrawingSession);
 				}
 			}
-			
+
 			// args.DrawingSession.DrawText("hello", new System.Numerics.Vector2(100, 50), Windows.UI.Colors.Aqua);
 			//args.DrawingSession.DrawImage(this.playerImage, new Vector2(a, 5));
 		}
@@ -144,6 +156,7 @@ namespace Space_Impact.src
 		//	}
 		//}
 
+		//Manipulation with available actors that are currently registered using Observer pattern for receiving events
 		public void AddActor(IActor actor)
 		{
 			if (actor != null)

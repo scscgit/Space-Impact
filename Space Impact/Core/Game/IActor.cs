@@ -14,6 +14,11 @@ namespace Space_Impact.Core
 			get;
 		}
 
+		string Name
+		{
+			set; get;
+		}
+
 		void Act();
 		void AddedToField(IField field);
 		void AddedToFieldHook();

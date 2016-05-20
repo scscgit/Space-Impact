@@ -6,17 +6,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public class MovementFlame: AbstractActor
+	public interface IPlayer: IActor
 	{
-		public MovementFlame()
-		{
-			setAnimation
-				(
-				new string[]
-				{
-					"ship1_fire"
-				}
-				);
-		}
 	}
 }

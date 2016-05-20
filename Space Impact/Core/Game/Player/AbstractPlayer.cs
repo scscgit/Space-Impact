@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Player
 {
-	public abstract class AbstractPlayer : AbstractActor
+	public abstract class AbstractPlayer : AbstractActor, IPlayer
 	{
-		public AbstractPlayer()
+		public AbstractPlayer(string name) : base(name)
 		{
-
 		}
 
 		public override void Act()

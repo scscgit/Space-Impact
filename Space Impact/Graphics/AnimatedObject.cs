@@ -60,44 +60,36 @@ namespace Space_Impact.Graphics
 			}
 		}
 
-		//Current drawing Canvas Session, args.DrawingSession of XAML canvas
-		public CanvasDrawingSession DrawingSession
-		{
-			protected get; set;
-		}
-
-		//Current Canvas Control, sender of XAML canvas
-		public ICanvasAnimatedControl CanvasControlSender
-		{
-			protected get; set;
-		}
-
 		private string[] textures = null;
 		private CanvasBitmap[] bitmaps = null;
-
-		//public AnimatedObject(string[] textures)
-		//{
-		//	setAnimation(textures);
-		//}
 
 		/// <summary>
 		/// Prepares a texture set to be loaded as bitmaps for representing an animated object.
 		/// Only relative path from Assets folder is required, .png is automatically added.
 		/// </summary>
-		/// <param name="textures">Texture set containing names (paths) of .png files inside Assets directory without .png</param>
-		public void setAnimation(string[] textures)
+		/// <param name="textureSet">Texture set containing names (paths) of .png files inside Assets directory without .png.
+		/// Supported null for no animation.</param>
+		public void setAnimation(string[] textureSet)
 		{
-			this.textures = textures;
-			this.bitmaps = new CanvasBitmap[textures.GetLength(0)];
+			this.textures = textureSet;
+
+			//Null parameter disables animation
+			if(textureSet == null)
+			{
+				this.bitmaps = null;
+				return;
+			}
+
+			this.bitmaps = TextureSetLoader.Instance[textureSet];
 			Frame = 0;
 		}
 
 		/// <summary>
 		/// Draws a texture on the screen using the current X and Y coordinates.
 		/// Increments Frame counters.
-		/// Supports lazy initialization of textures: if they werent loaded before, they will get loaded now.
 		/// </summary>
-		public void Draw()
+		/// <param name="draw">Session for drawing on the current frame</param>
+		public void Draw(CanvasDrawingSession draw)
 		{
 			//Increments Frame counter
 			FrameIndex++;
@@ -111,80 +103,41 @@ namespace Space_Impact.Graphics
 				}
 			}
 
-			//Lazy initialization
-			if (this.bitmaps == null || this.bitmaps[Frame] == null)
+			//Lets subclasses hook the bitmap modification
+			CanvasBitmap bitmap = DrawModification(this.bitmaps[Frame]);
+			if(bitmap== null)
 			{
-				Log.i("Texture " + TextureToString(this.textures[Frame]) + " was not pre-loaded.");
-
-				CreateResourcesAsync().GetAwaiter().GetResult();
-
-				//var task = Task.Run(async () => { await CreateResourcesAsync() } ).Wait();
+				return;
 			}
 
-			//Draw operation delegation to the Canvas Event Args
-			DrawingSession.DrawImage(this.bitmaps[Frame], new Vector2(this.X, this.Y));
+			//Draw operation delegation to the Canvas Session on the current coordinates
+			draw.DrawImage(bitmap, new Vector2(this.X, this.Y));
 
-			//Updates current variables
+			//Updates current description variables
 			var size = this.bitmaps[Frame].Size;
 			Width = size.Width;
 			Height = size.Height;
 
-			DrawHook();
+			DrawHook(draw);
 		}
 
-		//Post-Draw hook
-		public virtual void DrawHook()
+		/// <summary>
+		/// Optional draw operations at the end of Draw().
+		/// Can be used to call Draw() over a composition of objects.
+		/// </summary>
+		/// <param name="draw">Session for drawing on the current frame</param>
+		protected virtual void DrawHook(CanvasDrawingSession draw)
 		{
-
 		}
 
-		//public void DrawOnCanvasAnimated(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
-		//{
-		//	this.DrawingSession = args.DrawingSession;
-		//	this.CanvasControlSender = sender;
-		//	Draw();
-		//}
-
-		private string TextureToString(string texture)
+		/// <summary>
+		/// Hook for changing bitmap by returning changed version to the Draw operation on Canvas
+		/// </summary>
+		/// <param name="bitmap">Canvas Bitmap supposed to be drawn on the Canvas</param>
+		/// <returns>Canvas Bitmap actually drawn on the Canvas</returns>
+		protected virtual CanvasBitmap DrawModification(CanvasBitmap bitmap)
 		{
-			Log.i("converting texture name " + texture);
-			return "Assets/" + texture + ".png";
+			return bitmap;
 		}
-
-		//Loads all bitmap resources (frames) asynchronously
-		public async Task CreateResourcesAsync()
-		{
-			LinkedList<IAsyncOperation<CanvasBitmap>> loadTasks = new LinkedList<IAsyncOperation<CanvasBitmap>>();
-			LinkedList<int> loadTaskNumbers = new LinkedList<int>();
-
-			for (int frame = 0; frame < this.textures.GetLength(0); frame++)
-			{
-				Log.i("Preparing frame " + frame.ToString());
-				if (this.bitmaps[frame] == null)
-				{
-					loadTasks.AddLast(CanvasBitmap.LoadAsync(CanvasControlSender, TextureToString(this.textures[frame])));
-					loadTaskNumbers.AddLast(frame);
-				}
-				Log.i("Prepared frame " + frame.ToString());
-			}
-
-			//Iterate over both lists and await all tasks
-			LinkedListNode<IAsyncOperation<CanvasBitmap>> loadTask = loadTasks.First;
-			LinkedListNode<int> loadTaskNumber = loadTaskNumbers.First;
-			while (loadTask != null && loadTaskNumber != null)
-			{
-				this.bitmaps[loadTaskNumber.Value] = await (loadTask.Value);
-				Log.i("Awaiting frame");
-
-				loadTask = loadTask.Next;
-				loadTaskNumber = loadTaskNumber.Next;
-			}
-		}
-
-		//public async Task CreateResourcesAsync(ICanvasAnimatedControl sender)
-		//{
-		//	this.CanvasControlSender = sender;
-		//	await CreateResourcesAsync();
-		//}
 	}
 }

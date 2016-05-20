@@ -101,12 +101,13 @@
     <Compile Include="Core\Game\AbstractActor.cs" />
     <Compile Include="Core\Game\IActor.cs" />
     <Compile Include="Core\Game\IField.cs" />
-    <Compile Include="Core\Game\IPlacedOnField.cs" />
+    <Compile Include="Core\Game\Player\IPlayer.cs" />
+    <Compile Include="Graphics\IPlacedOnField.cs" />
     <Compile Include="Core\Game\Player\AbstractPlayer.cs" />
     <Compile Include="Core\Game\Player\Hero.cs" />
-    <Compile Include="Core\Game\Player\MovementFlame.cs" />
     <Compile Include="Graphics\AnimatedObject.cs" />
-    <Compile Include="Core\IAnimatedObject.cs" />
+    <Compile Include="Graphics\IAnimatedObject.cs" />
+    <Compile Include="Graphics\TextureSetLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen\GameRound.xaml.cs">
       <DependentUpon>GameRound.xaml</DependentUpon>
@@ -124,13 +125,12 @@
   <ItemGroup>
     <Content Include="Assets\Player.png" />
     <Content Include="Assets\ship1_base.png" />
-    <Content Include="Assets\ship1_fire.png" />
+    <Content Include="Assets\ship1_thrust.png" />
     <Content Include="Assets\ship2_base.png" />
-    <Content Include="Assets\ship2_flame.png" />
+    <Content Include="Assets\ship2_thrust.png" />
     <Content Include="Assets\ship3_base.png" />
-    <Content Include="Assets\ship3_fire.png" />
+    <Content Include="Assets\ship3_thrust.png" />
     <Content Include="Assets\ship4_base.png" />
-    <Content Include="Assets\ship4_fire.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

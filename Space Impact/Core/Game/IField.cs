@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Graphics.Canvas.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace Space_Impact.Core
 {
 	public interface IField
 	{
+		CanvasAnimatedControl FieldControl { get; }
+
 		void AddActor(IActor actor);
 		void RemoveActor(IActor actor);
 	}
