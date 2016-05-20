@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Graphics.Canvas;
+using Space_Impact.Core.Game.ActorStrategy;
 
-namespace Space_Impact.Core.Game.Player
+namespace Space_Impact.Core.Game.PartActor
 {
 	/// <summary>
 	/// A.K.A "Part" Impl.
 	/// </summary>
 	public abstract class AbstractPartActor : AbstractActor, IActorCompositePart
 	{
+		//Ower of the part
+		protected IActor Owner;
+
 		//Lists that the Part is contained in
 		LinkedList<LinkedList<IActorCompositePart>> containedInLists = new LinkedList<LinkedList<IActorCompositePart>>();
 
@@ -18,16 +23,24 @@ namespace Space_Impact.Core.Game.Player
 		/// Standard constructor.
 		/// </summary>
 		/// <param name="name">Name of the (Part) Actor</param>
-		protected AbstractPartActor(string name) : base(name)
+		protected AbstractPartActor(IActor owner, string name) : base(owner.Name + "'s " + name)
 		{
+			Owner = owner;
+			RegisterPartIn(owner);
 		}
 
 		//Registers the Part as an Actor in any list of Parts
-		public void RegisterPartIn(IActor containedInActor)
+		protected void RegisterPartIn(IActor containedInActor)
 		{
 			LinkedList<IActorCompositePart> containedInList = containedInActor.ActorComposition;
 			containedInList.AddLast(this);
 			this.containedInLists.AddLast(containedInList);
+
+			//If the part is added to an Actor contained in Field, the part will be expected to be in the same Field too
+			if(containedInActor.Field != null)
+			{
+				containedInActor.Field.AddActor(this);
+			}
 		}
 
 		//Unregisters Part from all currently registered lists of Parts

@@ -35,7 +35,8 @@ namespace Space_Impact.Core.Game.Object.Weapon
 			}
 		}
 		
-		//Projectile reimplements functionality of the Direction field, it would be maybe useful to hide the Direction field for changes?
+		//Projectile reimplements functionality of the Direction field, it would be maybe useful to hide the Direction field for changes.
+		//Angle is in degrees.
 		private float angle;
 		public float Angle
 		{
@@ -49,24 +50,23 @@ namespace Space_Impact.Core.Game.Object.Weapon
 				Direction = SpaceDirection.getFromAngle(angle);
 			}
 		}
-		
+
 		/// <summary>
 		/// Projectile that moves in a certain direction at a certain angle.
 		/// </summary>
 		/// <param name="name">name of the projectile object</param>
-		/// <param name="direction">direction to which the projectile can move</param>
-		/// <param name="angle">angle in degrees of the movement</param>
+		/// <param name="direction">direction in which the projectile can move</param>
+		/// <param name="angle">angle of the movement in degrees</param>
 		protected AbstractProjectile(string name, float angle) : base(name)
 		{
 			Angle = angle;
-				
 		}
 
 		protected override void DrawAbstractModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
 			base.DrawAbstractModification(ref bitmap, draw);
 			
-			Rotation.DrawModification(ref bitmap, draw, Rotation.DegreeToRadians(Angle));
+			FlyingRotation.DrawModification(ref bitmap, draw, FlyingRotation.DegreeToRadians(Angle));
 		}
 	}
 }

@@ -52,9 +52,11 @@ namespace Space_Impact.Graphics
 		//Bullets
 		public static string[] FIRE = { "fire_1.png", "fire_2.png" };
 
-		//Loading all textures
 		public delegate void IncreaseLoadedPercentageDelegate(float percent);
-		public async Task CreateResourcesAsync(CanvasAnimatedControl sender, IncreaseLoadedPercentageDelegate increaseLoadedPercentage)
+		public delegate void OnCreateResourcesAsyncFinished();
+
+		//Loading (implicitly all) textures
+		public async Task CreateResourcesAsync(CanvasAnimatedControl sender, IncreaseLoadedPercentageDelegate increaseLoadedPercentage, OnCreateResourcesAsyncFinished onFinished)
 		{
 			//Set of all textureSets to be loaded
 			string[][] textureSets =
@@ -84,16 +86,26 @@ namespace Space_Impact.Graphics
 				FIRE
 			};
 
+			await CreateResourcesAsync(sender, increaseLoadedPercentage, onFinished, textureSets);
+		}
+		//Loading specific textures
+		public async Task CreateResourcesAsync(CanvasAnimatedControl sender, IncreaseLoadedPercentageDelegate increaseLoadedPercentage, OnCreateResourcesAsyncFinished onFinished, string[][] textureSets)
+		{
 			//Loads each textureSet
 			foreach (string[] textureSet in textureSets)
 			{
 				await load(sender, textureSet);
-				
+
 				//Increases progress where applicable
 				if (increaseLoadedPercentage != null)
 				{
 					increaseLoadedPercentage((float)100 / textureSets.Length);
 				}
+			}
+
+			if (onFinished != null)
+			{
+				onFinished();
 			}
 		}
 

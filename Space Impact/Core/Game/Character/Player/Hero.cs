@@ -11,6 +11,8 @@ using Microsoft.Graphics.Canvas.Effects;
 using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Core.Game.Object.Bomb;
 using Space_Impact.Core.Game.IntersectStrategy;
+using Space_Impact.Core.Game.PartActor;
+using Space_Impact.Core.Game.PartActor.Thrust;
 
 namespace Space_Impact.Core.Game.Player
 {
@@ -20,70 +22,22 @@ namespace Space_Impact.Core.Game.Player
 		public const int HERO_SPEED = 8;
 
 		//Hero's thrust, class definion
-		public class MovementThrust : AbstractPartActor
+		public class MovementThrust : AbstractMovementThrust
 		{
-			//State
-			//public bool State
-			//{
-			//	get; set;
-			//}
+			const int BLINK_PERIOD = 5;
 
-			//Ower of the Thrust
-			Hero Player;
-
-			//Variables
-			bool blinkState = false;
-			int blinkCounter = 0;
-			int blinkPeriod = 3;
-
-			public MovementThrust(Hero player) : base(player.Name + "'s Thrust")
+			public MovementThrust(Hero player) : base(player, SpaceDirection.VerticalDirection.UP, BLINK_PERIOD)
 			{
 				Animation = TextureSetLoader.SHIP1_THRUST;
-				Player = player;
-				RegisterPartIn(player);
-			}
-
-			protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
-			{
-				//If there is a movement backwards, no movement actually happens
-				if (Player.Direction.Vertical == SpaceDirection.VerticalDirection.DOWN && Player.Direction.Horizontal == SpaceDirection.HorizontalDirection.NONE)
-				{
-					bitmap = null;
-					return;
-				}
-
-				//If there is no relative movement, or a weak backwards movement with a sideways movement, thrust will blink
-				//(it is always implicitly moving forward... this may be wrong in a boss battle in the case of a static background)
-				if
-					(
-					Player.Direction == SpaceDirection.None
-					||
-					Player.Direction.Vertical == SpaceDirection.VerticalDirection.DOWN && Player.Direction.Horizontal != SpaceDirection.HorizontalDirection.NONE
-					)
-				{
-					if (++blinkCounter > blinkPeriod)
-					{
-						blinkCounter = 0;
-						blinkState = !blinkState;
-						if (!blinkState)
-						{
-							bitmap = null;
-							return;
-						}
-					}
-				}
-
-				//Uses same rotation as Player
-				Player.RotationStrategy.DrawModification(ref bitmap, draw);
 			}
 		}
 
 		//Hero's thrust
-		MovementThrust thrust;
+		//MovementThrust thrust;
 		int temporary_log_counter = 0;
 
 		//Access to hero's strategy, should be only used for DrawModification purposes of other classes because Act() would collide
-		public Rotation RotationStrategy
+		public FlyingRotation RotationStrategy
 		{
 			get; private set;
 		}
@@ -91,11 +45,17 @@ namespace Space_Impact.Core.Game.Player
 		//Clickable implementation manager
 		IClickable Clickable;
 
+		/// <summary>
+		/// Angle in degrees.
+		/// </summary>
 		public float Angle
 		{
 			get; set;
 		}
 
+		/// <summary>
+		/// Represents state of being clicked on by mouse, or a different kind of pointer.
+		/// </summary>
 		public bool Clicked
 		{
 			get
@@ -109,16 +69,18 @@ namespace Space_Impact.Core.Game.Player
 			Animation = TextureSetLoader.SHIP1_BASE;
 			Speed = HERO_SPEED;
 			ShootingInterval = 50;
-			RotationStrategy = new Rotation(this, 10, 65);
+
+			AddStrategy(new FlyingRotation(this, SpaceDirection.VerticalDirection.UP, 10, 65));
 
 			//Hero uses our implementation of clickable event receiver
 			Clickable = new ClickableImpl(IntersectsOn);
 
 			//Hero has his thrust object
-			this.thrust = new MovementThrust(this);
+			//this.thrust = new MovementThrust(this);
 
 			//He is composed of the thrust
-			ActorComposition.AddLast(this.thrust);
+			//ActorComposition.AddLast(this.thrust);
+			new MovementThrust(this);
 
 			//TODO fix this, ellipse collision
 			/*IntersectStrategy = new DelegateIntersect
@@ -153,7 +115,8 @@ namespace Space_Impact.Core.Game.Player
 			base.Act();
 
 			//Calculates next expected rotation angle values
-			RotationStrategy.Act();
+			//(this is implemented automatically within a list in the AbstractActor)
+			//RotationStrategy.Act();
 
 			//Periodical logging of a Hero state
 			if (temporary_log_counter < 200)
@@ -162,7 +125,7 @@ namespace Space_Impact.Core.Game.Player
 			}
 			else
 			{
-				Health--; //debug todo remove
+				Health--; //debug TODO remove
 				Log.i(this, "X=" + X + " Y=" + Y +
 					" HP=" + Health + "/" + MaxHealth +
 					" Angle=" + Angle +
@@ -186,16 +149,16 @@ namespace Space_Impact.Core.Game.Player
 
 		public override void AddedToFieldHook()
 		{
-			Field.AddActor(this.thrust);
+			base.AddedToFieldHook();
+			//Field.AddActor(this.thrust);
 		}
 		protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
-			//Rotates the player in the direction where he is moving
-			RotationStrategy.DrawModification(ref bitmap, draw);
-		}
-		protected override void DrawHook(CanvasDrawingSession draw)
-		{
+			base.DrawModification(ref bitmap, draw);
 
+			//Rotates the player in the direction where he is moving
+			//(this is implemented automatically within a list in the AbstractActor)
+			//RotationStrategy.DrawModification(ref bitmap, draw);
 		}
 
 		public void Click(float x, float y)

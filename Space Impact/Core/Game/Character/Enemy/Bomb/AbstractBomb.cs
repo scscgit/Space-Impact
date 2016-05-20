@@ -53,8 +53,27 @@ namespace Space_Impact.Core.Game.Object.Bomb
 		{
 			base.Act();
 
+			//The radius gets reduced when the bomb is damaged.
+			float healthModifier = (float)(Health + (0.5 * MaxHealth)) / MaxHealth;
+			if (healthModifier > 1)
+			{
+				healthModifier = 1;
+			}
+
+			//The radius is at least of the size of the bomb
+			float radiusWidth = RadiusWidth * healthModifier;
+			if (radiusWidth < Width)
+			{
+				radiusWidth = (float)Width;
+			}
+			float radiusHeight = RadiusHeight * healthModifier;
+			if (radiusHeight < Height)
+			{
+				radiusHeight = (float)Height;
+			}
+
 			//Self-explanatory: If enemy is within the range of radius width and radius height, the bomb explodes.
-			if (EnemyWithinRange(RadiusWidth, RadiusHeight))
+			if (EnemyWithinRange(RadiusWidth * healthModifier, RadiusHeight * healthModifier))
 			{
 				Explode();
 			}

@@ -1,4 +1,6 @@
-﻿using Space_Impact.Core.Game.Object;
+﻿using Space_Impact.Core.Game.Character.Enemy;
+using Space_Impact.Core.Game.Enemy;
+using Space_Impact.Core.Game.Object;
 using Space_Impact.Core.Game.Spawner.Strategy;
 using Space_Impact.Support;
 using System;
@@ -24,7 +26,8 @@ namespace Space_Impact.Core.Game.Spawner
 		protected override void SpawnCallback()
 		{
 			Log.i(this, "SpawnCallback() called");
-			var enemy = new Doomday(Field.Player);
+			IEnemy enemy = Utility.RandomBetween(0,1)==1?new Doomday(Field.Player):null;
+			if (enemy == null) enemy = new Lakebeam();
 			enemy.X = Position.X;
 			enemy.Y = Position.Y;
 			Field.AddActor(enemy);

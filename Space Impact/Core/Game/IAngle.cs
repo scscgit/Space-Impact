@@ -11,6 +11,9 @@ namespace Space_Impact.Core.Game
 	/// </summary>
 	public interface IAngle
 	{
+		/// <summary>
+		/// Angle in degrees.
+		/// </summary>
 		float Angle
 		{
 			get; set;

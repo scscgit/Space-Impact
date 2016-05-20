@@ -52,7 +52,13 @@
 				<Grid>
 
 					<!-- Loading screen -->
-					<Grid Name="GameRoundLoadingGrid" Background="Aquamarine" Margin="0" Padding="0,50">
+					<Grid
+						Name="GameRoundLoadingGrid"
+						Background="Aquamarine"
+						Visibility="Collapsed"
+						Margin="0"
+						Padding="0,50"
+						>
 						<StackPanel>
 							<TextBlock x:Name="textBlock" HorizontalAlignment="Center" Text="Loading textures" VerticalAlignment="Top" FontSize="26.667" TextAlignment="Center" Margin="50,10" />
 							<ProgressBar x:Name="loadingProgressBar" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Background="#336F6FFF" Width="296" Foreground="#FF37E803" BorderThickness="0,1" Value="-7"  />
@@ -63,8 +69,9 @@
 					<Grid
 						Name ="GameRoundGrid"
 						Background="Black"
-						Visibility="Collapsed"
-						PointerPressed="Grid_PointerPressed" PointerReleased="Grid_PointerReleased" PointerMoved="Grid_PointerMoved"
+						PointerPressed="Grid_PointerPressed"
+						PointerReleased="Grid_PointerReleased"
+						PointerMoved="Grid_PointerMoved"
 						>
 
 						<canvas:CanvasAnimatedControl

@@ -19,7 +19,13 @@
 			>
 
 			<!-- Loading screen -->
-			<Grid Name="MainMenuLoadingGrid" Background="Aquamarine" Margin="0" Padding="0,50">
+			<Grid
+				Name="MainMenuLoadingGrid"
+				Background="Aquamarine"
+				Visibility="Collapsed"
+				Margin="0"
+				Padding="0,50"
+				>
 				<StackPanel>
 					<TextBlock x:Name="textBlock" HorizontalAlignment="Center" Text="Loading textures" VerticalAlignment="Top" FontSize="26.667" TextAlignment="Center" Margin="50,10" />
 					<ProgressBar x:Name="loadingProgressBar" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Background="#336F6FFF" Width="296" Foreground="#FF37E803" BorderThickness="0,1" Value="-7"  />
@@ -29,7 +35,6 @@
 			<!-- Main screen after loading finishes -->
 			<Grid
 				Name="MainMenuGrid"
-				Visibility="Collapsed"
 				>
 
 				<canvas:CanvasAnimatedControl
@@ -39,30 +44,50 @@
 				Draw="canvas_Draw"
 				CreateResources="canvas_CreateResources"
 				/>
+				
+				<!-- MainMenu - Main submenu screen -->
+				<Grid
+				Name="MainMenuMainScreenGrid"
+				Visibility="Collapsed"
+				>
 
-				<Button x:Name="newGameButton" Content="Start a New Game" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" FontSize="96" Width="1000" Height="160" BorderThickness="5" RequestedTheme="Dark" BorderBrush="#FF00C509" FontFamily="Comic Sans MS" Click="newGameButton_Click">
-					<Button.Background>
-						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-							<GradientStop Color="#FFA2FF1C"/>
-							<GradientStop Color="#FF009121" Offset="1"/>
-							<GradientStop Color="#7F007201" Offset="0.383"/>
-						</LinearGradientBrush>
-					</Button.Background>
-				</Button>
+					<Button x:Name="newGameButton" Content="Start a New Game" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" FontSize="96" Width="1000" Height="160" BorderThickness="5" RequestedTheme="Dark" BorderBrush="#FF00C509" FontFamily="Comic Sans MS" Click="newGameButton_Click">
+						<Button.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFA2FF1C"/>
+								<GradientStop Color="#FF009121" Offset="1"/>
+								<GradientStop Color="#7F007201" Offset="0.383"/>
+							</LinearGradientBrush>
+						</Button.Background>
+					</Button>
 
-				<Button x:Name="settingsButton" Content="Settings" HorizontalAlignment="Center" Margin="460,545,460,0" VerticalAlignment="Top" FontSize="82.667" Width="860" Height="140" RequestedTheme="Dark" FontFamily="Arial Black" BorderBrush="#FF000083" FontWeight="Bold" Click="settingsButton_Click">
-					<Button.Background>
-						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-							<GradientStop Color="#B2057800" Offset="0"/>
-							<GradientStop Color="#CC004993" Offset="1"/>
-						</LinearGradientBrush>
-					</Button.Background>
-				</Button>
+					<Button x:Name="settingsButton" Content="Settings" HorizontalAlignment="Center" Margin="460,545,460,0" VerticalAlignment="Top" FontSize="82.667" Width="860" Height="140" RequestedTheme="Dark" FontFamily="Arial Black" BorderBrush="#FF000083" FontWeight="Bold" Click="settingsButton_Click">
+						<Button.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#B2057800" Offset="0"/>
+								<GradientStop Color="#CC004993" Offset="1"/>
+							</LinearGradientBrush>
+						</Button.Background>
+					</Button>
 
-				<Button x:Name="exitButton" Content="Exit Game" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="600" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="exitButton_Click"/>
+					<Button x:Name="exitButton" Content="Exit Game" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="600" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="exitButton_Click"/>
+
+				</Grid>
+
+				<!-- MainMenu - settings submenu -->
+				<Grid
+				Name="MainMenuSettingsGrid"
+				Visibility="Visible"
+				>
+
+					<Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="903,501,-838,-469" VerticalAlignment="Top"/>
+
+					<Button x:Name="settingsReturnButton" Content="Return to Main Menu" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="720" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="settingsReturnButton_Click"/>
+
+				</Grid>
 
 			</Grid>
-
+			
 		</Grid>
 	</Viewbox>
 

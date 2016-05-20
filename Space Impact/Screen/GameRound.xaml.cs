@@ -159,7 +159,7 @@ namespace Space_Impact.Screen
 		}
 
 		/// <summary>
-		/// Delegates the getter to the Field's percentage completion
+		/// Delegates the getter to the Field's percentage completion.
 		/// </summary>
 		public float Percent
 		{
@@ -211,13 +211,16 @@ namespace Space_Impact.Screen
 
 			//Window focus
 			Window.Current.Activated -= Current_Activated;
+			Window.Current.SizeChanged -= Current_SizeChanged;
 		}
 
 		//Initialization of the class, before any textures are loaded
 		public GameRound()
 		{
 			Log.i(this, "Initializing");
+
 			this.InitializeComponent();
+			FieldLoaded = false;
 
 			//Resolution of the game
 			ApplicationView.PreferredLaunchViewSize = new Size(1600, 900);
@@ -270,6 +273,7 @@ namespace Space_Impact.Screen
 
 		async void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
 		{
+			//General condition for all key events is that the field is loaded
 			if (!FieldLoaded)
 			{
 				return;
@@ -279,7 +283,7 @@ namespace Space_Impact.Screen
 			//await was not used in documentation
 
 			await KeyDown_GameLoopThread(args.VirtualKey);
-			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey)); //Problem s volanim ShowExitDialog() z herneho vlakne
+			//await FieldControl.RunOnGameLoopThreadAsync(() => KeyDown_GameLoopThread(args.VirtualKey)); //Problem s volanim ShowExitDialog() z herneho vlakna
 		}
 
 		async Task KeyDown_GameLoopThread(VirtualKey virtualKey)
@@ -289,42 +293,49 @@ namespace Space_Impact.Screen
 			//const SpaceDirection.VerticalDirection up = SpaceDirection.VerticalDirection.UP;
 			//const SpaceDirection.VerticalDirection down = SpaceDirection.VerticalDirection.DOWN;
 
-			if (Player == null)
+			if (Player == null || !GameRunning)
 			{
-				Log.e(this, "There is no Player and yet, KeyDown event was run");
+				Log.i(this, "There is no Player, or the game is not running and yet, KeyDown event was run");
+			}
+			else
+			{
+				//Player control keys
+				switch (virtualKey)
+				{
+					//Movement keys
+					case VirtualKey.A:
+					case VirtualKey.Left:
+						Player.Direction += SpaceDirection.HorizontalDirection.LEFT;
+						break;
+					case VirtualKey.D:
+					case VirtualKey.Right:
+						Player.Direction += SpaceDirection.HorizontalDirection.RIGHT;
+						break;
+					case VirtualKey.W:
+					case VirtualKey.Up:
+						Player.Direction += SpaceDirection.VerticalDirection.UP;
+						break;
+					case VirtualKey.S:
+					case VirtualKey.Down:
+						Player.Direction += SpaceDirection.VerticalDirection.DOWN;
+						break;
+
+					//Shooting
+					case VirtualKey.F:
+					case VirtualKey.Space:
+					case VirtualKey.LeftControl:
+						if (Player.Shooting == false)
+						{
+							Log.i(this, "Player is shooting");
+							Player.Shooting = true;
+						}
+						break;
+				}
 			}
 
-			//Movement keys
+			//Game keys
 			switch (virtualKey)
 			{
-				case VirtualKey.A:
-				case VirtualKey.Left:
-					Player.Direction += SpaceDirection.HorizontalDirection.LEFT;
-					break;
-				case VirtualKey.D:
-				case VirtualKey.Right:
-					Player.Direction += SpaceDirection.HorizontalDirection.RIGHT;
-					break;
-				case VirtualKey.W:
-				case VirtualKey.Up:
-					Player.Direction += SpaceDirection.VerticalDirection.UP;
-					break;
-				case VirtualKey.S:
-				case VirtualKey.Down:
-					Player.Direction += SpaceDirection.VerticalDirection.DOWN;
-					break;
-
-				//Shooting
-				case VirtualKey.F:
-				case VirtualKey.Space:
-				case VirtualKey.LeftControl:
-					if (Player.Shooting == false)
-					{
-						Log.i(this, "Player is shooting");
-						Player.Shooting = true;
-					}
-					break;
-
 				//Game lifecycle alteration
 				case VirtualKey.Escape:
 					Log.i(this, "Escape button pressed, opening dialog asynchronously");
@@ -362,41 +373,50 @@ namespace Space_Impact.Screen
 
 		async Task KeyUp_GameLoopThread(VirtualKey virtualKey)
 		{
-			if (Player == null)
+			if (Player == null || !GameRunning)
 			{
-				Log.e(this, "There is no Player and yet, KeyUp event was run");
+				Log.i(this, "There is no Player, or the game is not running and yet, KeyUp event was run");
+			}
+			else
+			{
+				//Player control keys
+				switch (virtualKey)
+				{
+					//Movement keys
+					case VirtualKey.A:
+					case VirtualKey.Left:
+						Player.Direction -= SpaceDirection.HorizontalDirection.LEFT;
+						break;
+					case VirtualKey.D:
+					case VirtualKey.Right:
+						Player.Direction -= SpaceDirection.HorizontalDirection.RIGHT;
+						break;
+					case VirtualKey.W:
+					case VirtualKey.Up:
+						Player.Direction -= SpaceDirection.VerticalDirection.UP;
+						break;
+					case VirtualKey.S:
+					case VirtualKey.Down:
+						Player.Direction -= SpaceDirection.VerticalDirection.DOWN;
+						break;
+
+					//Shooting
+					case VirtualKey.F:
+					case VirtualKey.Space:
+					case VirtualKey.LeftControl:
+						if (Player.Shooting)
+						{
+							Player.Shooting = false;
+						}
+						break;
+				}
 			}
 
-			switch (virtualKey)
+			//Game keys
+			/*switch (virtualKey)
 			{
-				//Movement keys
-				case VirtualKey.A:
-				case VirtualKey.Left:
-					Player.Direction -= SpaceDirection.HorizontalDirection.LEFT;
-					break;
-				case VirtualKey.D:
-				case VirtualKey.Right:
-					Player.Direction -= SpaceDirection.HorizontalDirection.RIGHT;
-					break;
-				case VirtualKey.W:
-				case VirtualKey.Up:
-					Player.Direction -= SpaceDirection.VerticalDirection.UP;
-					break;
-				case VirtualKey.S:
-				case VirtualKey.Down:
-					Player.Direction -= SpaceDirection.VerticalDirection.DOWN;
-					break;
 
-				//Shooting
-				case VirtualKey.F:
-				case VirtualKey.Space:
-				case VirtualKey.LeftControl:
-					if (Player.Shooting)
-					{
-						Player.Shooting = false;
-					}
-					break;
-			}
+			}*/
 		}
 
 		void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -472,7 +492,15 @@ namespace Space_Impact.Screen
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
 			//Increases progress bar percentage
-			await TextureSetLoader.Instance.CreateResourcesAsync(sender, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; });
+			await TextureSetLoader.Instance.CreateResourcesAsync
+			(
+				sender
+				//Increases progress bar percentage during loading
+				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
+				//Gets called back after loading gets finished
+				, AfterCreateResourcesAsyncFinished
+				//Loads all textures implicitly
+				);
 
 			//Music is also a resource
 			Music = await Utility.GetMusic("core");
@@ -484,6 +512,13 @@ namespace Space_Impact.Screen
 			FieldLoaded = true;
 
 			Log.i(this, "CreateResourcesAsync finished");
+		}
+
+		void AfterCreateResourcesAsyncFinished()
+		{
+
+
+			Log.i(this, "AfterCreateResourcesAsyncFinished finished");
 		}
 
 		//Main game loop, should be fired 60 times per second
@@ -596,7 +631,7 @@ namespace Space_Impact.Screen
 
 			//Samotny vypis hlasky na obrazovku, cim dlhsi text, tym viac dolava sa musi posunut jeho zaciatok
 			drawingSession.DrawText
-				(
+			(
 				LastLog,
 				(float)Size.Width - 100 - 9.40f * LastLog.Length,
 				(float)Size.Height - 50,
@@ -607,7 +642,7 @@ namespace Space_Impact.Screen
 						Colors.Indigo
 						:
 						Colors.DarkGreen
-				);
+			);
 		}
 
 		//Manipulation with available actors that are currently registered using Observer pattern for receiving events
@@ -634,7 +669,7 @@ namespace Space_Impact.Screen
 		}
 
 		//Performs an operation on each actor on the Field.
-		//If the operation returns true, iteration will stop.
+		//If the operation returns true, iteration MAY stop (depending on implementation, the value is ignored for now).
 		public void ForEachActor<ActorType>(ActorAction<ActorType> action)
 		{
 			//This operation is synchronized
@@ -663,8 +698,6 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "User clicked on the Hamburger");
 			SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
-
-			//SplitView.Focus(FocusState.Unfocused);
 		}
 
 		void NewGameButton_Click(object sender, RoutedEventArgs e)
@@ -783,18 +816,20 @@ namespace Space_Impact.Screen
 			GameRunning = false;
 			ResetUserInput();
 
+
 			//todo pause and then get back to previous screen, TODO HOW TO PREVIOUS SCREEN (will use ExitScreen method)
 		}
 
 		void ExitScreen()
 		{
+			//Exiting before loading resources would cause synchronization hazard
 			if (!FieldLoaded)
 			{
 				return;
 			}
 
 			//GameRunning set to false just in case to be sure no parallel task will interrupt the proccess
-			GameRunning = false;
+			//GameRunning = false;
 
 			//TODO FIX NAVIGATION, IT CRASHES BECAUSE OF PARALLEL PROCESSES
 			Frame.Navigate(typeof(MainMenu));

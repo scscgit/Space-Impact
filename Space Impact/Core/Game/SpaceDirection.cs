@@ -95,7 +95,7 @@ namespace Space_Impact.Core.Game
 		//Conversion from angle
 		public static SpaceDirection getFromAngle(float angle)
 		{
-			angle = Utility.NormalizeAngle(angle);
+			angle = Utility.NormalizeDegreeAngle(angle);
 			if (angle > 0 && angle < 90)
 			{
 				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, SpaceDirection.VerticalDirection.UP);

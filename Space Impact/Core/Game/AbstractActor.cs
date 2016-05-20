@@ -9,6 +9,9 @@ using Space_Impact.Support;
 using Space_Impact.Core.Game.Player;
 using Windows.UI.Xaml.Shapes;
 using Space_Impact.Core.Game.IntersectStrategy;
+using Space_Impact.Core.Game.PartActor;
+using Space_Impact.Core.Game.ActorStrategy;
+using Microsoft.Graphics.Canvas;
 
 namespace Space_Impact.Core
 {
@@ -41,12 +44,23 @@ namespace Space_Impact.Core
 
 		public float Speed
 		{
-			get; set;
+			get; protected set;
 		}
 
+		//Current intersect strategy of the actor
 		protected IIntersectStrategy IntersectStrategy
 		{
-			get; set;
+			private get; set;
+		}
+
+		//Strategies of the Actor
+		public LinkedList<IActStrategy> ActStrategies
+		{
+			get; private set;
+		}
+		public LinkedList<IDrawModificationStrategy> DrawModificationStrategies
+		{
+			get; private set;
 		}
 
 		//Actor can contain more Actors.
@@ -66,10 +80,36 @@ namespace Space_Impact.Core
 
 		protected AbstractActor(string name)
 		{
+			//Initializes strategy lists
+			ActStrategies = new LinkedList<IActStrategy>();
+			DrawModificationStrategies = new LinkedList<IDrawModificationStrategy>();
+
+			//Default properties of the Actor
 			Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.NONE);
 			Speed = DEFAULT_SPEED;
+
+			//Downloads the concrete initialized name choice from the subclass
 			Name = name;
+
+			//By default, implements square intersect strategy using the current Animation dimensions
 			IntersectStrategy = new SquareIntersect(this);
+		}
+
+		//Adds a new strategy to the actor's queue of periodically launched event hooks
+		protected void AddStrategy(IStrategy strategy)
+		{
+			IActStrategy act = strategy as IActStrategy;
+			IDrawModificationStrategy draw = strategy as IDrawModificationStrategy;
+
+			if(act!= null)
+			{
+				ActStrategies.AddLast(act);
+			}
+
+			if (draw != null)
+			{
+				DrawModificationStrategies.AddLast(draw);
+			}
 		}
 
 		//Checks whether the X/Y movement is legal
@@ -210,17 +250,46 @@ namespace Space_Impact.Core
 					actor.Y = Y;
 				}
 			}
+
+			//Acts on all strategies
+			foreach(IActStrategy strategy in ActStrategies)
+			{
+				strategy.Act();
+			}
+		}
+
+		protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
+		{
+			base.DrawModification(ref bitmap, draw);
+
+			//Draws all strategies
+			foreach (IDrawModificationStrategy strategy in DrawModificationStrategies)
+			{
+				strategy.DrawModification(ref bitmap, draw);
+			}
 		}
 
 		public void RemoveFromField()
 		{
 			Field.RemoveActor(this);
+
+			//Removes all parts too
+			foreach(IActorCompositePart part in ActorComposition)
+			{
+				Field.RemoveActor(part);
+			}
 		}
 
 		public void AddedToField(IField field)
 		{
 			Field = field;
 			AddedToFieldHook();
+
+			//Adds all parts too
+			foreach (IActorCompositePart part in ActorComposition)
+			{
+				field.AddActor(part);
+			}
 		}
 
 		/// <summary>

@@ -38,14 +38,14 @@ namespace Space_Impact.Screen
 		/// </summary>
 		internal class MainMenuBackground : AbstractBackground
 		{
+			public static readonly string[][] backgrounds = new string[][]
+			{
+				TextureSetLoader.BG_CRATER_PLANET, TextureSetLoader.BG_MESSIER,
+				TextureSetLoader.BG_ROCKET_AND_PLANET, TextureSetLoader.BG_STAR_CLUSTERS
+			};
+
 			public MainMenuBackground(IField field) : base(field)
 			{
-				string[][] backgrounds = new string[][]
-				{
-					TextureSetLoader.BG_CRATER_PLANET, TextureSetLoader.BG_MESSIER,
-					TextureSetLoader.BG_ROCKET_AND_PLANET, TextureSetLoader.BG_STAR_CLUSTERS
-				};
-
 				Animation = backgrounds[Utility.RandomBetween(0, backgrounds.Length - 1)];
 				Speed = 5;
 				AddStrategy(new RandomMovement(this, field));
@@ -56,6 +56,7 @@ namespace Space_Impact.Screen
 		MediaElement Music;
 
 		//Represents if the screen is loaded (fully initialized) with all resources and can be safely navigated out from.
+		//The Settings Grid gets implicitly disabled each time the Field Loaded state changes.
 		bool fieldLoaded = false;
 		public bool FieldLoaded
 		{
@@ -128,7 +129,16 @@ namespace Space_Impact.Screen
 		public MainMenu()
 		{
 			Log.i(this, "Constructor initializing");
+
 			this.InitializeComponent();
+
+			//Initializing loading screen
+			FieldLoaded = false;
+
+			//Preparing Main Screen of MainMenu grid
+			MainMenuMainScreenGrid.Visibility = Visibility.Visible;
+			MainMenuSettingsGrid.Visibility = Visibility.Collapsed;
+
 			Log.i(this, "Constructor initialized");
 		}
 
@@ -146,6 +156,8 @@ namespace Space_Impact.Screen
 		private void Page_Unloaded(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "Page is being unloaded, removing events and other associations");
+			Log.i(this, "Music state before stopping was " + Music.CurrentState.ToString());
+
 			Music.Stop();
 
 			//Cleaning up the Page to help the garbage collector
@@ -158,7 +170,10 @@ namespace Space_Impact.Screen
 		void OnFirstDraw()
 		{
 			Log.i(this, "First draw started");
+
 			BackgroundImage = new MainMenuBackground(this);
+
+			Log.i(this, "First draw finished");
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -184,19 +199,36 @@ namespace Space_Impact.Screen
 		//Loads all resources asynchronously
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
-			//Increases progress bar percentage
-			await TextureSetLoader.Instance.CreateResourcesAsync(sender, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; });
+			//Loads textures asynchronously
+			await TextureSetLoader.Instance.CreateResourcesAsync
+			(
+				sender
+				//Increases progress bar percentage during loading
+				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
+				//Gets called back after loading gets finished
+				, AfterCreateResourcesAsyncFinished
+				//Only loads the required backgrounds for faster loading time
+				, MainMenuBackground.backgrounds
+			);
 
 			//Music is also a resource
 			Music = await Utility.GetMusic("vault");
-			Music.IsLooping = true;
+			
 			//Music is implicitly started, but to be sure, we explicitly start it
 			Music.Play();
+			Music.IsLooping = true;
 
 			Log.i(this, "Setting Field as loaded");
 			FieldLoaded = true;
 
 			Log.i(this, "CreateResourcesAsync finished");
+		}
+
+		void AfterCreateResourcesAsyncFinished()
+		{
+			
+
+			Log.i(this, "AfterCreateResourcesAsyncFinished finished");
 		}
 
 		public void AddActor(IAct actor)
@@ -228,12 +260,21 @@ namespace Space_Impact.Screen
 				return;
 			}
 
+			//The literally only way I could find to prevent music from loading and running even after it was stopped before old Page disposal
+			if(Music.CurrentState == MediaElementState.Opening)
+			{
+				return;
+			}
+
 			Frame.Navigate(typeof(GameRound));
 		}
 
 		private void settingsButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Settings Button");
+
+			MainMenuMainScreenGrid.Visibility = Visibility.Collapsed;
+			MainMenuSettingsGrid.Visibility = Visibility.Visible;
 		}
 
 		private void exitButton_Click(object sender, RoutedEventArgs e)
@@ -242,6 +283,14 @@ namespace Space_Impact.Screen
 
 			//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
 			Application.Current.Exit();
+		}
+
+		private void settingsReturnButton_Click(object sender, RoutedEventArgs e)
+		{
+			Log.i(this, "User clicked on Return to Main Menu Button");
+
+			MainMenuMainScreenGrid.Visibility = Visibility.Visible;
+			MainMenuSettingsGrid.Visibility = Visibility.Collapsed;
 		}
 	}
 }

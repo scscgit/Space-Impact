@@ -9,6 +9,14 @@ namespace Space_Impact.Core.Game.Enemy
 {
 	public abstract class AbstractEnemy: AbstractCharacter, IEnemy
 	{
+		public int Score
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
 		protected AbstractEnemy(string name): base(name)
 		{
 

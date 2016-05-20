@@ -12,12 +12,23 @@ namespace Space_Impact.Support
 	{
 		private static Random Random = new Random();
 
-		public static float NormalizeAngle(float angle)
+		public static float NormalizeDegreeAngle(float angle)
 		{
 			angle %= 360;
 			if (angle < 0)
 			{
 				angle += 360;
+			}
+			return angle;
+		}
+
+		public static float NormalizeRadianAngle(float angle)
+		{
+			float threesixty = (float)Math.PI * 2;
+			angle %= threesixty;
+			if (angle < 0)
+			{
+				angle += threesixty;
 			}
 			return angle;
 		}
@@ -49,15 +60,21 @@ namespace Space_Impact.Support
 			return number * number;
 		}
 
+		/// <summary>
+		/// Returns a number between (inclusively) the two numbers.
+		/// </summary>
+		/// <param name="a">first bound</param>
+		/// <param name="b">second bound</param>
+		/// <returns></returns>
 		public static int RandomBetween(int a, int b)
 		{
 			if (a <= b)
 			{
-				return Random.Next(a, b);
+				return Random.Next(a, b + 1);
 			}
 			else
 			{
-				return Random.Next(b, a);
+				return Random.Next(b, a + 1);
 			}
 		}
 	}

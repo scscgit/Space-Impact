@@ -9,5 +9,6 @@ namespace Space_Impact.Core.Game.Enemy
 {
 	public interface IEnemy: ICharacter
 	{
+		int Score { get; }
 	}
 }

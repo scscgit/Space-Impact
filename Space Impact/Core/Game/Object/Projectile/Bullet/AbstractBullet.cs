@@ -29,7 +29,6 @@ namespace Space_Impact.Core.Game.Player.Bullet
 			Position centerPosition = Player.BulletFocusPosition;
 			X = centerPosition.X - (float)Width / 2;
 			Y = centerPosition.Y - (float)Height /2;
-			Log.d(this, centerPosition.X.ToString() + " " + (Width).ToString());
 		}
 
 		//Removes all movement limitations, instead verifies in the Act whether the object needs to be destroyed
