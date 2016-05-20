@@ -16,7 +16,7 @@ namespace Space_Impact.Core.Game.Player.Bullet
 			Speed = 50;
 		}
 
-		public override bool IntersectsOn(float x, float y)
+		public override bool IntersectsWithin(float x, float width, float y, float height)
 		{
 			//todo lambda square static utility new static method
 			return true;

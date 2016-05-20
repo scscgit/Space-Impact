@@ -60,7 +60,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 
 		SpaceDirection.HorizontalDirection HorizontalDirectionToTarget()
 		{
-			if (Target.X + Target.Width /2 - WidthBounds / 2 < Owner.X + Owner.Width / 2 - WidthBounds / 2)
+			if (Target.X + Target.Width / 2 - WidthBounds / 2 < Owner.X + Owner.Width / 2 - WidthBounds / 2)
 			{
 				return SpaceDirection.HorizontalDirection.LEFT;
 			}

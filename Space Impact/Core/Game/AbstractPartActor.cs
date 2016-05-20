@@ -20,7 +20,6 @@ namespace Space_Impact.Core.Game.Player
 		/// <param name="name">Name of the (Part) Actor</param>
 		protected AbstractPartActor(string name) : base(name)
 		{
-
 		}
 
 		//Registers the Part as an Actor in any list of Parts

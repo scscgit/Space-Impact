@@ -44,7 +44,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			AngleDeltaCount = angleDeltaCount;
 
 			//MaxAngle is defined by used StraightenEffect class, which is called twice
-			MaxAngle = ((float)Math.PI / 4) / ((float)90/maxAngleDegrees);
+			MaxAngle = ((float)Math.PI / 4) / ((float)90 / maxAngleDegrees);
 
 			//Delta is a fraction of MaxAngle
 			DeltaAngle = MaxAngle / angleDeltaCount;
@@ -79,7 +79,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 					CurrentHalfAngle += DeltaAngle;
 				}
 			}
-			else if(CurrentHalfAngle> angle)
+			else if (CurrentHalfAngle > angle)
 			{
 				//Decrease value down to the needed value, but not after that
 				if (CurrentHalfAngle - DeltaAngle < angle)
@@ -99,7 +99,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			if (IsRotatingLeft())
 			{
 				//If moving down, we only allow half of the max angle
-				if(IsMovingDown())
+				if (IsMovingDown())
 				{
 					ChangeAngleTowards(-MaxAngle / 2);
 				}
@@ -107,7 +107,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 				{
 					ChangeAngleTowards(-MaxAngle);
 				}
-				
+
 			}
 			else if (IsRotatingRight())
 			{
@@ -127,7 +127,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			}
 
 			//Update the angle of the actor, but only if he is compatible
-			if(Owner is IAngle)
+			if (Owner is IAngle)
 			{
 				((IAngle)Owner).Angle = CurrentAngleDegrees;
 			}

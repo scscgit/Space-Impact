@@ -20,7 +20,7 @@ namespace Space_Impact.Graphics
 			AnimationSpeed = 1;
 		}
 		
-		//Location on a field, TODO don't forget C# isnt virtual implicitly
+		//Location on a field, TODO don't forget C# isn't virtual implicitly
 		public float X
 		{
 			get; set;
@@ -61,9 +61,9 @@ namespace Space_Impact.Graphics
 
 		/// <summary>
 		/// Prepares a texture set to be loaded as bitmaps for representing an animated object.
-		/// Only relative path from Assets folder is required, .png is automatically added.
+		/// Only relative path from Assets folder is required, .png is NOT automatically added.
 		/// </summary>
-		/// <param name="textureSet">Texture set containing names (paths) of .png files inside Assets directory without .png.
+		/// <param name="textureSet">Texture set containing names (paths) of .png or .jpg (or other) files inside Assets directory.
 		/// Supported null for no animation.</param>
 		string[] textures = null;
 		CanvasBitmap[] bitmaps = null;
@@ -82,6 +82,11 @@ namespace Space_Impact.Graphics
 
 				this.bitmaps = TextureSetLoader.Instance[value];
 				Frame = 0;
+
+				//Updates current description variables
+				var size = this.bitmaps[Frame].Size;
+				Width = size.Width;
+				Height = size.Height;
 
 				//Lets subclasses hook some event after a new animation is set
 				OnAnimationSet();
@@ -126,7 +131,6 @@ namespace Space_Impact.Graphics
 
 			//Lets subclasses hook the bitmap modification
 			DrawModification(ref bitmap, draw);
-
 
 			if (bitmap == null)
 			{

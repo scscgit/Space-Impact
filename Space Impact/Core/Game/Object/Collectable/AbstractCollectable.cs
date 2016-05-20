@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Object.Collectable
 {
-	public abstract class AbstractCollectable: AbstractObject, ICollectable
+	public abstract class AbstractCollectable : AbstractObject, ICollectable
 	{
-		protected AbstractCollectable(String name): base(name)
+		protected AbstractCollectable(String name) : base(name)
 		{
 
 		}

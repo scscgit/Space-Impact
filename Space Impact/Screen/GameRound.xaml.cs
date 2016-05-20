@@ -33,6 +33,7 @@ using Space_Impact.Core.Game;
 using Space_Impact.Core.Game.Object;
 using Space_Impact.Core.Game.Character;
 using Space_Impact.Core.Game.Spawner;
+using Space_Impact.Core.Graphics.Background;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -49,10 +50,21 @@ namespace Space_Impact.Screen
 	/// </summary>
 	public sealed partial class GameRound : Page, IField
 	{
-		//The game should be running only after the map is loaded with all characters and no null problems can happen
-		bool GameRunning
+		/// <summary>
+		/// Background class of the Field
+		/// </summary>
+		internal class GameRoundBackground : AbstractBackground
 		{
-			get; set;
+			public GameRoundBackground(IField field): base(field)
+			{
+				Animation = TextureSetLoader.BG1;
+			}
+		}
+
+		//The game should be running only after the map is loaded with all characters and no null problems can happen
+		public bool GameRunning
+		{
+			get; private set;
 		} = false;
 
 		//Accessor point of the Field Canvas Animated Control
@@ -92,6 +104,11 @@ namespace Space_Impact.Screen
 			}
 		}
 
+		IBackground BackgroundImage
+		{
+			get; set;
+		}
+
 		//Screen debug logging
 		int LastLogCounter { get; set; } = 0;
 		int LastLogCountTime { get; set; } = 0;
@@ -112,6 +129,17 @@ namespace Space_Impact.Screen
 			{
 				this.messageBroadcastText = value;
 				MessageBroadcastCounter = 0;
+			}
+		}
+
+		/// <summary>
+		/// Delegates the getter to the Field's percentage completion
+		/// </summary>
+		public float Percent
+		{
+			get
+			{
+				return BackgroundImage.Percent;
 			}
 		}
 
@@ -356,6 +384,10 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "First draw has started");
 
+			//Instance of a background image
+			Log.i(this, "Creating instance of background image");
+			BackgroundImage = new GameRoundBackground(this);
+
 			//Loading player ad-hoc
 			Player = new Hero();
 			Player.X = (float)Size.Width / 2 - (float)Player.Width / 2;
@@ -376,9 +408,6 @@ namespace Space_Impact.Screen
 
 			//Resetting user input for avoiding possible start glitches that would require user to alt+tab for a hotfix instead
 			ResetUserInput();
-
-			//Position position = new Position();
-			//position.X = (int)Width / 2;
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -438,6 +467,17 @@ namespace Space_Impact.Screen
 				throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
 			}
 
+			//Background draw cycle
+			try
+			{
+				BackgroundImage.Draw(args.DrawingSession);
+			}
+			catch (Exception e)
+			{
+				Log.e(this, "Problem happened during Background Draw.\n" + e.ToString());
+			}
+
+			//Actor draw cycle
 			//No problem should happen, but this makes debugging easier, plus any error during a single frame Draw is irrelevant anyway
 			try
 			{
@@ -564,7 +604,7 @@ namespace Space_Impact.Screen
 					actor = actor.Next;
 
 					//Only Actors with the correct type will act
-					if(currentActor is ActorType)
+					if (currentActor is ActorType)
 					{
 						//Action returns true if it intends to modify the list, but we don't use that value
 						action((ActorType)currentActor);

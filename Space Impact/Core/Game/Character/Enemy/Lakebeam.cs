@@ -10,7 +10,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 {
 	public class Lakebeam : AbstractEnemy
 	{
-		public Lakebeam(string name): base(name)
+		public Lakebeam(string name) : base(name)
 		{
 			Animation = TextureSetLoader.SHIP2_BASE;
 			Direction = SpaceDirection.None;

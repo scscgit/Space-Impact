@@ -9,41 +9,44 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Graphics
 {
-	public class TextureSetLoader
+	public sealed class TextureSetLoader
 	{
 		//List of all pre-defined texture sets
 
+		//Backgrounds
+		public static string[] BG1 = { "Background/background_1.jpg" };
+
 		//Ships and their thrusts
-		public static string[] SHIP1_BASE = { "ship1_base" };
-		public static string[] SHIP1_THRUST = { "ship1_thrust" };
-		public static string[] SHIP2_BASE = { "ship2_base" };
-		public static string[] SHIP2_THRUST = { "ship2_thrust" };
-		public static string[] SHIP3_BASE = { "ship3_base" };
-		public static string[] SHIP3_THRUST = { "ship3_thrust" };
-		public static string[] SHIP4_BASE = { "ship4_base" };
-		public static string[] SHIP4_THRUST = { "ship4_thrust" };
-		public static string[] SHIP5_BASE = { "ship5_base" };
-		public static string[] SHIP5_THRUST = { "ship5_thrust" };
-		public static string[] SHIP6_BASE = { "ship6_base" };
-		public static string[] SHIP6_THRUST = { "ship6_thrust" };
-		public static string[] SHIP7_BASE = { "ship7_base" };
-		public static string[] SHIP7_THRUST = { "ship7_thrust" };
-		public static string[] SHIP8_BASE = { "ship8_base" };
-		public static string[] SHIP8_THRUST = { "ship8_thrust" };
-		public static string[] SHIP9_BASE = { "ship9_base" };
-		public static string[] SHIP9_THRUST = { "ship9_thrust" };
-		public static string[] SHIP10_BASE = { "ship10_base" };
-		public static string[] SHIP10_THRUST = { "ship10_thrust" };
-		public static string[] SHIP11_BASE = { "ship11_base" };
-		public static string[] SHIP11_THRUST = { "ship11_thrust" };
-		public static string[] SHIP12_BASE = { "ship12_base" };
-		public static string[] SHIP12_THRUST = { "ship12_thrust" };
+		public static string[] SHIP1_BASE = { "ship1_base.png" };
+		public static string[] SHIP1_THRUST = { "ship1_thrust.png" };
+		public static string[] SHIP2_BASE = { "ship2_base.png" };
+		public static string[] SHIP2_THRUST = { "ship2_thrust.png" };
+		public static string[] SHIP3_BASE = { "ship3_base.png" };
+		public static string[] SHIP3_THRUST = { "ship3_thrust.png" };
+		public static string[] SHIP4_BASE = { "ship4_base.png" };
+		public static string[] SHIP4_THRUST = { "ship4_thrust.png" };
+		public static string[] SHIP5_BASE = { "ship5_base.png" };
+		public static string[] SHIP5_THRUST = { "ship5_thrust.png" };
+		public static string[] SHIP6_BASE = { "ship6_base.png" };
+		public static string[] SHIP6_THRUST = { "ship6_thrust.png" };
+		public static string[] SHIP7_BASE = { "ship7_base.png" };
+		public static string[] SHIP7_THRUST = { "ship7_thrust.png" };
+		public static string[] SHIP8_BASE = { "ship8_base.png" };
+		public static string[] SHIP8_THRUST = { "ship8_thrust.png" };
+		public static string[] SHIP9_BASE = { "ship9_base.png" };
+		public static string[] SHIP9_THRUST = { "ship9_thrust.png" };
+		public static string[] SHIP10_BASE = { "ship10_base.png" };
+		public static string[] SHIP10_THRUST = { "ship10_thrust.png" };
+		public static string[] SHIP11_BASE = { "ship11_base.png" };
+		public static string[] SHIP11_THRUST = { "ship11_thrust.png" };
+		public static string[] SHIP12_BASE = { "ship12_base.png" };
+		public static string[] SHIP12_THRUST = { "ship12_thrust.png" };
 
 		//Bombs maybe?
-		public static string[] DOOMDAY = { "doomday_1", "doomday_2", "doomday_3" };
-	
+		public static string[] DOOMDAY = { "doomday_1.png", "doomday_2.png", "doomday_3.png" };
+
 		//Bullets
-		public static string[] FIRE = { "fire_1", "fire_2" };
+		public static string[] FIRE = { "fire_1.png", "fire_2.png" };
 
 		//Loading all textures
 		public async Task CreateResourcesAsync(CanvasAnimatedControl sender)
@@ -51,6 +54,9 @@ namespace Space_Impact.Graphics
 			//Set of all textureSets to be loaded
 			string[][] textureSets =
 			{
+				//Backgrounds
+				BG1,
+
 				//Ships and their thrusts
 				SHIP1_BASE, SHIP1_THRUST,
 				SHIP2_BASE, SHIP2_THRUST,
@@ -85,19 +91,24 @@ namespace Space_Impact.Graphics
 			textureSetLoader = null;
 		}
 
+		private static object ConstructorLock = new object();
+
 		//Singleton
+		private static TextureSetLoader textureSetLoader = null;
 		public static TextureSetLoader Instance
 		{
 			get
 			{
-				if (textureSetLoader == null)
+				lock (ConstructorLock)
 				{
-					textureSetLoader = new TextureSetLoader();
+					if (textureSetLoader == null)
+					{
+						textureSetLoader = new TextureSetLoader();
+					}
+					return textureSetLoader;
 				}
-				return textureSetLoader;
 			}
 		}
-		private static TextureSetLoader textureSetLoader = null;
 		TextureSetLoader()
 		{
 		}
@@ -115,7 +126,7 @@ namespace Space_Impact.Graphics
 		//Internal conversion of texture format to a full file name
 		private string TextureToString(string texture)
 		{
-			return "Assets/" + texture + ".png";
+			return "Assets/" + texture;
 		}
 
 		//Loads a bitmap representing each texture and adds them to the Dictionary
@@ -125,15 +136,15 @@ namespace Space_Impact.Graphics
 			CanvasBitmap[] bitmapSet = new CanvasBitmap[length];
 			for (int i = 0; i < length; i++)
 			{
+				Log.i(this, "Loading texture " + textureSet[i]);
 				try
 				{
 					bitmapSet[i] = await CanvasBitmap.LoadAsync(sender, TextureToString(textureSet[i]));
 				}
-				catch(System.IO.FileNotFoundException)
+				catch (System.IO.FileNotFoundException)
 				{
-					Log.e(this,"Problem loading texture from assets: "+textureSet[i]);
+					Log.e(this, "Problem loading texture from assets: " + textureSet[i]);
 				}
-				Log.i(this, "Loading texture "+textureSet[i]);
 			}
 			this.bitmapDictionary.Add(textureSet, bitmapSet);
 		}

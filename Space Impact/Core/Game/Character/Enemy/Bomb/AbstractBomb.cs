@@ -81,10 +81,6 @@ namespace Space_Impact.Core.Game.Object.Bomb
 						killable.OnBombExplosion(this);
 						affectedActors++;
 					}
-					else
-					{
-						Log.d(this,"Actor "+actor+" not affected by explosion on X="+X+" Y="+Y+" (Bomb "+actor.X+"x"+actor.Y+")");
-					}
 					return false;
 				}
 			);

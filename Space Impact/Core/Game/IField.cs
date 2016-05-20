@@ -14,10 +14,12 @@ namespace Space_Impact.Core
 
 	public interface IField
 	{
+		bool GameRunning { get; }
 		CanvasAnimatedControl FieldControl { get; }
 		IPlayer Player { get; }
 		Size Size { get; }
 		string MessageBroadcastText { get; set; }
+		float Percent { get; }
 
 		//Actor management
 		void AddActor(IAct actor);

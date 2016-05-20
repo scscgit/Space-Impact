@@ -140,6 +140,11 @@
     <Compile Include="Core\Game\IActor.cs" />
     <Compile Include="Core\Game\IField.cs" />
     <Compile Include="Core\Game\Character\Player\IPlayer.cs" />
+    <Compile Include="Core\Game\Spawner\Strategy\EveryNActs.cs" />
+    <Compile Include="Core\Game\Spawner\Strategy\EveryNPercent.cs" />
+    <Compile Include="Core\Game\Spawner\Strategy\ISpawnerStrategy.cs" />
+    <Compile Include="Core\Graphics\Background\AbstractBackground.cs" />
+    <Compile Include="Core\Graphics\Background\IBackground.cs" />
     <Compile Include="Core\Graphics\Position.cs" />
     <Compile Include="Core\Graphics\IPlacedOnField.cs" />
     <Compile Include="Core\Game\Character\Player\AbstractPlayer.cs" />
@@ -163,6 +168,7 @@
     <None Include="Space Impact_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Background\background_1.jpg" />
     <Content Include="Assets\black_old_face.png" />
     <Content Include="Assets\doomday_1.png" />
     <Content Include="Assets\doomday_2.png" />

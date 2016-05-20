@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Character
 {
-	public interface ICharacter: IActor
+	public interface ICharacter : IActor
 	{
 		//User-friendly properties of a character
 		int MaxHealth

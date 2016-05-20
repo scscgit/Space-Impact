@@ -221,7 +221,16 @@ namespace Space_Impact.Core
 		/// </summary>
 		public virtual void AddedToFieldHook()
 		{
+		}
 
+		public virtual bool IntersectsWithin(float x, float width, float y, float height)
+		{
+			if (x + width >= this.X && x <= this.X + this.Width &&
+				y + height >= this.Y && y <= this.Y + this.Height)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -234,20 +243,7 @@ namespace Space_Impact.Core
 		/// <returns>true if the actor can collide on x, y coordinates</returns>
 		public virtual bool IntersectsOn(float x, float y)
 		{
-			if (x >= X && x <= X + Width && y >= Y && y <= Y + Width)
-			{
-				return true;
-			}
-			return false;
-		}
-		public virtual bool IntersectsWithin(float x, float width, float y, float height)
-		{
-			if (x + width >= this.X && x <= this.X + this.Width &&
-				y + height >= this.Y && y <= this.Y + this.Height)
-			{
-				return true;
-			}
-			return false;
+			return IntersectsWithin(x, 0, y, 0);
 		}
 
 		public bool IntersectsActor(IActor actor)

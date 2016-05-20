@@ -7,11 +7,15 @@ using System.Threading.Tasks;
 namespace Space_Impact.Core.Game.Spawner
 {
 	/// <summary>
-	/// Spawner is also like an Actor, but does not implement Actor interface, only Act
+	/// Spawner is also like an Actor, but does not implement Actor interface, only Act.
 	/// </summary>
 	public interface ISpawner: IAct
 	{
+		IField Field { get; }
 		int RemainingEnemies { get; }
-		int Interval { get; }
+		bool UnlimitedEnemies { get; }
+		bool Active { get; }
+
+		void Spawn();
 	}
 }
