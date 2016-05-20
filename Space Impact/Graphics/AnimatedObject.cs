@@ -23,11 +23,11 @@ namespace Space_Impact.Graphics
 		//Location on a field, TODO don't forget C# isnt virtual implicitly
 		public int X
 		{
-			get; protected set;
+			get; set;
 		} = 0;
 		public int Y
 		{
-			get; protected set;
+			get; set;
 		} = 0;
 		public double Width
 		{

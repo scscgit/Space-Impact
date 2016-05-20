@@ -41,6 +41,23 @@ namespace Space_Impact.Core.Game
 			get; protected set;
 		}
 
+		//Returns an empty direction set
+		public static SpaceDirection None
+		{
+			get
+			{
+				return NONE_NONE;
+			}
+		}
+
+		/*
+		//Destroyer operator, a custom reset operation, returns an empty direction set
+		public static SpaceDirection operator~ (SpaceDirection oldDirection)
+		{
+			return NONE_NONE;
+		}
+		*/
+
 		SpaceDirection(HorizontalDirection horizontal, VerticalDirection vertical)
 		{
 			Horizontal = horizontal;

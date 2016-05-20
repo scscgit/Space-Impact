@@ -8,5 +8,6 @@ namespace Space_Impact.Core.Game.Player
 {
 	public interface IPlayer: IActor
 	{
+		bool Shooting { get; set; }
 	}
 }

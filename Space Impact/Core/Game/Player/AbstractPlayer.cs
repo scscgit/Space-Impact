@@ -12,6 +12,11 @@ namespace Space_Impact.Core.Game.Player
 		{
 		}
 
+		public bool Shooting
+		{
+			get; set;
+		}
+
 		public override void Act()
 		{
 			base.Act();

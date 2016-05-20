@@ -40,6 +40,21 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
+		//Actor can contain more Actors.
+		//For light-weight operation, lazy initialization is used.
+		LinkedList<IActorCompositePart> actorComposition = null;
+		public LinkedList<IActorCompositePart> ActorComposition
+		{
+			get
+			{
+				if(actorComposition == null)
+				{
+					actorComposition = new LinkedList<IActorCompositePart>();
+				}
+				return actorComposition;
+			}
+		}
+
 		protected AbstractActor(string name)
 		{
 			Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.NONE);
@@ -69,6 +84,17 @@ namespace Space_Impact.Core
 			{
 				Y = Y + Speed;
 			}
+
+			//Moving hero's objects together with him.
+			//All actors that this actor is composed of always get their coordinates updated to be the same.
+			if (ActorComposition != null)
+			{
+				foreach (IActor actor in ActorComposition)
+				{
+					actor.X = X;
+					actor.Y = Y;
+				}
+			}
 		}
 
 		public void RemoveFromField()
@@ -79,6 +105,7 @@ namespace Space_Impact.Core
 		public void AddedToField(IField field)
 		{
 			Field = field;
+			AddedToFieldHook();
 		}
 
 		/// <summary>

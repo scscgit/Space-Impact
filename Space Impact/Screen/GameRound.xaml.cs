@@ -55,6 +55,7 @@ namespace Space_Impact.src
 			}
 		}
 
+		//Current player on the Field
 		IPlayer player = null;
 		public IPlayer Player
 		{
@@ -64,7 +65,7 @@ namespace Space_Impact.src
 			}
 			private set
 			{
-				if(player != null)
+				if (player != null)
 				{
 					RemoveActor(player);
 				}
@@ -73,10 +74,51 @@ namespace Space_Impact.src
 			}
 		}
 
+		//Current size of the Field
+		public Size Size
+		{
+			get
+			{
+				return this.canvas.Size;
+			}
+		}
+
 		bool FirstDraw = true;
 
 		//List of all actors that will receive Draw and Act callbacks
 		LinkedList<IActor> ActorList;
+
+		//Actions that happen after the end of an animated Draw cycle
+		void AfterDraw()
+		{
+			if (Window.Current == null) return;
+			Log.d(this, Window.Current.Bounds.Width + "x");
+		}
+
+		//Registering events
+		void RegisterEvents()
+		{
+			//Keyboard presses
+			Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+			Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
+			//Instead of losing/gaining focus (which doesn't work properly),
+			//reinitialization of some aspects like KeyUp/KeyDown are best handled in Window Activated Event
+			Window.Current.Activated += Current_Activated;
+			//LostFocus += GameRound_LostFocus;
+			//Window.Current.Content.LostFocus += Content_LostFocus;
+		}
+
+		//Unregistering events
+		void RemoveEvents()
+		{
+			//Keyboard presses
+			Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
+			Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
+
+			//Window focus
+			Window.Current.Activated -= Current_Activated;
+		}
 
 		//Initialization of the class, before any textures are loaded
 		public GameRound()
@@ -84,15 +126,29 @@ namespace Space_Impact.src
 			Log.i(this, "Initializing");
 			this.InitializeComponent();
 
+			//Resolution of the game
 			ApplicationView.PreferredLaunchViewSize = new Size(1600, 900);
 			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
 			ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
+			RegisterEvents();
+
 			ActorList = new LinkedList<IActor>();
-			Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-			Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
 
 			Log.i(this, "Initialized");
+		}
+
+		//Reinitialization of all basic user-controlled logic after losing track of inputs
+		void Current_Activated(object sender, WindowActivatedEventArgs e)
+		{
+			Log.i(this, "Event Window.Current.Activated, resetting user-controlled (input) logic");
+
+			//Window.Current events can happen during game initialization
+			if (Player != null)
+			{
+				Player.Direction = SpaceDirection.None;
+				Player.Shooting = false;
+			}
 		}
 
 		async void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
@@ -134,6 +190,17 @@ namespace Space_Impact.src
 				case VirtualKey.S:
 				case VirtualKey.Down:
 					Player.Direction += SpaceDirection.VerticalDirection.DOWN;
+					break;
+
+				//Shooting
+				case VirtualKey.F:
+				case VirtualKey.Space:
+				case VirtualKey.LeftControl:
+					if (Player.Shooting == false)
+					{
+						Log.i(this, "Player is shooting");
+						Player.Shooting = true;
+					}
 					break;
 
 				//Debug
@@ -179,6 +246,16 @@ namespace Space_Impact.src
 				case VirtualKey.Down:
 					Player.Direction -= SpaceDirection.VerticalDirection.DOWN;
 					break;
+
+				//Shooting
+				case VirtualKey.F:
+				case VirtualKey.Space:
+				case VirtualKey.LeftControl:
+					if (Player.Shooting)
+					{
+						Player.Shooting = false;
+					}
+					break;
 			}
 		}
 
@@ -186,8 +263,7 @@ namespace Space_Impact.src
 		{
 			//Removing events
 			Log.i(this, "Page is being unloaded, removing events and other associations");
-			Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
-			Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
+			RemoveEvents();
 
 			//Cleaning up the Page to help the garbage collector
 			canvas.RemoveFromVisualTree();
@@ -221,7 +297,7 @@ namespace Space_Impact.src
 			Task createResourcesAsync = CreateResourcesAsync(sender);
 			args.TrackAsyncAction(createResourcesAsync.AsAsyncAction());
 			Log.i(this, "CreateResources started parallel task for creating textures");
-		
+
 			//Failed attempt at syncing async
 			//args.GetTrackedAction().AsTask().GetAwaiter().GetResult();
 			//Log.i(this, "CreateResources parallel task has finished");			
@@ -238,12 +314,12 @@ namespace Space_Impact.src
 		//Main game loop, should be fired 60 times per second
 		void canvas_DrawAnimated(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
-			if(FirstDraw)
+			if (FirstDraw)
 			{
 				FirstDraw = false;
 				OnFirstDraw();
 			}
-
+			
 			//Exception during Act is fatal. We encapsulate it as plain text and throw it.
 			try
 			{
@@ -257,9 +333,9 @@ namespace Space_Impact.src
 					currentActor.Act();
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				throw new Exception("Exception happened during Act on an Actor.\n"+e.ToString());
+				throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString());
 			}
 
 			//No problem should happen, but this makes debugging easier, plus any error during a single frame Draw is irrelevant anyway
@@ -275,6 +351,8 @@ namespace Space_Impact.src
 			{
 				Log.e(this, e.ToString());
 			}
+
+			AfterDraw();
 
 			// args.DrawingSession.DrawText("hello", new System.Numerics.Vector2(100, 50), Windows.UI.Colors.Aqua);
 			//args.DrawingSession.DrawImage(this.playerImage, new Vector2(a, 5));

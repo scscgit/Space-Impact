@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Game\AbstractActor.cs" />
+    <Compile Include="Core\Game\IActorCompositePart.cs" />
+    <Compile Include="Core\Game\Player\AbstractPartActor.cs" />
     <Compile Include="Core\Game\SpaceDirection.cs" />
     <Compile Include="Core\Game\IActor.cs" />
     <Compile Include="Core\Game\IField.cs" />

@@ -30,6 +30,11 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
+		LinkedList<IActorCompositePart> ActorComposition
+		{
+			get;
+		}
+
 		void Act();
 		void AddedToField(IField field);
 		void AddedToFieldHook();
