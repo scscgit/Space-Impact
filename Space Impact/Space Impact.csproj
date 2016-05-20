@@ -169,6 +169,7 @@
     <Compile Include="Screen\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\ScoreService.cs" />
     <Compile Include="Support\AbstractAction.cs" />
     <Compile Include="Support\ActionQueue.cs" />
     <Compile Include="Support\Log.cs" />
@@ -194,6 +195,7 @@
     <Content Include="Assets\fire_2.png" />
     <Content Include="Assets\hot_side_object.png" />
     <Content Include="Assets\Music\core.mp3" />
+    <Content Include="Assets\Music\userspace.mp3" />
     <Content Include="Assets\Music\vault.mp3" />
     <Content Include="Assets\ship10_base.png" />
     <Content Include="Assets\ship10_thrust.png" />

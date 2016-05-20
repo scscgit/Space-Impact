@@ -44,7 +44,7 @@
 				Draw="canvas_Draw"
 				CreateResources="canvas_CreateResources"
 				/>
-				
+
 				<!-- MainMenu - Main submenu screen -->
 				<Grid
 				Name="MainMenuMainScreenGrid"
@@ -74,20 +74,51 @@
 
 				</Grid>
 
-				<!-- MainMenu - settings submenu -->
+				<!-- MainMenu - Settings submenu screen -->
 				<Grid
 				Name="MainMenuSettingsGrid"
 				Visibility="Visible"
 				>
 
-					<Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="903,501,-838,-469" VerticalAlignment="Top"/>
+					<!-- ScrollViewer of Settings options -->
+					<ScrollViewer HorizontalAlignment="Center" Margin="448,192,472,288" VerticalAlignment="Center" Width="1000" Height="600" Padding="80,60" RequestedTheme="Light" BorderThickness="5" BorderBrush="#7F00F3FF">
+						<ScrollViewer.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#B2A3D1FF" Offset="1"/>
+								<GradientStop Color="#B2A7FFD3"/>
+							</LinearGradientBrush>
+						</ScrollViewer.Background>
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+							<StackPanel.ChildrenTransitions>
+								<TransitionCollection>
+									<EdgeUIThemeTransition Edge="Bottom"/>
+								</TransitionCollection>
+							</StackPanel.ChildrenTransitions>
+
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="Resolution" FontSize="34.667" Margin="0,0,50,0"  />
+								<TextBox x:Name="settingsResolutionWidth" HorizontalAlignment="Stretch" Height="37" VerticalAlignment="Stretch" Width="150"/>
+								<TextBlock Text="x" FontSize="34.667" Margin="20,0" VerticalAlignment="Top"/>
+								<TextBox x:Name="settingsResolutionHeight" HorizontalAlignment="Stretch" Height="37" VerticalAlignment="Stretch" Width="150"/>
+								<CheckBox x:Name="settingsFullscreen" Content="Fullscreen" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="21.333" BorderThickness="0" Padding="10,0,0,0" Width="156" Margin="30,0,0,0"/>
+							</StackPanel>
+
+							<StackPanel Orientation="Horizontal" BorderThickness="0" Margin="0,20,0,0">
+								<TextBlock Text="Sound Volume" FontSize="34.667" Margin="0,0,50,0" />
+								<Slider x:Name="settingsVolume" HorizontalAlignment="Center" Width="450" VerticalAlignment="Center" Margin="0,8,0,0" />
+							</StackPanel>
+
+							<Button x:Name="settingsResetToDefault" Content="Reset to Default Settings" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="24"/>
+
+						</StackPanel>
+					</ScrollViewer>
 
 					<Button x:Name="settingsReturnButton" Content="Return to Main Menu" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="720" Height="120" FontFamily="Arial Black" BorderBrush="#66FF0000" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="settingsReturnButton_Click"/>
 
 				</Grid>
 
 			</Grid>
-			
+
 		</Grid>
 	</Viewbox>
 

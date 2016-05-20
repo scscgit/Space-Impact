@@ -51,6 +51,8 @@ namespace Space_Impact.Screen
 	/// </summary>
 	public sealed partial class GameRound : Page, IField
 	{
+		const string PageMusic = "core";
+
 		/// <summary>
 		/// Background class of the Field
 		/// </summary>
@@ -221,11 +223,6 @@ namespace Space_Impact.Screen
 
 			this.InitializeComponent();
 			FieldLoaded = false;
-
-			//Resolution of the game
-			ApplicationView.PreferredLaunchViewSize = new Size(1600, 900);
-			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
-			ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
 			RegisterEvents();
 
@@ -503,10 +500,15 @@ namespace Space_Impact.Screen
 				);
 
 			//Music is also a resource
-			Music = await Utility.GetMusic("core");
-			Music.IsLooping = true;
+			Log.i(this, "Loading music");
+			Music = await Utility.GetMusic(PageMusic);
+
 			//Music is implicitly started, but to be sure, we explicitly start it
+			//BUG: Music is not being looped
+			Music.Loaded += (a, b) => { Music.IsLooping = true; };
+			Music.IsLooping = true;
 			Music.Play();
+			Music.IsLooping = true;
 
 			Log.i(this, "Setting Field as loaded");
 			FieldLoaded = true;
@@ -544,7 +546,8 @@ namespace Space_Impact.Screen
 			}
 			catch (Exception e)
 			{
-				throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
+				Log.e(this, "Exception happened during Act on an Actor.\n" + e.ToString());
+				//throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
 			}
 
 			//Background draw cycle
@@ -700,11 +703,15 @@ namespace Space_Impact.Screen
 			SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
 		}
 
-		void NewGameButton_Click(object sender, RoutedEventArgs e)
+		async void NewGameButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on New Game Button");
-			//todo
-
+			string message = "Are you sure you want to start a new game?";
+			if(GameRunning)
+			{
+				message += "\nYou will lose all of the current progress!";
+			}
+			await ShowPopupDialog(message, "Yes, I am", () => ChangeScreen(typeof(GameRound)), "No, let me play", null);
 		}
 
 		async void ExitGameButton_Click(object sender, RoutedEventArgs e)
@@ -713,35 +720,62 @@ namespace Space_Impact.Screen
 			await ShowExitDialog();
 		}
 
-		async Task ShowExitDialog()
+		public delegate void PopupDialogActionDelegate();
+		async Task ShowPopupDialog(string question, string yes, PopupDialogActionDelegate actionYes, string no, PopupDialogActionDelegate actionNo, bool defaultYes, string third, PopupDialogActionDelegate actionThird)
 		{
-			var dialog = new Windows.UI.Popups.MessageDialog("Are you sure you don't want to keep playing?");
+			var dialog = new Windows.UI.Popups.MessageDialog(question==null?"<NO TEXT AVAILABLE>":question);
 
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand("Yes, I am") { Id = 0 });
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand("No, let me play") { Id = 1 });
+			dialog.Commands.Add(new Windows.UI.Popups.UICommand(yes==null?"Yes":yes) { Id = 0 });
+			dialog.Commands.Add(new Windows.UI.Popups.UICommand(no==null?"No":no) { Id = 1 });
 
-			if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
+			if (third != null && actionThird != null && Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
 			{
 				//Adding a 3rd command will crash the app when running on Mobile !!!
-				//dialog.Commands.Add(new Windows.UI.Popups.UICommand("Maybe later") { Id = 2 });
+				dialog.Commands.Add(new Windows.UI.Popups.UICommand(third) { Id = 2 });
 			}
 
-			dialog.DefaultCommandIndex = 0;
+			if (defaultYes)
+			{
+				dialog.DefaultCommandIndex = 0;
+			}
+			else
+			{
+				dialog.DefaultCommandIndex = 1;
+			}
 			dialog.CancelCommandIndex = 1;
 
 			switch ((int)(await dialog.ShowAsync()).Id)
 			{
 				case 0:
-					//User decided to exit the game
-					Log.i(this, "User has confirmed his choice to end the game via Exit Button");
-					ExitScreen();
+					Log.i(this, "User has confirmed his choice in the popup dialog");
+					if (actionYes != null)
+					{
+						actionYes();
+					}
 					break;
 				case 1:
 				default:
-					Log.i(this, "User has cancelled his choice to end the game via Exit Button");
-					//No action when user decides to keep playing
+					Log.i(this, "User has cancelled his choice in the popup dialog");
+					if (actionNo != null)
+					{
+						actionNo();
+					}
+					break;
+				case 2:
+					Log.i(this, "User has chosen the third choice in the popup dialog");
+					actionThird();
 					break;
 			}
+		}
+		//Most used overload with only yes / no choices (the only applicable options on mobile) for convenience
+		async Task ShowPopupDialog(string question, string yes, PopupDialogActionDelegate actionYes, string no, PopupDialogActionDelegate actionNo)
+		{
+			await ShowPopupDialog(question, yes, actionYes, no, actionNo, false, null, null);
+		}
+		//Exit Dialog implementation
+		async Task ShowExitDialog()
+		{
+			await ShowPopupDialog("Are you sure you don't want to keep playing?", "Yes, I am", () => ChangeScreen(typeof(MainMenu)), "No, let me play", null);
 		}
 
 		//Converts the position representing a point on a Window to a point on the Field
@@ -817,13 +851,20 @@ namespace Space_Impact.Screen
 			ResetUserInput();
 
 
-			//todo pause and then get back to previous screen, TODO HOW TO PREVIOUS SCREEN (will use ExitScreen method)
+			//todo pause and then get back to previous screen, TODO WHEN TO PREVIOUS SCREEN (will use ExitScreen method)
 		}
 
-		void ExitScreen()
+		//The exit point of the page
+		void ChangeScreen(Type screenType)
 		{
 			//Exiting before loading resources would cause synchronization hazard
 			if (!FieldLoaded)
+			{
+				return;
+			}
+
+			//The literally only way I could find to prevent music from loading and running even after it was stopped before old Page disposal
+			if (Music.CurrentState == MediaElementState.Opening)
 			{
 				return;
 			}
@@ -832,7 +873,7 @@ namespace Space_Impact.Screen
 			//GameRunning = false;
 
 			//TODO FIX NAVIGATION, IT CRASHES BECAUSE OF PARALLEL PROCESSES
-			Frame.Navigate(typeof(MainMenu));
+			Frame.Navigate(screenType);
 		}
 	}
 }

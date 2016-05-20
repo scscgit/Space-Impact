@@ -77,5 +77,26 @@ namespace Space_Impact.Support
 				return Random.Next(b, a + 1);
 			}
 		}
+
+		public static Windows.Storage.ApplicationDataContainer LocalSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+		public static Windows.Storage.StorageFolder LocalFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+		public static T SettingsLoad<T>(string name)
+		{
+			object value = LocalSettings.Values[name];
+			if (value is T)
+			{
+				return (T)value;
+			}
+			else
+			{
+				return default(T);
+			}
+		}
+
+		public static void SettingsSave<T>(string name, T value)
+		{
+			LocalSettings.Values[name] = value;
+		}
 	}
 }

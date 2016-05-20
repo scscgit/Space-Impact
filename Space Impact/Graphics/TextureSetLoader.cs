@@ -11,6 +11,8 @@ namespace Space_Impact.Graphics
 {
 	public sealed class TextureSetLoader
 	{
+		private static object ConstructorLock = new object();
+
 		//List of all pre-defined texture sets
 
 		//Backgrounds
@@ -114,8 +116,6 @@ namespace Space_Impact.Graphics
 		{
 			textureSetLoader = null;
 		}
-
-		private static object ConstructorLock = new object();
 
 		//Singleton
 		private static TextureSetLoader textureSetLoader = null;
