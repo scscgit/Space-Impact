@@ -1,0 +1,13 @@
+# Ignore all other files
+/*
+
+# Commit project files
+!/Space Impact
+!/Space Impact.sln
+
+# Ignore project builds
+/Space Impact/bin
+/Space Impact/obj
+
+# Commit gitignore
+!/.gitignore
