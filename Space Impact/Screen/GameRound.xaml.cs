@@ -35,6 +35,7 @@ using Space_Impact.Core.Game.Character;
 using Space_Impact.Core.Game.Spawner;
 using Space_Impact.Core.Graphics.Background;
 using Space_Impact.Core.Graphics.Background.Strategy;
+using Space_Impact.Core.Game.Spawner.Wrapper;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -441,7 +442,8 @@ namespace Space_Impact.Screen
 			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
 			//Initializing spawner
-			ISpawner spawner = new DualSymmetrySpawner(y: 0);
+			//ISpawner spawner = new DualSymmetrySpawner(y: 0);
+			ISpawner spawner = new DelayedStart(0, 10, new DualSymmetrySpawner(y: 0));
 			AddActor(spawner);
 
 			//Also objects adhoc
@@ -542,12 +544,14 @@ namespace Space_Impact.Screen
 			}
 
 			//Exception during Act is fatal. We encapsulate it as a plain text and throw it.
+			IAct problemActor = null;
 			try
 			{
 				ForEachActor<IAct>
 				(
 					a =>
 					{
+						problemActor = a;
 						a.Act();
 						return false;
 					}
@@ -556,6 +560,10 @@ namespace Space_Impact.Screen
 			catch (Exception e)
 			{
 				Log.e(this, "Exception happened during Act on an Actor.\n" + e.ToString());
+				if (problemActor != null)
+				{
+					Log.e(this, "Problem Actor was " + problemActor.ToString());
+				}
 				//sender.RunOnGameLoopThreadAsync(async() => { await Utility.GetMusic("Sounds", "alarm_to_the_extreme"); }).AsTask();
 				//throw new Exception("Exception happened during Act on an Actor.\n" + e.ToString(), e);
 			}

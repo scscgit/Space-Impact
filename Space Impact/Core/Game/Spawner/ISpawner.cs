@@ -11,8 +11,9 @@ namespace Space_Impact.Core.Game.Spawner
 
 	/// <summary>
 	/// Spawner is also like an Actor, but does not implement Actor interface, only Act.
+	/// He should Spawn Actors to the Field.
 	/// </summary>
-	public interface ISpawner : IAct
+	public interface ISpawner : IAct, IPlacedInSpace, IPlacedInField
 	{
 		/// <summary>
 		/// Returns a current representative target position for the Spawner.

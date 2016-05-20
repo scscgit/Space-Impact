@@ -19,7 +19,7 @@ namespace Space_Impact.Core.Game.Player
 	public class Hero : AbstractPlayer, IClickable, IAffectedByBombExplosion
 	{
 		//Constants
-		public const int HERO_SPEED = 8;
+		public const int HERO_SPEED = 7;
 		public const int HERO_HEALTH = 500;
 
 		//Hero's thrust, class definion
@@ -63,7 +63,7 @@ namespace Space_Impact.Core.Game.Player
 			Speed = HERO_SPEED;
 			ShootingInterval = 50;
 
-			AddStrategy(new FlyingRotation(this, SpaceDirection.VerticalDirection.UP, 10, 65));
+			AddStrategy(new FlyingRotation(this, verticalOrientation: SpaceDirection.VerticalDirection.UP, angleDeltaCount: 20, maxAngleDegrees: 75));
 
 			//Default weapon
 			Weapon = new MultiBulletShooter(1, 20);

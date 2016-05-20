@@ -34,6 +34,7 @@ namespace Space_Impact.Core.Game.Spawner
 			base.DeleteActorHook();
 
 			//Delete strategies from the Spawner
+			Log.i(this, "Clearing strategies");
 			Strategies.Clear();
 		}
 

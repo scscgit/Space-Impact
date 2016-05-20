@@ -31,8 +31,13 @@ namespace Space_Impact.Services
 		public void Connect()
 		{
 			//todo
+			//System.Data.S
+			//SQLiteConnection
+			//SqlConnection
+			//SQLite
+			
+
+			//System.Data.S
 		}
-
-
 	}
 }

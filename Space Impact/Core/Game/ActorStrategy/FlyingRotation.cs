@@ -61,7 +61,6 @@ namespace Space_Impact.Core.Game.ActorStrategy
 
 			//Maximum rotation angle
 			MaxAngle = DegreeToRadians(maxAngleDegrees);
-			Log.d(this, "max"+MaxAngle.ToString());
 
 			//Delta is a fraction of MaxAngle
 			DeltaAngle = MaxAngle / angleDeltaCount;
@@ -178,7 +177,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 		public static void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw, float angleRadians)
 		{
 			float maxStep = (float)Math.PI / 4;
-			
+
 			angleRadians = Utility.NormalizeRadianAngle(angleRadians);
 
 			for (float remainingAngleRadians = angleRadians; remainingAngleRadians > 0; remainingAngleRadians -= maxStep)

@@ -2,6 +2,7 @@
 using Space_Impact.Core.Game.Character.Enemy.Bomb;
 using Space_Impact.Core.Game.Enemy;
 using Space_Impact.Core.Game.Object;
+using Space_Impact.Core.Game.Spawner.Wrapper;
 using Space_Impact.Support;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner
 {
+	/// <summary>
+	/// Adds two symmetrical Spawners to the Field, but hides (and controls) their Acts using a HideAct wrapper.
+	/// </summary>
 	public class DualSymmetrySpawner : AbstractSpawner
 	{
 		//Constant settings
@@ -18,8 +22,8 @@ namespace Space_Impact.Core.Game.Spawner
 		const int REMAINING_ENEMIES_RIGHT = 15;
 
 		//Symmetrical Spawners
-		ISpawner LeftSpawner = null;
-		ISpawner RightSpawner = null;
+		HideAct LeftSpawner = null;
+		HideAct RightSpawner = null;
 
 		public DualSymmetrySpawner(float y) : base(0, y, REMAINING_ENEMIES_LEFT + REMAINING_ENEMIES_RIGHT)
 		{
@@ -29,8 +33,8 @@ namespace Space_Impact.Core.Game.Spawner
 		{
 			base.AddedToFieldHook();
 
-			LeftSpawner = new EnemySpawner(0, Y, REMAINING_ENEMIES_LEFT, LeftSpawnCallback);
-			RightSpawner = new EnemySpawner((float)Field.Size.Width, Y, REMAINING_ENEMIES_RIGHT, RightSpawnCallback);
+			LeftSpawner = new HideAct(new EnemySpawner(0, Y, REMAINING_ENEMIES_LEFT, LeftSpawnCallback));
+			RightSpawner = new HideAct(new EnemySpawner((float)Field.Size.Width, Y, REMAINING_ENEMIES_RIGHT, RightSpawnCallback));
 
 			Field.AddActor(LeftSpawner);
 			Field.AddActor(RightSpawner);
@@ -40,11 +44,11 @@ namespace Space_Impact.Core.Game.Spawner
 		{
 			base.DeleteActorHook();
 
+			LeftSpawner.DeleteActor();
+			RightSpawner.DeleteActor();
+
 			LeftSpawner = null;
 			RightSpawner = null;
-
-			Field.RemoveActor(LeftSpawner);
-			Field.RemoveActor(RightSpawner);
 		}
 
 		protected void LeftSpawnCallback()
@@ -65,6 +69,19 @@ namespace Space_Impact.Core.Game.Spawner
 			enemy.X = RightSpawner.Position.X;
 			enemy.Y = RightSpawner.Position.Y;
 			Field.AddActor(enemy);
+		}
+
+		public override void Act()
+		{
+			base.Act();
+			if(LeftSpawner != null)
+			{
+				LeftSpawner.HiddenAct();
+			}
+			if(RightSpawner != null)
+			{
+				RightSpawner.HiddenAct();
+			}
 		}
 	}
 }

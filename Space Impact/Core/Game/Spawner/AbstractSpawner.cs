@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner
 {
-	public abstract class AbstractSpawner : ISpawner, IPlacedInSpace, IPlacedInField
+	public abstract class AbstractSpawner : ISpawner
 	{
 		public IField Field
 		{
@@ -106,11 +106,22 @@ namespace Space_Impact.Core.Game.Spawner
 			Strategies = new List<ISpawnerStrategy>();
 
 			//By default, Spawner is active only while the round is not finished
-			IsActiveStrategy = () => Field.GameRunning;
+			IsActiveStrategy = () =>
+			{
+				if (Field != null)
+				{
+					return Field.GameRunning;
+				}
+				else
+				{
+					return false;
+				}
+			};
 		}
 
 		/// <summary>
 		/// Public spawn interface implementation, calls the callback of the subclasses.
+		/// Automatically removes the Spawner from the Field after it has no more enemies to produce because of the RemainingEnemies setter action.
 		/// </summary>
 		/// <param name="spawnCallback">Callback that runs if the conditions for the spawn get fulfilled, e.g. there are remaining enemies.</param>
 		public void Spawn(SpawnCallbackDelegate spawnCallback)
@@ -132,7 +143,7 @@ namespace Space_Impact.Core.Game.Spawner
 		protected void NoRemainingEnemies()
 		{
 			//Default implementation removes the spawner
-			Field.RemoveActor(this);
+			DeleteActor();
 		}
 
 		public virtual void Act()
@@ -143,12 +154,19 @@ namespace Space_Impact.Core.Game.Spawner
 				foreach (ISpawnerStrategy strategy in Strategies)
 				{
 					strategy.Act();
+
+					//When the strategy removed the Spawner, iteration ends
+					if (Field == null)
+					{
+						break;
+					}
 				}
 			}
 		}
 
 		public void AddedToField(IField field)
 		{
+			//Preventively deletes the actor from an existing Field
 			DeleteActor();
 			Field = field;
 			AddedToFieldHook();
