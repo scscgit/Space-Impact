@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core
 {
-	public interface IActor : IAnimatedObject
+	public interface IActor : IAnimatedObject, IAct
 	{
 		IField Field
 		{
@@ -39,7 +39,6 @@ namespace Space_Impact.Core
 		bool IntersectsWithin(float x, float width, float y, float height);
 		bool IntersectsActor(IActor actor);
 
-		void Act();
 		void AddedToField(IField field);
 		void AddedToFieldHook();
 

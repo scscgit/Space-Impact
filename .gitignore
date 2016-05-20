@@ -5,9 +5,12 @@
 !/Space Impact
 !/Space Impact.sln
 
-# Ignore project builds
-/Space Impact/bin
-/Space Impact/obj
+# Commit project images
+!/*.png
 
 # Commit gitignore
 !/.gitignore
+
+# Ignore project builds
+/Space Impact/bin
+/Space Impact/obj

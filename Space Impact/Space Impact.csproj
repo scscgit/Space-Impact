@@ -93,6 +93,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,11 @@
     <Compile Include="Core\Game\ActorStrategy\NullActStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\Rotation.cs" />
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
+    <Compile Include="Core\Game\IAct.cs" />
+    <Compile Include="Core\Game\Spawner\AbstractSpawner.cs" />
+    <Compile Include="Core\Game\Spawner\EnemySpawner.cs" />
+    <Compile Include="Core\Game\Spawner\ISpawner.cs" />
     <Compile Include="Core\Game\Character\ICharacter.cs" />
     <Compile Include="Core\Game\ClickableImpl.cs" />
     <Compile Include="Core\Game\Character\Enemy\AbstractEnemy.cs" />
@@ -148,6 +154,7 @@
     <Compile Include="Support\AbstractAction.cs" />
     <Compile Include="Support\ActionQueue.cs" />
     <Compile Include="Support\Log.cs" />
+    <Compile Include="Support\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

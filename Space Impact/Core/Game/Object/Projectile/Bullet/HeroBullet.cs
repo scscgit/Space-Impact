@@ -10,7 +10,7 @@ namespace Space_Impact.Core.Game.Player.Bullet
 {
 	public class HeroBullet : AbstractBullet
 	{
-		public HeroBullet(IPlayer player, SpaceDirection direction, float angle) : base("Bullet", player, direction, angle)
+		public HeroBullet(IPlayer player, float angle) : base("Bullet", player, angle)
 		{
 			Animation = TextureSetLoader.FIRE;
 			Speed = 50;

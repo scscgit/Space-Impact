@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Space_Impact.Support;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -89,6 +90,45 @@ namespace Space_Impact.Core.Game
 		public static SpaceDirection get(VerticalDirection vertical)
 		{
 			return get(HorizontalDirection.NONE, vertical);
+		}
+
+		//Conversion from angle
+		public static SpaceDirection getFromAngle(float angle)
+		{
+			angle = Utility.NormalizeAngle(angle);
+			if (angle > 0 && angle < 90)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, SpaceDirection.VerticalDirection.UP);
+			}
+			else if (angle == 90)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT);
+			}
+			else if (angle > 90 && angle < 180)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, SpaceDirection.VerticalDirection.DOWN);
+			}
+			else if (angle == 180)
+			{
+				return SpaceDirection.get(SpaceDirection.VerticalDirection.DOWN);
+			}
+			else if (angle > 180 && angle < 270)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT, SpaceDirection.VerticalDirection.DOWN);
+			}
+			else if (angle == 270)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT);
+			}
+			else if (angle > 270 && angle < 360)
+			{
+				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT, SpaceDirection.VerticalDirection.UP);
+			}
+			else if (angle == 360 || angle == 0)
+			{
+				return SpaceDirection.get(SpaceDirection.VerticalDirection.UP);
+			}
+			throw new Exception("Fatal error: Angle for conversion in SpaceDirection was not normalized.");
 		}
 
 		public static SpaceDirection operator +(SpaceDirection direction, HorizontalDirection horizontal)

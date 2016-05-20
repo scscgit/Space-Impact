@@ -22,7 +22,7 @@ namespace Space_Impact.Core.Game.Object
 		{
 			Animation = TextureSetLoader.DOOMDAY;
 			AnimationSpeed = 20;
-			Damage = 96;
+			Damage = 90;
 
 			//The strategy is a follower of a target chosen by the constructor parameter
 			ActStrategy = new Follower(this, followTarget);

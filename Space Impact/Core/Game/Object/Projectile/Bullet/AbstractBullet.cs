@@ -16,7 +16,7 @@ namespace Space_Impact.Core.Game.Player.Bullet
 			get; set;
 		}
 
-		protected AbstractBullet(string name, IPlayer player, SpaceDirection direction, float angle) : base(name, direction, angle)
+		protected AbstractBullet(string name, IPlayer player, float angle) : base(name, angle)
 		{
 			Player = player;
 		}

@@ -32,6 +32,7 @@ using Windows.UI.ViewManagement;
 using Space_Impact.Core.Game;
 using Space_Impact.Core.Game.Object;
 using Space_Impact.Core.Game.Character;
+using Space_Impact.Core.Game.Spawner;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -119,7 +120,7 @@ namespace Space_Impact.Screen
 		bool FirstDraw = true;
 
 		//List of all actors that will receive Draw and Act callbacks
-		LinkedList<IActor> ActorList;
+		LinkedList<IAct> ActorList;
 		//Lock for concurrent operations on the same ActorList
 		private object ActorListLock = new object();
 
@@ -171,7 +172,7 @@ namespace Space_Impact.Screen
 
 			RegisterEvents();
 
-			ActorList = new LinkedList<IActor>();
+			ActorList = new LinkedList<IAct>();
 
 			Log.i(this, "Initialized");
 		}
@@ -360,11 +361,15 @@ namespace Space_Impact.Screen
 			Player.X = (float)Size.Width / 2 - (float)Player.Width / 2;
 			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
+			//Initializing spawner
+			ISpawner spawner = new EnemySpawner(this, 600, 400);
+			AddActor(spawner);
+
 			//Also objects adhoc
-			ICharacter doomday = new Doomday(Player);
-			doomday.X = 600;
-			doomday.Y = 400;
-			AddActor(doomday);
+			//ICharacter doomday = new Doomday(Player);
+			//doomday.X = 600;
+			//doomday.Y = 400;
+			//AddActor(doomday);
 
 			//The game starts running after the map is loaded with all characters
 			GameRunning = true;
@@ -419,7 +424,7 @@ namespace Space_Impact.Screen
 			//Exception during Act is fatal. We encapsulate it as a plain text and throw it.
 			try
 			{
-				ForEachActor
+				ForEachActor<IAct>
 				(
 					a =>
 					{
@@ -437,10 +442,14 @@ namespace Space_Impact.Screen
 			try
 			{
 				//Draw all actors
-				foreach (IActor actor in ActorList)
-				{
-					actor.Draw(args.DrawingSession);
-				}
+				ForEachActor<IActor>
+				(
+					a =>
+					{
+						a.Draw(args.DrawingSession);
+						return false;
+					}
+				);
 
 				//Draw last error log
 				DrawErrorLog(args.DrawingSession);
@@ -517,37 +526,49 @@ namespace Space_Impact.Screen
 		}
 
 		//Manipulation with available actors that are currently registered using Observer pattern for receiving events
-		public void AddActor(IActor actor)
+		public void AddActor(IAct actor)
 		{
-			Log.i(this, "Adding actor " + actor.Name);
+			Log.i(this, "Adding actor " + actor.ToString());
 			if (actor != null)
 			{
-				actor.AddedToField(this);
-				ActorList.AddLast(actor);
+				if (actor is IActor)
+				{
+					((IActor)actor).AddedToField(this);
+					ActorList.AddLast(actor);
+				}
+				else
+				{
+					ActorList.AddLast(actor);
+				}
 			}
 		}
-		public void RemoveActor(IActor actor)
+		public void RemoveActor(IAct actor)
 		{
-			Log.i(this, "Removing actor " + actor.Name);
+			Log.i(this, "Removing actor " + actor.ToString());
 			ActorList.Remove(actor);
 		}
 
 		//Performs an operation on each actor on the Field.
 		//If the operation returns true, iteration will stop.
-		public void ForEachActor(ActorAction action)
+		public void ForEachActor<ActorType>(ActorAction<ActorType> action)
 		{
 			//This operation is synchronized
 			lock (ActorListLock)
 			{
 				//Iterate over the list and Act on all actors
-				LinkedListNode<IActor> actor = ActorList.First;
+				LinkedListNode<IAct> actor = ActorList.First;
 				while (actor != null)
 				{
 					//We allow the actor to remove himself from the list by taking care of a possible concurrent list modification problem
-					IActor currentActor = actor.Value;
+					IAct currentActor = actor.Value;
 					actor = actor.Next;
-					//Action returns true if it intends to modify the list, but we don't use that value
-					action(currentActor);
+
+					//Only Actors with the correct type will act
+					if(currentActor is ActorType)
+					{
+						//Action returns true if it intends to modify the list, but we don't use that value
+						action((ActorType)currentActor);
+					}
 				}
 			}
 		}
@@ -625,15 +646,11 @@ namespace Space_Impact.Screen
 			Point point = WindowToFieldPosition(e.GetCurrentPoint(this).Position);
 
 			//Clicks on all clickable actors
-			ForEachActor
+			ForEachActor<IClickable>
 			(
 				a =>
 				{
-					IClickable actor = a as IClickable;
-					if (actor != null)
-					{
-						actor.Click(point.ToVector2().X, point.ToVector2().Y);
-					}
+					a.Click(point.ToVector2().X, point.ToVector2().Y);
 					return false;
 				}
 			);
@@ -643,16 +660,12 @@ namespace Space_Impact.Screen
 			Point point = WindowToFieldPosition(e.GetCurrentPoint(this).Position);
 
 			//Event on all clickable actors
-			ForEachActor
+			ForEachActor<IClickable>
 			(
 				a =>
 				{
-					IClickable actor = a as IClickable;
-					if (actor != null)
-					{
-						//Log.d(this, "Trying to ClickMove on IClickable actor " + actor.ToString() + "."); todo delete, just testing for a certain type of crash
-						actor.ClickMove(point.ToVector2().X, point.ToVector2().Y);
-					}
+					//Log.d(this, "Trying to ClickMove on IClickable actor " + actor.ToString() + "."); todo delete, just testing for a certain type of crash
+					a.ClickMove(point.ToVector2().X, point.ToVector2().Y);
 					return false;
 				}
 			);
@@ -660,15 +673,11 @@ namespace Space_Impact.Screen
 		void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
 		{
 			//Event on all clickable actors
-			ForEachActor
+			ForEachActor<IClickable>
 			(
 				a =>
 				{
-					IClickable actor = a as IClickable;
-					if (actor != null)
-					{
-						actor.ClickRelease();
-					}
+					a.ClickRelease();
 					return false;
 				}
 			);

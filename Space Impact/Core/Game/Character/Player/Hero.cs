@@ -125,7 +125,7 @@ namespace Space_Impact.Core.Game.Player
 		public override bool Shot()
 		{
 			//var up = SpaceDirection.get(SpaceDirection.VerticalDirection.UP)
-			HeroBullet bullet = new HeroBullet(this, SpaceDirection.get(Direction.Horizontal, SpaceDirection.VerticalDirection.UP), Angle);
+			HeroBullet bullet = new HeroBullet(this, Angle);
 			Log.i(this, "new Bullet created");
 
 			Field.AddActor(bullet);

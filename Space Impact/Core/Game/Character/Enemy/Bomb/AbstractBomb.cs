@@ -65,7 +65,7 @@ namespace Space_Impact.Core.Game.Object.Bomb
 		{
 			Log.i(this, "Bomb exploding");
 			int affectedActors = 0;
-			Field.ForEachActor
+			Field.ForEachActor<IActor>
 			(
 				actor =>
 				{
@@ -102,7 +102,7 @@ namespace Space_Impact.Core.Game.Object.Bomb
 		protected bool EnemyWithinRange(float radiusWidth, float radiusHeight)
 		{
 			bool withinRange = false;
-			Field.ForEachActor
+			Field.ForEachActor<IActor>
 			(
 				actor =>
 				{
