@@ -1,4 +1,5 @@
-﻿using Space_Impact.Graphics;
+﻿using Space_Impact.Core.Game;
+using Space_Impact.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,16 @@ namespace Space_Impact.Core
 		string Name
 		{
 			set; get;
+		}
+
+		SpaceDirection Direction
+		{
+			get; set;
+		}
+
+		int Speed
+		{
+			get; set;
 		}
 
 		void Act();

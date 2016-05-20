@@ -7,11 +7,26 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Support
 {
+	//Shamelessly stealing ideas from Android.
+	//Provides single point of enabling/disabling those messages, and/or forwarding them to screen when I reimplement it.
 	static class Log
 	{
-		public static void i(String message)
+		//Debug
+		public static void d(Object context, String message)
 		{
-			Debug.WriteLine(message);
+			Debug.WriteLine("D>" + context.ToString() + ": " + message);
+		}
+
+		//Information
+		public static void i(Object context, String message)
+		{
+			Debug.WriteLine("I>"+context.ToString() + ": " + message);
+		}
+
+		//Error
+		public static void e(Object context, String message)
+		{
+			Debug.WriteLine("E>"+context.ToString() + ": " + message);
 		}
 	}
 }

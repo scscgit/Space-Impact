@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
+using Space_Impact.Support;
 
 namespace Space_Impact.Core.Game.Player
 {
@@ -42,13 +43,15 @@ namespace Space_Impact.Core.Game.Player
 		public Hero() : base("Hero")
 		{
 			setAnimation(TextureSetLoader.SHIP1_BASE);
+			Speed = 8;
 
 			this.thrust = new MovementThrust(this);
 		}
 
 		public override void Act()
 		{
-
+			Log.i(this,"X="+X+" Y="+Y+" Horizontal="+(Direction.Horizontal==SpaceDirection.HorizontalDirection.LEFT?"L":(Direction.Horizontal == SpaceDirection.HorizontalDirection.RIGHT?"R":".")));
+			base.Act();
 		}
 
 		public override void AddedToFieldHook()
@@ -58,7 +61,7 @@ namespace Space_Impact.Core.Game.Player
 
 		protected override void DrawHook(CanvasDrawingSession draw)
 		{
-			thrust.Draw(draw);
+			//thrust.Draw(draw);
 		}
 	}
 }

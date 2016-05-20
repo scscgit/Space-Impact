@@ -31,6 +31,12 @@ namespace Space_Impact.Graphics
 			}
 		}
 
+		//Resets all loaded textures by destroying the current TextureSetLoader Instance
+		public static void DeleteInstance()
+		{
+			textureSetLoader = null;
+		}
+
 		//Singleton
 		public static TextureSetLoader Instance
 		{
@@ -65,14 +71,14 @@ namespace Space_Impact.Graphics
 		}
 
 		//Loads a bitmap representing each texture and adds them to the Dictionary
-		private async Task load(CanvasAnimatedControl sender, string[] textureSet)
+		async Task load(CanvasAnimatedControl sender, string[] textureSet)
 		{
 			int length = textureSet.Length;
 			CanvasBitmap[] bitmapSet = new CanvasBitmap[length];
 			for (int i = 0; i < length; i++)
 			{
 				bitmapSet[i] = await CanvasBitmap.LoadAsync(sender, TextureToString(textureSet[i]));
-				Log.i("Loading texture "+textureSet[i]);
+				Log.i(this, "Loading texture "+textureSet[i]);
 			}
 			this.bitmapDictionary.Add(textureSet, bitmapSet);
 		}

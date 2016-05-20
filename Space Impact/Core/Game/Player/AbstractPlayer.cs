@@ -14,7 +14,7 @@ namespace Space_Impact.Core.Game.Player
 
 		public override void Act()
 		{
-			X++;
+			base.Act();
 		}
 	}
 }

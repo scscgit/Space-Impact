@@ -12,19 +12,61 @@
 	xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
 	>
 
-	<!-- Main grid for canvases -->
-	<Grid
-		Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-		>
-		
-		<canvas:CanvasAnimatedControl x:Name="canvas"
+	<!-- Entire screen -->
+	<SplitView Name="SplitView"
+			   DisplayMode="CompactOverlay"  IsPaneOpen="False" 
+               CompactPaneLength="51" OpenPaneLength="250">
+		<SplitView.Pane>
+
+			<!-- Left Stack Panel -->
+			<StackPanel>
+				<StackPanel.Background>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FFA6FFBE" Offset="0"/>
+						<GradientStop Color="#FFF95746" Offset="0.996"/>
+					</LinearGradientBrush>
+				</StackPanel.Background>
+
+				<Button x:Name="MenuButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                    Width="50" Height="50" Background="Transparent" Click="MenuButton_Click"/>
+				
+				<StackPanel Orientation="Horizontal">
+					<Button x:Name="NewGameButton" FontFamily="Segoe MDL2 Assets" Content="&#xE825;"
+                    Width="50" Height="50" Background="Transparent" Click="NewGameButton_Click"/>
+					<TextBlock Text="Start a new game" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal">
+					<Button x:Name="ExitButton" FontFamily="Segoe MDL2 Assets" Content="&#xE811;"
+                    Width="50" Height="50" Background="Transparent" Click="ExitGameButton_Click"/>
+					<TextBlock Text="Exit the game" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
+				</StackPanel>
+
+			</StackPanel>
+
+		</SplitView.Pane>
+		<SplitView.Content>
+
+			<!-- Main grid for canvases -->
+			<Grid
+				Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+				>
+				<Viewbox Stretch="Fill">
+					<canvas:CanvasAnimatedControl x:Name="canvas"
+									  Width="1920"  
+									  Height="1080"
 									  Draw="canvas_DrawAnimated"
 									  CreateResources="canvas_CreateResources"
 									  />
+				</Viewbox>
 
-		<canvas:CanvasControl x:Name="canvasTouchpad"
+				<canvas:CanvasControl x:Name="canvasTouchpad"
 							  Draw="canvasTouchpad_Draw"
 							  RenderTransformOrigin="0.686,0.503" Width="50" Height="200"
 							  />
-	</Grid>
+			</Grid>
+
+		</SplitView.Content>
+	</SplitView>
+
 </Page>
