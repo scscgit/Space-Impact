@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graphics.Canvas;
+using Space_Impact.Core.Graphics.Background.Strategy;
 using Space_Impact.Graphics;
 using Space_Impact.Support;
 using System;
@@ -14,56 +15,52 @@ namespace Space_Impact.Core.Graphics.Background
 	/// </summary>
 	public class AbstractBackground : AbstractAnimatedObject, IBackground
 	{
-		protected IField Field
+		LinkedList<IBackgroundStrategy> Strategies;
+
+		/// <summary>
+		/// Field under which the background is displayed.
+		/// </summary>
+		public IField Field
 		{
-			get; set;
+			get; private set;
 		}
 
 		/// <summary>
-		/// Speed of animation movement
+		/// Speed of the background animation movement.
 		/// </summary>
 		public float Speed
 		{
 			get; set;
 		}
 
-		/// <summary>
-		/// Percentage of the finished part of the background (map)
-		/// </summary>
-		public float Percent
-		{
-			get
-			{
-				return 100 - ((Y / (-(float)Height + (float)Field.Size.Height)) * 100);
-			}
-		}
-
 		public AbstractBackground(IField field)
 		{
+			Strategies = new LinkedList<IBackgroundStrategy>();
 			Field = field;
 			Speed = 1;
+		}
+
+		public void AddStrategy(IBackgroundStrategy strategy)
+		{
+			Strategies.AddLast(strategy);
 		}
 
 		protected override void OnAnimationSet()
 		{
 			base.OnAnimationSet();
-			Y = (float)-Height + (float)Field.Size.Height;
+			foreach(IBackgroundStrategy strategy in Strategies)
+			{
+				strategy.OnAnimationSet(Field);
+			}
 		}
 
 		//Act() of the background
 		protected override void DrawHook(CanvasDrawingSession draw)
 		{
 			base.DrawHook(draw);
-			if (Y < 0)
+			foreach (IBackgroundStrategy strategy in Strategies)
 			{
-				if (Y + Speed >= 0)
-				{
-					Y = 0;
-				}
-				else
-				{
-					Y += Speed;
-				}
+				strategy.DrawHook(draw);
 			}
 		}
 	}

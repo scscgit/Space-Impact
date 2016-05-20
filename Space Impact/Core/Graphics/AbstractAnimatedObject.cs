@@ -98,7 +98,7 @@ namespace Space_Impact.Graphics
 		}
 
 		/// <summary>
-		/// Lets subclasses hook some event after a new animation is set
+		/// Lets subclasses hook some event after a new animation is set.
 		/// </summary>
 		protected virtual void OnAnimationSet()
 		{

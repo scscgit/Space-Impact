@@ -15,6 +15,10 @@ namespace Space_Impact.Graphics
 
 		//Backgrounds
 		public static string[] BG1 = { "Background/background_1.jpg" };
+		public static string[] BG_CRATER_PLANET = { "Background/crater_planet.jpg" };
+		public static string[] BG_MESSIER = { "Background/messier_101.jpg" };
+		public static string[] BG_ROCKET_AND_PLANET = { "Background/rocket_and_planet.jpg" };
+		public static string[] BG_STAR_CLUSTERS = { "Background/star_clusters_74052.jpg" };
 
 		//Ships and their thrusts
 		public static string[] SHIP1_BASE = { "ship1_base.png" };
@@ -55,7 +59,8 @@ namespace Space_Impact.Graphics
 			string[][] textureSets =
 			{
 				//Backgrounds
-				BG1,
+				BG1, BG_CRATER_PLANET, BG_MESSIER,
+				BG_ROCKET_AND_PLANET, BG_STAR_CLUSTERS,
 
 				//Ships and their thrusts
 				SHIP1_BASE, SHIP1_THRUST,

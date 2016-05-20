@@ -34,6 +34,7 @@ using Space_Impact.Core.Game.Object;
 using Space_Impact.Core.Game.Character;
 using Space_Impact.Core.Game.Spawner;
 using Space_Impact.Core.Graphics.Background;
+using Space_Impact.Core.Graphics.Background.Strategy;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -55,11 +56,14 @@ namespace Space_Impact.Screen
 		/// </summary>
 		internal class GameRoundBackground : AbstractBackground
 		{
-			public GameRoundBackground(IField field): base(field)
+			public GameRoundBackground(IField field) : base(field)
 			{
+				AddStrategy(new MovingUp(this, field));
 				Animation = TextureSetLoader.BG1;
 			}
 		}
+
+		MediaElement Music;
 
 		//The game should be running only after the map is loaded with all characters and no null problems can happen
 		public bool GameRunning
@@ -139,7 +143,7 @@ namespace Space_Impact.Screen
 		{
 			get
 			{
-				return BackgroundImage.Percent;
+				return MovingUp.PercentageCompletion(BackgroundImage, this);
 			}
 		}
 
@@ -306,6 +310,12 @@ namespace Space_Impact.Screen
 					break;
 
 				//Debug
+				case VirtualKey.J:
+					Music.Play();
+					break;
+				case VirtualKey.K:
+					Music.Pause();
+					break;
 				case VirtualKey.L:
 					Log.d(this, "New player added");
 					MessageBroadcastText = "Hello world";
@@ -372,6 +382,7 @@ namespace Space_Impact.Screen
 			//Removing events
 			Log.i(this, "Page is being unloaded, removing events and other associations");
 			RemoveEvents();
+			Music.Stop();
 
 			//Cleaning up the Page to help the garbage collector
 			canvas.RemoveFromVisualTree();
@@ -425,13 +436,13 @@ namespace Space_Impact.Screen
 
 			//We create resources asynchronously
 			Task createResourcesAsync = CreateResourcesAsync(sender);
+			Log.i(this, "CreateResources starting parallel task for creating textures");
 			args.TrackAsyncAction(createResourcesAsync.AsAsyncAction());
-			Log.i(this, "CreateResources started parallel task for creating textures");
 
 			//Failed attempt at syncing async
 			//args.GetTrackedAction().AsTask().GetAwaiter().GetResult();
 			//Log.i(this, "CreateResources parallel task has finished");			
-
+			
 			Log.i(this, "CreateResources finished");
 		}
 
@@ -439,6 +450,13 @@ namespace Space_Impact.Screen
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
 			await TextureSetLoader.Instance.CreateResourcesAsync(sender);
+
+			//Music is also a resource
+			Music = await Utility.GetMusic("core");
+			Music.IsLooping = true;
+			//Music is implicitly started, but to be sure, we explicitly start it
+			Music.Play();
+			Log.i(this, "CreateResourcesAsync finished");
 		}
 
 		//Main game loop, should be fired 60 times per second
@@ -743,8 +761,16 @@ namespace Space_Impact.Screen
 
 		void ExitScreen()
 		{
-			//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
-			Application.Current.Exit();
+			/*if(!GameRunning)
+			{
+				return;
+			}*/
+
+			//GameRunning set to false just in case to be sure no parallel task will interrupt the proccess
+			GameRunning = false;
+
+			//TODO FIX NAVIGATION, IT CRASHES BECAUSE OF PARALLEL PROCESSES
+			Frame.Navigate(typeof(MainMenu));
 		}
 	}
 }

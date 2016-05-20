@@ -1,15 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <RemoteDebugMachine>Notebook-scsc</RemoteDebugMachine>
-    <AuthenticationMode>Windows</AuthenticationMode>
+    <RemoteDebugMachine>192.168.8.101:4020</RemoteDebugMachine>
+    <AuthenticationMode>Universal</AuthenticationMode>
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <UseSimulator>false</UseSimulator>
-    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <DeviceId>F554226E-1E47-460D-B76A-338418AD356B</DeviceId>
     <UseEmulator>false</UseEmulator>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
     <UseEmulator>true</UseEmulator>
+    <RemoteDebugMachine>192.168.8.101:4020 (10EDU)</RemoteDebugMachine>
+    <AuthenticationMode>Windows</AuthenticationMode>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DeviceId>98CD6FA8-9114-4179-ACA3-38E5D23C77EE</DeviceId>
+    <UseEmulator>false</UseEmulator>
+    <AuthenticationMode>Windows</AuthenticationMode>
+    <RemoteDebugMachine>192.168.8.101:4020 (10EDU)</RemoteDebugMachine>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+    <UseSimulator>false</UseSimulator>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <AuthenticationMode>Windows</AuthenticationMode>
   </PropertyGroup>
 </Project>

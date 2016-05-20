@@ -22,14 +22,14 @@
 			<StackPanel>
 				<StackPanel.Background>
 					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-						<GradientStop Color="#FFA6FFBE" Offset="0"/>
-						<GradientStop Color="#FFF95746" Offset="0.996"/>
+						<GradientStop Color="#CC35FD6C" Offset="0.051"/>
+						<GradientStop Color="#CCFB3520" Offset="0.96"/>
 					</LinearGradientBrush>
 				</StackPanel.Background>
 
 				<Button x:Name="MenuButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Width="50" Height="50" Background="Transparent" Click="MenuButton_Click"/>
-				
+
 				<StackPanel Orientation="Horizontal">
 					<Button x:Name="NewGameButton" FontFamily="Segoe MDL2 Assets" Content="&#xE825;"
                     Width="50" Height="50" Background="Transparent" Click="NewGameButton_Click"/>
@@ -47,20 +47,23 @@
 		</SplitView.Pane>
 		<SplitView.Content>
 
-			<!-- Main grid for canvases -->
-			<Grid
-				Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-				PointerPressed="Grid_PointerPressed" PointerReleased="Grid_PointerReleased" PointerMoved="Grid_PointerMoved"
-				>
-				<Viewbox Stretch="Fill">
-					<canvas:CanvasAnimatedControl x:Name="canvas"
-									  Width="1920"  
-									  Height="1080"
-									  Draw="canvas_DrawAnimated"
-									  CreateResources="canvas_CreateResources"
-									  />
-				</Viewbox>
-			</Grid>
+			<!-- Main grid for canvases is stretched -->
+			<Viewbox Stretch="Fill">
+				<Grid
+					Background="Black"
+					PointerPressed="Grid_PointerPressed" PointerReleased="Grid_PointerReleased" PointerMoved="Grid_PointerMoved"
+					>
+
+					<canvas:CanvasAnimatedControl
+						x:Name="canvas"
+						Width="1920"  
+						Height="1080"
+						Draw="canvas_DrawAnimated"
+						CreateResources="canvas_CreateResources"
+						/>
+
+				</Grid>
+			</Viewbox>
 
 		</SplitView.Content>
 	</SplitView>

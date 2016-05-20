@@ -8,6 +8,5 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 {
 	public interface ISpawnerStrategy: IAct
 	{
-		void Act();
 	}
 }
