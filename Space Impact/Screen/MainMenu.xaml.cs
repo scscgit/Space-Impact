@@ -45,7 +45,7 @@ namespace Space_Impact.Screen
 					TextureSetLoader.BG_CRATER_PLANET, TextureSetLoader.BG_MESSIER,
 					TextureSetLoader.BG_ROCKET_AND_PLANET, TextureSetLoader.BG_STAR_CLUSTERS
 				};
-				
+
 				Animation = backgrounds[Utility.RandomBetween(0, backgrounds.Length - 1)];
 				Speed = 5;
 				AddStrategy(new RandomMovement(this, field));
@@ -56,10 +56,35 @@ namespace Space_Impact.Screen
 		MediaElement Music;
 
 		//Represents if the screen is loaded (fully initialized) with all resources and can be safely navigated out from.
+		bool fieldLoaded = false;
+		public bool FieldLoaded
+		{
+			get
+			{
+				return this.fieldLoaded;
+			}
+			private set
+			{
+				this.fieldLoaded = value;
+				if (this.fieldLoaded)
+				{
+					MainMenuLoadingGrid.Visibility = Visibility.Collapsed;
+					MainMenuGrid.Visibility = Visibility.Visible;
+					Log.i(this, "FieldLoaded set to true");
+				}
+				else
+				{
+					MainMenuLoadingGrid.Visibility = Visibility.Visible;
+					MainMenuGrid.Visibility = Visibility.Collapsed;
+					Log.i(this, "FieldLoaded set to false");
+				}
+			}
+		}
+
 		public bool GameRunning
 		{
 			get; private set;
-		}
+		} = false;
 
 		public CanvasAnimatedControl FieldControl
 		{
@@ -104,7 +129,6 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "Constructor initializing");
 			this.InitializeComponent();
-			GameRunning = false;
 			Log.i(this, "Constructor initialized");
 		}
 
@@ -135,8 +159,6 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "First draw started");
 			BackgroundImage = new MainMenuBackground(this);
-
-			GameRunning = true;
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -162,13 +184,18 @@ namespace Space_Impact.Screen
 		//Loads all resources asynchronously
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
-			await TextureSetLoader.Instance.CreateResourcesAsync(sender);
+			//Increases progress bar percentage
+			await TextureSetLoader.Instance.CreateResourcesAsync(sender, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; });
 
 			//Music is also a resource
 			Music = await Utility.GetMusic("vault");
 			Music.IsLooping = true;
 			//Music is implicitly started, but to be sure, we explicitly start it
 			Music.Play();
+
+			Log.i(this, "Setting Field as loaded");
+			FieldLoaded = true;
+
 			Log.i(this, "CreateResourcesAsync finished");
 		}
 
@@ -196,10 +223,10 @@ namespace Space_Impact.Screen
 			Log.i(this, "User clicked on New Game Button");
 
 			//New game can only be started if the Main Menu is fully loaded
-			/*if (!GameRunning)
+			if (!FieldLoaded)
 			{
 				return;
-			}*/
+			}
 
 			Frame.Navigate(typeof(GameRound));
 		}

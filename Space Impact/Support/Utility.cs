@@ -39,6 +39,16 @@ namespace Space_Impact.Support
 			return music;
 		}
 
+		//Improvement over Math.pow() and less prone to programming mistakes than multiplying directly imo
+		public static double square(double number)
+		{
+			return number * number;
+		}
+		public static float square(float number)
+		{
+			return number * number;
+		}
+
 		public static int RandomBetween(int a, int b)
 		{
 			if (a <= b)

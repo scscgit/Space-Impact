@@ -111,6 +111,10 @@
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
     <Compile Include="Core\Game\IAct.cs" />
+    <Compile Include="Core\Game\IntersectStrategy\AbstractIntersectStrategy.cs" />
+    <Compile Include="Core\Game\IntersectStrategy\DelegateIntersect.cs" />
+    <Compile Include="Core\Game\IntersectStrategy\IIntersectStrategy.cs" />
+    <Compile Include="Core\Game\IntersectStrategy\SquareIntersect.cs" />
     <Compile Include="Core\Game\Spawner\AbstractSpawner.cs" />
     <Compile Include="Core\Game\Spawner\EnemySpawner.cs" />
     <Compile Include="Core\Game\Spawner\ISpawner.cs" />

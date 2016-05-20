@@ -10,6 +10,7 @@ using Space_Impact.Core.Game.Player.Bullet;
 using Microsoft.Graphics.Canvas.Effects;
 using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Core.Game.Object.Bomb;
+using Space_Impact.Core.Game.IntersectStrategy;
 
 namespace Space_Impact.Core.Game.Player
 {
@@ -118,6 +119,21 @@ namespace Space_Impact.Core.Game.Player
 
 			//He is composed of the thrust
 			ActorComposition.AddLast(this.thrust);
+
+			//TODO fix this, ellipse collision
+			/*IntersectStrategy = new DelegateIntersect
+			(
+				this
+				, (x, y) =>
+				{
+					float XRadius = (float)Width / 2;
+					float YRadius = (float)Height / 2;
+					float ellipsePosition = Utility.square(X - x - XRadius) / Utility.square(XRadius) +
+											Utility.square(Y - y - YRadius) / Utility.square(YRadius);
+					if(ellipsePosition<1)Log.d(this, ellipsePosition.ToString());
+					return ellipsePosition < 1;
+				}
+			);*/
 		}
 
 		//Fired when player is shooting, limited by the ShootingInterval property.

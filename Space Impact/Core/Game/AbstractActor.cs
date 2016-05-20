@@ -8,6 +8,7 @@ using Space_Impact.Core.Game;
 using Space_Impact.Support;
 using Space_Impact.Core.Game.Player;
 using Windows.UI.Xaml.Shapes;
+using Space_Impact.Core.Game.IntersectStrategy;
 
 namespace Space_Impact.Core
 {
@@ -43,6 +44,11 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
+		protected IIntersectStrategy IntersectStrategy
+		{
+			get; set;
+		}
+
 		//Actor can contain more Actors.
 		//For light-weight operation, lazy initialization is used.
 		LinkedList<IActorCompositePart> actorComposition = null;
@@ -63,6 +69,7 @@ namespace Space_Impact.Core
 			Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.NONE);
 			Speed = DEFAULT_SPEED;
 			Name = name;
+			IntersectStrategy = new SquareIntersect(this);
 		}
 
 		//Checks whether the X/Y movement is legal
@@ -223,14 +230,9 @@ namespace Space_Impact.Core
 		{
 		}
 
-		public virtual bool IntersectsWithin(float x, float width, float y, float height)
+		public bool IntersectsWithin(float x, float width, float y, float height)
 		{
-			if (x + width >= this.X && x <= this.X + this.Width &&
-				y + height >= this.Y && y <= this.Y + this.Height)
-			{
-				return true;
-			}
-			return false;
+			return IntersectStrategy.IntersectsWithin(x, width, y, height);
 		}
 
 		/// <summary>
@@ -241,14 +243,14 @@ namespace Space_Impact.Core
 		/// <param name="x">X coordinate</param>
 		/// <param name="y">Y coordinate</param>
 		/// <returns>true if the actor can collide on x, y coordinates</returns>
-		public virtual bool IntersectsOn(float x, float y)
+		public bool IntersectsOn(float x, float y)
 		{
-			return IntersectsWithin(x, 0, y, 0);
+			return IntersectStrategy.IntersectsOn(x, y);
 		}
 
 		public bool IntersectsActor(IActor actor)
 		{
-			return actor.IntersectsWithin(X, (float)Width, Y, (float)Height);
+			return IntersectStrategy.IntersectsActor(actor);
 		}
 
 		/// <summary>

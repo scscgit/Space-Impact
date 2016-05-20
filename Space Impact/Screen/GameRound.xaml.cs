@@ -63,7 +63,34 @@ namespace Space_Impact.Screen
 			}
 		}
 
+		IBackground BackgroundImage;
 		MediaElement Music;
+
+		//Represents if the screen is loaded (fully initialized) with all resources and can be safely navigated out from.
+		bool fieldLoaded = false;
+		public bool FieldLoaded
+		{
+			get
+			{
+				return this.fieldLoaded;
+			}
+			private set
+			{
+				this.fieldLoaded = value;
+				if (this.fieldLoaded)
+				{
+					GameRoundLoadingGrid.Visibility = Visibility.Collapsed;
+					GameRoundGrid.Visibility = Visibility.Visible;
+					Log.i(this, "FieldLoaded set to true");
+				}
+				else
+				{
+					GameRoundLoadingGrid.Visibility = Visibility.Visible;
+					GameRoundGrid.Visibility = Visibility.Collapsed;
+					Log.i(this, "FieldLoaded set to false");
+				}
+			}
+		}
 
 		//The game should be running only after the map is loaded with all characters and no null problems can happen
 		public bool GameRunning
@@ -106,11 +133,6 @@ namespace Space_Impact.Screen
 			{
 				return this.canvas.Size;
 			}
-		}
-
-		IBackground BackgroundImage
-		{
-			get; set;
 		}
 
 		//Screen debug logging
@@ -234,7 +256,7 @@ namespace Space_Impact.Screen
 
 		async void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
 		{
-			if (!GameRunning)
+			if (!FieldLoaded)
 			{
 				return;
 			}
@@ -248,7 +270,7 @@ namespace Space_Impact.Screen
 
 		async void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
 		{
-			if (!GameRunning)
+			if (!FieldLoaded)
 			{
 				return;
 			}
@@ -442,20 +464,25 @@ namespace Space_Impact.Screen
 			//Failed attempt at syncing async
 			//args.GetTrackedAction().AsTask().GetAwaiter().GetResult();
 			//Log.i(this, "CreateResources parallel task has finished");			
-			
+
 			Log.i(this, "CreateResources finished");
 		}
 
 		//Loads all resources asynchronously
 		async Task CreateResourcesAsync(CanvasAnimatedControl sender)
 		{
-			await TextureSetLoader.Instance.CreateResourcesAsync(sender);
+			//Increases progress bar percentage
+			await TextureSetLoader.Instance.CreateResourcesAsync(sender, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; });
 
 			//Music is also a resource
 			Music = await Utility.GetMusic("core");
 			Music.IsLooping = true;
 			//Music is implicitly started, but to be sure, we explicitly start it
 			Music.Play();
+
+			Log.i(this, "Setting Field as loaded");
+			FieldLoaded = true;
+
 			Log.i(this, "CreateResourcesAsync finished");
 		}
 
@@ -761,10 +788,10 @@ namespace Space_Impact.Screen
 
 		void ExitScreen()
 		{
-			/*if(!GameRunning)
+			if (!FieldLoaded)
 			{
 				return;
-			}*/
+			}
 
 			//GameRunning set to false just in case to be sure no parallel task will interrupt the proccess
 			GameRunning = false;

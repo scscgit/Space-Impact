@@ -14,6 +14,7 @@ namespace Space_Impact.Core
 
 	public interface IField
 	{
+		bool FieldLoaded { get; }
 		bool GameRunning { get; }
 		CanvasAnimatedControl FieldControl { get; }
 		IPlayer Player { get; }

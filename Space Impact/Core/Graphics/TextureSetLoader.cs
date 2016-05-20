@@ -53,7 +53,8 @@ namespace Space_Impact.Graphics
 		public static string[] FIRE = { "fire_1.png", "fire_2.png" };
 
 		//Loading all textures
-		public async Task CreateResourcesAsync(CanvasAnimatedControl sender)
+		public delegate void IncreaseLoadedPercentageDelegate(float percent);
+		public async Task CreateResourcesAsync(CanvasAnimatedControl sender, IncreaseLoadedPercentageDelegate increaseLoadedPercentage)
 		{
 			//Set of all textureSets to be loaded
 			string[][] textureSets =
@@ -87,6 +88,12 @@ namespace Space_Impact.Graphics
 			foreach (string[] textureSet in textureSets)
 			{
 				await load(sender, textureSet);
+				
+				//Increases progress where applicable
+				if (increaseLoadedPercentage != null)
+				{
+					increaseLoadedPercentage((float)100 / textureSets.Length);
+				}
 			}
 		}
 
