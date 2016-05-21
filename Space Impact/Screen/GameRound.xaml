@@ -1,45 +1,65 @@
-﻿<Page
-    x:Class="Space_Impact.Screen.GameRound"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Space_Impact.Screen"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
-	
-	Unloaded="Page_Unloaded"
-	
-	xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-	>
-	
-	<!-- Entire screen -->
+﻿<Page x:Class="Space_Impact.Screen.GameRound"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:local="using:Space_Impact.Screen"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  Unloaded="Page_Unloaded"
+	  mc:Ignorable="d">
+
+	<!--  Entire screen  -->
 	<SplitView Name="SplitView"
-			   DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="51" OpenPaneLength="250" PaneClosing="SplitView_PaneClosing">
+			   CompactPaneLength="51"
+			   DisplayMode="CompactOverlay"
+			   IsPaneOpen="False"
+			   OpenPaneLength="250"
+			   PaneClosing="SplitView_PaneClosing">
 		<SplitView.Pane>
 
-			<!-- Left Stack Panel -->
+			<!--  Left Stack Panel  -->
 			<StackPanel>
 				<StackPanel.Background>
-					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-						<GradientStop Color="#CC35FD6C" Offset="0.051"/>
-						<GradientStop Color="#CCFB3520" Offset="0.96"/>
+					<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+						<GradientStop Offset="0.051" Color="#CC35FD6C" />
+						<GradientStop Offset="0.96" Color="#CCFB3520" />
 					</LinearGradientBrush>
 				</StackPanel.Background>
 
-				<Button x:Name="MenuButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
-                    Width="50" Height="50" Background="Transparent" Click="MenuButton_Click"/>
+				<Button x:Name="MenuButton"
+						Width="50"
+						Height="50"
+						Background="Transparent"
+						Click="MenuButton_Click"
+						Content="&#xE700;"
+						FontFamily="Segoe MDL2 Assets" />
 
 				<StackPanel Orientation="Horizontal">
-					<Button x:Name="NewGameButton" FontFamily="Segoe MDL2 Assets" Content="&#xE825;"
-                    Width="50" Height="50" Background="Transparent" Click="NewGameButton_Click"/>
-					<TextBlock Text="Start a new game" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
+					<Button x:Name="NewGameButton"
+							Width="50"
+							Height="50"
+							Background="Transparent"
+							Click="NewGameButton_Click"
+							Content="&#xE825;"
+							FontFamily="Segoe MDL2 Assets" />
+					<TextBlock Margin="10,0,0,0"
+							   VerticalAlignment="Center"
+							   FontSize="18"
+							   Text="Start a new game" />
 				</StackPanel>
 
 				<StackPanel Orientation="Horizontal">
-					<Button x:Name="ExitButton" FontFamily="Segoe MDL2 Assets" Content="&#xE811;"
-                    Width="50" Height="50" Background="Transparent" Click="ExitGameButton_Click"/>
-					<TextBlock Text="Exit the game" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
+					<Button x:Name="ExitButton"
+							Width="50"
+							Height="50"
+							Background="Transparent"
+							Click="ExitGameButton_Click"
+							Content="&#xE811;"
+							FontFamily="Segoe MDL2 Assets" />
+					<TextBlock Margin="10,0,0,0"
+							   VerticalAlignment="Center"
+							   FontSize="18"
+							   Text="Exit the game" />
 				</StackPanel>
 
 			</StackPanel>
@@ -47,40 +67,48 @@
 		</SplitView.Pane>
 		<SplitView.Content>
 
-			<!-- Main grid for canvases is stretched -->
+			<!--  Main grid for content (stretched)  -->
 			<Viewbox Stretch="Fill">
 				<Grid>
 
-					<!-- Loading screen -->
-					<Grid
-						Name="GameRoundLoadingGrid"
-						Background="Aquamarine"
-						Visibility="Collapsed"
-						Margin="0"
-						Padding="0,50"
-						>
+					<!--  Loading screen  -->
+					<Grid Name="GameRoundLoadingGrid"
+						  Margin="0"
+						  Background="Aquamarine"
+						  Padding="0,50"
+						  Visibility="Collapsed">
 						<StackPanel>
-							<TextBlock x:Name="textBlock" HorizontalAlignment="Center" Text="Loading textures" VerticalAlignment="Top" FontSize="26.667" TextAlignment="Center" Margin="50,10" />
-							<ProgressBar x:Name="loadingProgressBar" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Background="#336F6FFF" Width="296" Foreground="#FF37E803" BorderThickness="0,1" Value="-7"  />
+							<TextBlock x:Name="textBlock"
+									   Margin="50,10"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Top"
+									   FontSize="26.667"
+									   Text="Loading textures"
+									   TextAlignment="Center" />
+							<ProgressBar x:Name="loadingProgressBar"
+										 Width="296"
+										 Height="32"
+										 HorizontalAlignment="Left"
+										 VerticalAlignment="Top"
+										 Background="#336F6FFF"
+										 BorderThickness="0,1"
+										 Foreground="#FF37E803"
+										 Value="-7" />
 						</StackPanel>
 					</Grid>
-				
-					<!-- Game Screen -->
-					<Grid
-						Name ="GameRoundGrid"
-						Background="Black"
-						PointerPressed="Grid_PointerPressed"
-						PointerReleased="Grid_PointerReleased"
-						PointerMoved="Grid_PointerMoved"
-						>
 
-						<canvas:CanvasAnimatedControl
-							x:Name="canvas"
-							Width="1920"  
-							Height="1080"
-							Draw="canvas_DrawAnimated"
-							CreateResources="canvas_CreateResources"
-							/>
+					<!--  Game Screen  -->
+					<Grid Name="GameRoundGrid"
+						  Background="Black"
+						  PointerMoved="Grid_PointerMoved"
+						  PointerPressed="Grid_PointerPressed"
+						  PointerReleased="Grid_PointerReleased">
+
+						<canvas:CanvasAnimatedControl x:Name="canvas"
+													  Width="1920"
+													  Height="1080"
+													  CreateResources="canvas_CreateResources"
+													  Draw="canvas_DrawAnimated" />
 
 					</Grid>
 				</Grid>

@@ -1,131 +1,278 @@
-﻿<Page
-    x:Class="Space_Impact.Screen.MainMenu"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Space_Impact.Screen"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-	
-	Unloaded="Page_Unloaded"
-	
-	xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-	>
+﻿<Page x:Class="Space_Impact.Screen.MainMenu"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:local="using:Space_Impact.Screen"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  Unloaded="Page_Unloaded"
+	  mc:Ignorable="d">
 
-	<!-- Main grid for canvases is stretched -->
+	<!--  Main grid for content (stretched)  -->
 	<Viewbox Stretch="Fill">
-		<Grid
-			Background="Black"
-			>
+		<Grid Background="Black">
 
-			<!-- Loading screen -->
-			<Grid
-				Name="MainMenuLoadingGrid"
-				Background="Aquamarine"
-				Visibility="Collapsed"
-				Margin="0"
-				Padding="0,50"
-				>
+			<!--  Loading screen  -->
+			<Grid Name="MainMenuLoadingGrid"
+				  Margin="0"
+				  Background="Aquamarine"
+				  Padding="0,50"
+				  Visibility="Collapsed">
 				<StackPanel>
-					<TextBlock x:Name="textBlock" HorizontalAlignment="Center" Text="Loading textures" VerticalAlignment="Top" FontSize="26.667" TextAlignment="Center" Margin="50,10" />
-					<ProgressBar x:Name="loadingProgressBar" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Background="#336F6FFF" Width="296" Foreground="#FF37E803" BorderThickness="0,1" Value="-7"  />
+					<TextBlock x:Name="textBlock"
+							   Margin="50,10"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Top"
+							   FontSize="26.667"
+							   Text="Loading textures"
+							   TextAlignment="Center" />
+					<ProgressBar x:Name="loadingProgressBar"
+								 Width="296"
+								 Height="32"
+								 HorizontalAlignment="Left"
+								 VerticalAlignment="Top"
+								 Background="#336F6FFF"
+								 BorderThickness="0,1"
+								 Foreground="#FF37E803"
+								 Value="-7" />
 				</StackPanel>
 			</Grid>
+			<!--  End - Loading screen  -->
 
-			<!-- Main screen after loading finishes -->
-			<Grid
-				Name="MainMenuGrid"
-				>
+			<!--  Main screen after loading finishes  -->
+			<Grid Name="MainMenuGrid">
 
-				<canvas:CanvasAnimatedControl
-				x:Name="canvas"
-				Width="1920"
-				Height="1080"
-				Draw="canvas_Draw"
-				CreateResources="canvas_CreateResources"
-				/>
+				<canvas:CanvasAnimatedControl x:Name="canvas"
+											  Width="1920"
+											  Height="1080"
+											  CreateResources="canvas_CreateResources"
+											  Draw="canvas_Draw" />
 
-				<!-- MainMenu - Main submenu screen -->
-				<Grid
-				Name="MainMenuMainScreenGrid"
-				Visibility="Visible"
-				>
+				<!--  MainMenu - Main submenu screen  -->
+				<Grid Name="MainMenuMainScreenGrid" Visibility="Visible">
 
-					<Button x:Name="newGameButton" Content="Start a New Game" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" FontSize="96" Width="1000" Height="160" BorderThickness="5" RequestedTheme="Dark" BorderBrush="#E500FF0C" FontFamily="Comic Sans MS" Click="newGameButton_Click">
+					<!--  New Game Button  -->
+					<Button x:Name="newGameButton"
+							Width="1000"
+							Height="160"
+							Margin="0,320,0,0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top"
+							BorderBrush="#E500FF0C"
+							BorderThickness="5"
+							Click="newGameButton_Click"
+							Content="Start a New Game"
+							FontFamily="Comic Sans MS"
+							FontSize="96"
+							RequestedTheme="Dark">
 						<Button.Background>
-							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-								<GradientStop Color="#FFA2FF1C"/>
-								<GradientStop Color="#FF009121" Offset="1"/>
-								<GradientStop Color="#7F007201" Offset="0.383"/>
+							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+								<GradientStop Color="#FFA2FF1C" />
+								<GradientStop Offset="1" Color="#FF009121" />
+								<GradientStop Offset="0.383" Color="#7F007201" />
 							</LinearGradientBrush>
 						</Button.Background>
 					</Button>
 
-					<Button x:Name="settingsButton" Content="Settings" HorizontalAlignment="Center" Margin="460,545,460,0" VerticalAlignment="Top" FontSize="82.667" Width="860" Height="140" RequestedTheme="Dark" FontFamily="Arial Black" FontWeight="Bold" Click="settingsButton_Click">
+					<!--  Player selection  -->
+					<TextBlock Width="262"
+							   Margin="1525,294,133,0"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Top"
+							   FontFamily="Segoe Print"
+							   FontSize="46.667"
+							   FontWeight="Bold"
+							   Foreground="White"
+							   Text="Player"
+							   TextAlignment="Center" />
+					<ComboBox x:Name="PlayersComboBox"
+							  Width="262"
+							  Height="50"
+							  Margin="1525,376,0,0"
+							  HorizontalAlignment="Left"
+							  VerticalAlignment="Top"
+							  Background="#4C6BFF6B"
+							  Foreground="Yellow" SelectionChanged="PlayersComboBox_SelectionChanged">
+						<!--  Only name of the Player will be displayed even though the real item in the ComboBox is an instance of Player  -->
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Name}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button x:Name="NewPlayerButton"
+							Width="148"
+							Height="46"
+							Margin="1525,441,0,0"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Top"
+							Background="#E504FF04"
+							Click="NewPlayerButton_Click"
+							Content="Create New"
+							FontSize="20"
+							FontWeight="Bold"
+							RenderTransformOrigin="0.892,-1.063" />
+					<Button x:Name="DeletePlayerButton"
+							Width="94"
+							Height="46"
+							Margin="1693,441,0,0"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Top"
+							Background="#E5FF0000"
+							Click="DeletePlayerButton_Click"
+							Content="Delete"
+							FontSize="20"
+							FontWeight="Bold"
+							RenderTransformOrigin="0.892,-1.063" />
+
+					<!--  Settings Button  -->
+					<Button x:Name="settingsButton"
+							Width="860"
+							Height="140"
+							Margin="460,545,460,0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top"
+							Click="settingsButton_Click"
+							Content="Settings"
+							FontFamily="Arial Black"
+							FontSize="82.667"
+							FontWeight="Bold"
+							RequestedTheme="Dark">
 						<Button.BorderBrush>
-							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-								<GradientStop Color="#FF008906" Offset="0"/>
-								<GradientStop Color="#FF000083" Offset="1"/>
+							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+								<GradientStop Offset="0" Color="#FF008906" />
+								<GradientStop Offset="1" Color="#FF000083" />
 							</LinearGradientBrush>
 						</Button.BorderBrush>
 						<Button.Background>
-							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-								<GradientStop Color="#B2057800" Offset="0"/>
-								<GradientStop Color="#CC004993" Offset="1"/>
+							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+								<GradientStop Offset="0" Color="#B2057800" />
+								<GradientStop Offset="1" Color="#CC004993" />
 							</LinearGradientBrush>
 						</Button.Background>
 					</Button>
 
-					<Button x:Name="exitButton" Content="Exit Game" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="600" Height="120" FontFamily="Arial Black" BorderBrush="#668B00FF" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="exitButton_Click"/>
+					<!--  Exit Button  -->
+					<Button x:Name="exitButton"
+							Width="600"
+							Height="120"
+							Margin="460,870,460,0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top"
+							Background="#99004CA6"
+							BorderBrush="#668B00FF"
+							Click="exitButton_Click"
+							Content="Exit Game"
+							FontFamily="Arial Black"
+							FontSize="61.333"
+							FontWeight="Bold"
+							RequestedTheme="Dark" />
 
 				</Grid>
+				<!--  End - MainMenu - Main submenu screen  -->
 
-				<!-- MainMenu - Settings submenu screen -->
-				<Grid
-				Name="MainMenuSettingsGrid"
-				Visibility="Visible"
-				>
+				<!--  MainMenu - Settings submenu screen  -->
+				<Grid Name="MainMenuSettingsGrid" Visibility="Visible">
 
-					<!-- ScrollViewer of Settings options -->
-					<ScrollViewer HorizontalAlignment="Center" Margin="450,192,450,288" VerticalAlignment="Center" Width="1000" Height="600" Padding="80,60" RequestedTheme="Light" BorderThickness="5" BorderBrush="#7F00F3FF">
+					<!--  ScrollViewer of Settings options  -->
+					<ScrollViewer Width="1000"
+								  Height="600"
+								  Margin="450,192,450,288"
+								  HorizontalAlignment="Center"
+								  VerticalAlignment="Center"
+								  BorderBrush="#7F00F3FF"
+								  BorderThickness="5"
+								  Padding="80,60"
+								  RequestedTheme="Light">
 						<ScrollViewer.Background>
-							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-								<GradientStop Color="#B2A3D1FF" Offset="1"/>
-								<GradientStop Color="#B2A7FFD3"/>
+							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+								<GradientStop Offset="1" Color="#B2A3D1FF" />
+								<GradientStop Color="#B2A7FFD3" />
 							</LinearGradientBrush>
 						</ScrollViewer.Background>
-						<StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+						<StackPanel HorizontalAlignment="Center" Orientation="Vertical">
 							<StackPanel.ChildrenTransitions>
 								<TransitionCollection>
-									<EdgeUIThemeTransition Edge="Bottom"/>
+									<EdgeUIThemeTransition Edge="Bottom" />
 								</TransitionCollection>
 							</StackPanel.ChildrenTransitions>
 
 							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="Resolution" FontSize="34.667" Margin="0,0,50,0"  />
-								<TextBox x:Name="settingsResolutionWidth" HorizontalAlignment="Stretch" Height="37" VerticalAlignment="Stretch" Width="150"/>
-								<TextBlock Text="x" FontSize="34.667" Margin="20,0" VerticalAlignment="Top"/>
-								<TextBox x:Name="settingsResolutionHeight" HorizontalAlignment="Stretch" Height="37" VerticalAlignment="Stretch" Width="150"/>
-								<CheckBox x:Name="settingsFullscreen" Content="Fullscreen" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="21.333" BorderThickness="0" Padding="10,0,0,0" Width="156" Margin="30,0,0,0"/>
+								<TextBlock Margin="0,0,50,0"
+										   FontSize="34.667"
+										   Text="Resolution" />
+								<TextBox x:Name="settingsResolutionWidth"
+										 Width="150"
+										 Height="37"
+										 HorizontalAlignment="Stretch"
+										 VerticalAlignment="Stretch" />
+								<TextBlock Margin="20,0"
+										   VerticalAlignment="Top"
+										   FontSize="34.667"
+										   Text="x" />
+								<TextBox x:Name="settingsResolutionHeight"
+										 Width="150"
+										 Height="37"
+										 HorizontalAlignment="Stretch"
+										 VerticalAlignment="Stretch" />
+								<CheckBox x:Name="settingsFullscreen"
+										  Width="156"
+										  Margin="30,0,0,0"
+										  HorizontalAlignment="Center"
+										  VerticalAlignment="Center"
+										  BorderThickness="0"
+										  Content="Fullscreen"
+										  FontSize="21.333"
+										  Padding="10,0,0,0" />
 							</StackPanel>
 
-							<StackPanel Orientation="Horizontal" BorderThickness="0" Margin="0,20,0,0">
-								<TextBlock Text="Sound Volume" FontSize="34.667" Margin="0,0,50,0" />
-								<Slider x:Name="settingsVolume" HorizontalAlignment="Center" Width="450" VerticalAlignment="Center" Margin="0,8,0,0" />
+							<StackPanel Margin="0,20,0,0"
+										BorderThickness="0"
+										Orientation="Horizontal">
+								<TextBlock Margin="0,0,50,0"
+										   FontSize="34.667"
+										   Text="Sound Volume" />
+								<Slider x:Name="settingsVolume"
+										Width="450"
+										Margin="0,8,0,0"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center" />
 							</StackPanel>
 
-							<Button x:Name="settingsResetToDefault" Content="Reset to Default Settings" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="24" Click="settingsResetToDefault_Click"/>
+							<Button x:Name="settingsResetToDefault"
+									Margin="0,20,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Top"
+									Click="settingsResetToDefault_Click"
+									Content="Reset to Default Settings"
+									FontSize="24" />
 
 						</StackPanel>
 					</ScrollViewer>
 
-					<Button x:Name="settingsReturnButton" Content="Return to Main Menu" HorizontalAlignment="Center" Margin="460,870,460,0" VerticalAlignment="Top" FontSize="61.333" Width="720" Height="120" FontFamily="Arial Black" BorderBrush="#668B00FF" Background="#99004CA6" FontWeight="Bold" RequestedTheme="Dark" Click="settingsReturnButton_Click"/>
+					<Button x:Name="settingsReturnButton"
+							Width="720"
+							Height="120"
+							Margin="460,870,460,0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top"
+							Background="#99004CA6"
+							BorderBrush="#668B00FF"
+							Click="settingsReturnButton_Click"
+							Content="Return to Main Menu"
+							FontFamily="Arial Black"
+							FontSize="61.333"
+							FontWeight="Bold"
+							RequestedTheme="Dark" />
 
 				</Grid>
+				<!--  End - MainMenu - Settings submenu screen  -->
 
 			</Grid>
+			<!--  End - Main screen after loading finishes  -->
 
 		</Grid>
 	</Viewbox>
+	<!--  End - Main grid for content (stretched)  -->
 
 </Page>

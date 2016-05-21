@@ -446,13 +446,13 @@ namespace Space_Impact.Screen
 			ISpawner spawner = new DelayedStart(0, 10, new DualSymmetrySpawner(y: 0));
 			AddActor(spawner);
 
-			//Also objects adhoc
+			//Also objects ad-hoc
 			//ICharacter doomday = new Doomday(Player);
 			//doomday.X = 600;
 			//doomday.Y = 400;
 			//AddActor(doomday);
 
-			//The gameflow starts running after the map is loaded with all characters
+			//The game-flow starts running after the map is loaded with all characters
 			GameRunning = true;
 
 			//Resetting user input for avoiding possible start glitches that would require user to alt+tab for a hotfix instead
@@ -734,7 +734,7 @@ namespace Space_Impact.Screen
 			{
 				message += "\nYou will lose all of the current progress!";
 			}
-			await ShowPopupDialog(message, "Yes, I am", () => ChangeScreen(typeof(GameRound)), "No, let me play", null);
+			await PopupDialog.ShowPopupDialog(message, "Yes, I am", () => ChangeScreen(typeof(GameRound)), "No, let me play", null);
 		}
 
 		async void ExitGameButton_Click(object sender, RoutedEventArgs e)
@@ -743,62 +743,10 @@ namespace Space_Impact.Screen
 			await ShowExitDialog();
 		}
 
-		public delegate void PopupDialogActionDelegate();
-		async Task ShowPopupDialog(string question, string yes, PopupDialogActionDelegate actionYes, string no, PopupDialogActionDelegate actionNo, bool defaultYes, string third, PopupDialogActionDelegate actionThird)
-		{
-			var dialog = new Windows.UI.Popups.MessageDialog(question == null ? "<NO TEXT AVAILABLE>" : question);
-
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand(yes == null ? "Yes" : yes) { Id = 0 });
-			dialog.Commands.Add(new Windows.UI.Popups.UICommand(no == null ? "No" : no) { Id = 1 });
-
-			if (third != null && actionThird != null && Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-			{
-				//Adding a 3rd command will crash the app when running on Mobile !!!
-				dialog.Commands.Add(new Windows.UI.Popups.UICommand(third) { Id = 2 });
-			}
-
-			if (defaultYes)
-			{
-				dialog.DefaultCommandIndex = 0;
-			}
-			else
-			{
-				dialog.DefaultCommandIndex = 1;
-			}
-			dialog.CancelCommandIndex = 1;
-
-			switch ((int)(await dialog.ShowAsync()).Id)
-			{
-				case 0:
-					Log.i(this, "User has confirmed his choice in the popup dialog");
-					if (actionYes != null)
-					{
-						actionYes();
-					}
-					break;
-				case 1:
-				default:
-					Log.i(this, "User has cancelled his choice in the popup dialog");
-					if (actionNo != null)
-					{
-						actionNo();
-					}
-					break;
-				case 2:
-					Log.i(this, "User has chosen the third choice in the popup dialog");
-					actionThird();
-					break;
-			}
-		}
-		//Most used overload with only yes / no choices (the only applicable options on mobile) for convenience
-		async Task ShowPopupDialog(string question, string yes, PopupDialogActionDelegate actionYes, string no, PopupDialogActionDelegate actionNo)
-		{
-			await ShowPopupDialog(question, yes, actionYes, no, actionNo, false, null, null);
-		}
 		//Exit Dialog implementation
 		async Task ShowExitDialog()
 		{
-			await ShowPopupDialog("Are you sure you don't want to keep playing?", "Yes, I am", () => ChangeScreen(typeof(MainMenu)), "No, let me play", null);
+			await PopupDialog.ShowPopupDialog("Are you sure you don't want to keep playing?", "Yes, I am", () => ChangeScreen(typeof(MainMenu)), "No, let me play", null);
 		}
 
 		//Converts the position representing a point on a Window to a point on the Field
@@ -868,7 +816,7 @@ namespace Space_Impact.Screen
 
 		public void GameOver()
 		{
-			//Display a message and stop the gameflow
+			//Display a message and stop the game-flow
 			MessageBroadcastText = "Game Over,\nYou've lost!";
 			GameRunning = false;
 			ResetUserInput();
@@ -892,7 +840,7 @@ namespace Space_Impact.Screen
 				return;
 			}
 
-			//GameRunning set to false just in case to be sure no parallel task will interrupt the proccess
+			//GameRunning set to false just in case to be sure no parallel task will interrupt the process
 			//GameRunning = false;
 
 			//TODO FIX NAVIGATION, IT CRASHES BECAUSE OF PARALLEL PROCESSES

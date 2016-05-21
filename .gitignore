@@ -14,3 +14,8 @@
 # Ignore project builds
 /Space Impact/bin
 /Space Impact/obj
+
+# Ignore generated and user-specific project files
+/Space Impact/project.lock.json
+/Space Impact/Space Impact.nuget.targets
+/Space Impact/Space Impact.csproj.user

@@ -11,8 +11,6 @@ namespace Space_Impact.Graphics
 {
 	public sealed class TextureSetLoader
 	{
-		static object ConstructorLock = new object();
-
 		//List of all pre-defined texture sets
 
 		//Backgrounds
@@ -54,8 +52,36 @@ namespace Space_Impact.Graphics
 		//Bullets
 		public static string[] FIRE = { "fire_1.png", "fire_2.png" };
 
+		//Delegates
 		public delegate void IncreaseLoadedPercentageDelegate(float percent);
 		public delegate void OnCreateResourcesAsyncFinished();
+
+		//Singleton
+		private static TextureSetLoader textureSetLoader = null;
+		static object SingletonLock = new object();
+		public static TextureSetLoader Instance
+		{
+			get
+			{
+				lock (SingletonLock)
+				{
+					if (textureSetLoader == null)
+					{
+						textureSetLoader = new TextureSetLoader();
+					}
+					return textureSetLoader;
+				}
+			}
+		}
+		TextureSetLoader()
+		{
+		}
+
+		//Resets all loaded textures by destroying the current TextureSetLoader Instance
+		public static void DeleteInstance()
+		{
+			textureSetLoader = null;
+		}
 
 		//Loading (implicitly all) textures
 		public async Task CreateResourcesAsync(CanvasAnimatedControl sender, IncreaseLoadedPercentageDelegate increaseLoadedPercentage, OnCreateResourcesAsyncFinished onFinished)
@@ -109,32 +135,6 @@ namespace Space_Impact.Graphics
 			{
 				onFinished();
 			}
-		}
-
-		//Resets all loaded textures by destroying the current TextureSetLoader Instance
-		public static void DeleteInstance()
-		{
-			textureSetLoader = null;
-		}
-
-		//Singleton
-		private static TextureSetLoader textureSetLoader = null;
-		public static TextureSetLoader Instance
-		{
-			get
-			{
-				lock (ConstructorLock)
-				{
-					if (textureSetLoader == null)
-					{
-						textureSetLoader = new TextureSetLoader();
-					}
-					return textureSetLoader;
-				}
-			}
-		}
-		TextureSetLoader()
-		{
 		}
 
 		//Mapping texture sets to canvas bitmap sets, main accessor point for bitmaps

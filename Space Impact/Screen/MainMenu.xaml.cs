@@ -24,6 +24,8 @@ using Space_Impact.Core.Game.Player;
 using Space_Impact.Core.Graphics.Background.Strategy;
 using Space_Impact.Support;
 using Windows.UI.ViewManagement;
+using Space_Impact.Services;
+using Microsoft.EntityFrameworkCore;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -149,11 +151,14 @@ namespace Space_Impact.Screen
 			//Loading sound volume settings
 			LoadSoundVolume();
 
+			//Initializing Database of Players and loading them
+			InitializeAndLoadPlayers();
+
 			Log.i(this, "Constructor initialized");
 		}
 
 		//Page destructor
-		private void Page_Unloaded(object sender, RoutedEventArgs e)
+		void Page_Unloaded(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "Page is being unloaded, removing events and other associations");
 			Log.i(this, "Music state before stopping was " + Music.CurrentState.ToString());
@@ -169,12 +174,12 @@ namespace Space_Impact.Screen
 		/// <summary>
 		/// Initializes screen resolution view size from settings.
 		/// Loads default values when the settings are not found, width and height are reset both at once to prevent user mistakes.
-		/// Updates corresponding values in the Settings submenu.
+		/// Updates corresponding values in the Settings sub-menu.
 		/// Order:
 		/// First the fullscreen is evaluated so that if it changes, resolution update can follow and will not be ignored.
 		/// After that, width and height sizes get set accordingly.
 		/// </summary>
-		private void LoadScreenResolution()
+		void LoadScreenResolution()
 		{
 			//Default fullscreen value is false
 			bool resolutionFullscreen = Utility.SettingsLoad<bool>("resolutionFullscreen");
@@ -224,7 +229,7 @@ namespace Space_Impact.Screen
 			settingsFullscreen.IsChecked = resolutionFullscreen;
 		}
 
-		private void LoadSoundVolume()
+		void LoadSoundVolume()
 		{
 			double? resultVolume = Utility.SettingsLoad<double?>("resultVolume");
 
@@ -238,12 +243,79 @@ namespace Space_Impact.Screen
 			settingsVolume.ValueChanged += (a, b) => LoadVolume();
 		}
 
-		private void LoadVolume()
+		void LoadVolume()
 		{
 			if (Music != null)
 			{
 				Music.Volume = settingsVolume.Value;
 			}
+		}
+
+		void InitializeAndLoadPlayers()
+		{
+			using (var db = new Persistence())
+			{
+				//Creates the Database if it does not exist
+				db.Database.EnsureCreated();
+
+				var players = db.Players;
+
+				//Displays all Players
+				UpdatePlayers(db.Players);
+
+				//Selects last selected Player
+				int? selectedPlayerId = Utility.SettingsLoad<int?>("selectedPlayer");
+				if (selectedPlayerId != null)
+				{
+					var player = db.Players.Where(p => p.Id == selectedPlayerId).First();
+					if (player == null)
+					{
+						Utility.SettingsSave<int?>("selectedPlayer", null);
+						Log.e(this, "Player selection restored, but there was no such player in database. Deleting setting choice.");
+					}
+					else
+					{
+						PlayersComboBox.SelectedItem = player;
+						Log.i(this, "Restored player selection choice to " + player.Name);
+					}
+				}
+				else
+				{
+					Log.i(this, "There was no saved ID for selected Player");
+				}
+
+				Log.i(this, "Players initialized");
+			}
+		}
+
+		/// <summary>
+		/// Updates all structures that work with Players.
+		/// </summary>
+		/// <param name="players">current list of players in the Database</param>
+		void UpdatePlayers(DbSet<Services.Entity.Player> players)
+		{
+			if (players == null)
+			{
+				Log.e(this, "Players in Database returned null");
+				return;
+			}
+
+			//Updates list of Players that can be chosen from
+			PlayersComboBox.ItemsSource = players.ToList();
+		}
+
+		/// <summary>
+		/// Implicit (less efficient) overload of updating Players.
+		/// Downloads a current updated version of the Database.
+		/// </summary>
+		void UpdatePlayers()
+		{
+			DbSet<Services.Entity.Player> players;
+			using (var db = new Persistence())
+			{
+				players = db.Players;
+			}
+			UpdatePlayers(players);
 		}
 
 		void canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
@@ -414,6 +486,64 @@ namespace Space_Impact.Screen
 			//Reloads all data
 			LoadScreenResolution();
 			LoadSoundVolume();
+		}
+
+		private void NewPlayerButton_Click(object sender, RoutedEventArgs e)
+		{
+			Frame.Navigate(typeof(NewPlayer));
+		}
+
+		private async void DeletePlayerButton_Click(object sender, RoutedEventArgs e)
+		{
+			var selectedItem = PlayersComboBox.SelectedItem as Services.Entity.Player;
+			if (selectedItem == null)
+			{
+				Log.e(this, "Selected player is null");
+				return;
+			}
+
+			await PopupDialog.ShowPopupDialog
+				(
+				"Are you sure you want to delete player " + selectedItem.Name + "?"
+				, "Sure"
+				, () =>
+				{
+					using (var db = new Persistence())
+					{
+						var players = db.Players;
+						if (players == null)
+						{
+							Log.e(this, "Players in Database returned null");
+							return;
+						}
+
+						players.Remove(selectedItem);
+						db.SaveChanges();
+						UpdatePlayers(players);
+						Log.i(this, "Player removed");
+					}
+				}
+				, "NO, it was a misclick!"
+				, null
+				);
+		}
+
+		private void PlayersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var player = PlayersComboBox.SelectedItem as Services.Entity.Player;
+
+			//If the player is not valid, overwrites the stored selected player value by null, otherwise saves him.
+			//This happens as a callback after player gets removed.
+			if (player == null)
+			{
+				Utility.SettingsSave<int?>("selectedPlayer", null);
+				Log.i(this, "Deleted player selection choice");
+			}
+			else
+			{
+				Utility.SettingsSave<int?>("selectedPlayer", player.Id);
+				Log.i(this, "Saved player selection choice");
+			}
 		}
 	}
 }

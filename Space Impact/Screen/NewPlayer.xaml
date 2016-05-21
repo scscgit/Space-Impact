@@ -1,0 +1,75 @@
+﻿<Page x:Class="Space_Impact.Screen.NewPlayer"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:local="using:Space_Impact.Screen"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  mc:Ignorable="d">
+
+	<!--  Main grid for content (stretched)  -->
+	<Viewbox Stretch="Fill">
+		<Grid Width="1920" Height="1080">
+			<Grid.Background>
+				<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+					<GradientStop Offset="0.526" Color="#FF00400E" />
+					<GradientStop Offset="1" Color="#FFFF8B00" />
+				</LinearGradientBrush>
+			</Grid.Background>
+
+			<!--  Name selection of Player  -->
+			<TextBox x:Name="playerNameTextBox"
+					 Width="1300"
+					 Height="150"
+					 Margin="0,0,0,616"
+					 HorizontalAlignment="Center"
+					 VerticalAlignment="Bottom"
+					 CharacterSpacing="0"
+					 FontSize="93.333"
+					 IsColorFontEnabled="True"
+					 SelectionHighlightColor="#FF0CFF00"
+					 Text=""
+					 TextAlignment="Center" PlaceholderText="Enter your name here" MaxLength="30" FontFamily="Yu Gothic UI" />
+
+			<!--  Create Player Button  -->
+			<Button x:Name="createPlayerButton"
+					Width="850"
+					Height="230"
+					Margin="0,810,988,0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					BorderBrush="#E500FF0C"
+					BorderThickness="5"
+					Click="createPlayerButton_Click"
+					Content="Create player"
+					FontFamily="Comic Sans MS"
+					FontSize="96"
+					RequestedTheme="Dark">
+				<Button.Background>
+					<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+						<GradientStop Color="#FFA2FF1C" />
+						<GradientStop Offset="1" Color="#FF009121" />
+						<GradientStop Offset="0.383" Color="#7F007201" />
+					</LinearGradientBrush>
+				</Button.Background>
+			</Button>
+
+			<!--  Return back without saving Button  -->
+			<Button x:Name="returnButton"
+					Width="850"
+					Height="170"
+					Margin="0,843,70,0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					Background="#99004CA6"
+					BorderBrush="#668B00FF"
+					Click="returnButton_Click"
+					Content="Return back without saving"
+					FontFamily="Arial Black"
+					FontSize="56"
+					FontWeight="Bold"
+					RequestedTheme="Dark" />
+			<TextBlock x:Name="errorTextBlock" HorizontalAlignment="Left" Margin="310,469,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="66.667" Width="1300" TextAlignment="Center" Foreground="Red"/>
+
+		</Grid>
+	</Viewbox>
+</Page>

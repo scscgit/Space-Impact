@@ -179,10 +179,16 @@
     <Compile Include="Screen\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\ScoreService.cs" />
+    <Compile Include="Screen\NewPlayer.xaml.cs">
+      <DependentUpon>NewPlayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Entity\Player.cs" />
+    <Compile Include="Services\Entity\Score.cs" />
+    <Compile Include="Services\Persistence.cs" />
     <Compile Include="Support\AbstractAction.cs" />
     <Compile Include="Support\ActionQueue.cs" />
     <Compile Include="Support\Log.cs" />
+    <Compile Include="Support\PopupDialog.cs" />
     <Compile Include="Support\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -255,14 +261,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="SQLite.UWP.2015, Version=3.12.2">
-      <Name>SQLite for Universal Windows Platform</Name>
-    </SDKReference>
+    <Page Include="Screen\NewPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
