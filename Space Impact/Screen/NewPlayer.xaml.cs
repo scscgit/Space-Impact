@@ -24,6 +24,7 @@ namespace Space_Impact.Screen
 	/// </summary>
 	public sealed partial class NewPlayer : Page
 	{
+		//Dimensions
 		private const int MIN_PLAYER_NAME_LENGTH = 4;
 		private const int MAX_PLAYER_NAME_LENGTH = 22;
 
@@ -36,15 +37,15 @@ namespace Space_Impact.Screen
 		{
 			Log.i(this, "Create Player Button clicked");
 
-			//Verifying static validity of the name
+			//Verifying the static validity of a name
 			string playerName = playerNameTextBox.Text;
 			if (playerName.Length < MIN_PLAYER_NAME_LENGTH)
 			{
-				errorTextBlock.Text = "Name is too short. Please add " + (MIN_PLAYER_NAME_LENGTH- playerName.Length).ToString() + " characters.";
+				errorTextBlock.Text = "Name is too short. Please add " + (MIN_PLAYER_NAME_LENGTH - playerName.Length).ToString() + " characters.";
 			}
 			else if (playerName.Length > MAX_PLAYER_NAME_LENGTH)
 			{
-				errorTextBlock.Text = "Name is too long. Please remove " + (playerName.Length- MAX_PLAYER_NAME_LENGTH).ToString() + " characters.";
+				errorTextBlock.Text = "Name is too long. Please remove " + (playerName.Length - MAX_PLAYER_NAME_LENGTH).ToString() + " characters.";
 			}
 			else
 			{
@@ -66,8 +67,14 @@ namespace Space_Impact.Screen
 						return;
 					}
 
+					//Persisting the Player
 					players.Add(player);
 					db.SaveChanges();
+
+					//After saving changes, the ID in our entity was automatically generated
+					//The new Player will be the selected Player
+					Utility.SettingsSave<int?>("selectedPlayer", player.Id);
+
 					Log.i(this, "Player " + player.Name + " added");
 				}
 

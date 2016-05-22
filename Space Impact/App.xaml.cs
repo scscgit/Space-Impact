@@ -34,6 +34,9 @@ namespace Space_Impact
 				Microsoft.ApplicationInsights.WindowsCollectors.Session);
 			this.InitializeComponent();
 			this.Suspending += OnSuspending;
+
+			//Custom Logging rules initialization, must be initialized here
+			Support.Log.InitializeMetroLog();
 		}
 
 		/// <summary>
@@ -104,6 +107,38 @@ namespace Space_Impact
 			var deferral = e.SuspendingOperation.GetDeferral();
 			//TODO: Save application state and stop any background activity
 			deferral.Complete();
+		}
+
+		//EXPERIMENTAL, TODO: FIX OR DELETE
+		//On Activated by request using URI in event of application restart (and possibly later also for IPC)
+		protected override void OnActivated(IActivatedEventArgs args)
+		{
+			//debug todo delete, trying to open a folder when the event fires and activates the app
+			Windows.System.Launcher.LaunchFolderAsync(Support.Utility.LocalFolder);
+
+			ProtocolActivatedEventArgs paea = args as ProtocolActivatedEventArgs;
+
+			if (args != null)
+			{
+				Frame content = Window.Current.Content as Frame;
+
+				if (content == null)
+				{
+					content = new Frame();
+
+					content.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+					Window.Current.Content = content;
+				}
+
+				if (content.Content == null)
+				{
+					//debug - opening a different Page
+					content.Navigate(typeof(NewPlayer), null);
+				}
+			}
+
+			Window.Current.Activate();
+			base.OnActivated(args);
 		}
 	}
 }

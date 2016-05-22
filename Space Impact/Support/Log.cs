@@ -1,4 +1,5 @@
-﻿using Space_Impact.Core;
+﻿using MetroLog;
+using Space_Impact.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,15 +15,14 @@ namespace Space_Impact.Support
 	/// </summary>
 	class Log
 	{
-		static object singletonLock = new object();
-
 		//Singleton
+		static object SingletonLock = new object();
 		static Log log = null;
 		public static Log Instance
 		{
 			get
 			{
-				lock (singletonLock)
+				lock (SingletonLock)
 				{
 					if (log == null)
 					{
@@ -33,10 +33,37 @@ namespace Space_Impact.Support
 			}
 		}
 
+		//MetroLog
+		private ILogger MetroLogger;
+
 		//When an error happens, this flag gets changed to true
 		public bool ErrorReceived;
 
 		LinkedList<string> Queue = new LinkedList<string>();
+
+		public Log()
+		{
+			MetroLogger = LogManagerFactory.DefaultLogManager.GetLogger<App>();
+		}
+
+		/// <summary>
+		/// Logger must be initialized during the App initialization.
+		/// </summary>
+		public static void InitializeMetroLog()
+		{
+			bool debug = false;
+#if DEBUG
+			debug = true;
+#endif
+
+			//If debugging, everything will be logged
+			if (debug || Utility.SettingsLoad<bool?>("debug") == true)
+			{
+				LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal, new MetroLog.Targets.StreamingFileTarget());
+			}
+
+			GlobalCrashHandler.Configure();
+		}
 
 		//Used to take a next message from the queue (before some kind of output)
 		public static string NextMessage
@@ -57,16 +84,18 @@ namespace Space_Impact.Support
 		public static void d(object context, string message)
 		{
 			string debug = "D>" + context.ToString() + ": " + message;
-			Debug.WriteLine(debug);
+			//Debug.WriteLine(debug);
 			Instance.Queue.AddLast(debug);
+			Instance.MetroLogger.Debug(debug);
 		}
 
 		//Information - This message provides a control flow information and can be used for filtering, should not be displayed in Release version.
 		public static void i(object context, string message)
 		{
 			string information = "I>" + context.ToString() + ": " + message;
-			Debug.WriteLine(information);
+			//Debug.WriteLine(information);
 			Instance.Queue.AddLast(information);
+			Instance.MetroLogger.Info(information);
 		}
 
 		//Error - This represents situation that should actually crash the program, so it has to be fixed later.
@@ -74,9 +103,10 @@ namespace Space_Impact.Support
 		public static void e(object context, string message)
 		{
 			string error = "E>" + context.ToString() + ": " + message;
-			Debug.WriteLine(error);
+			//Debug.WriteLine(error);
 			Instance.Queue.AddLast(error);
 			Instance.ErrorReceived = true;
+			Instance.MetroLogger.Error(error);
 		}
 	}
 }

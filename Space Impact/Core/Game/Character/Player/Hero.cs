@@ -75,11 +75,12 @@ namespace Space_Impact.Core.Game.Player
 			new MovementThrust(this);
 
 			//Custom square intersect percentage
-			var squareIntersect = new SquareIntersect(this);
-			squareIntersect.Percent = 60;
-			IntersectStrategy = squareIntersect;
+			IntersectStrategy = new SquareIntersect(this)
+			{
+				Percent = 60
+			};
 
-			//TODO fix this, ellipse collision
+			//TODO fix this and implement ellipse intersect collision instead of default square
 			/*IntersectStrategy = new DelegateIntersect
 			(
 				this

@@ -26,6 +26,7 @@ using Space_Impact.Support;
 using Windows.UI.ViewManagement;
 using Space_Impact.Services;
 using Microsoft.EntityFrameworkCore;
+using Windows.ApplicationModel.Background;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -154,6 +155,9 @@ namespace Space_Impact.Screen
 			//Initializing Database of Players and loading them
 			InitializeAndLoadPlayers();
 
+			//Loading debug settings
+			LoadDebugSetting();
+
 			Log.i(this, "Constructor initialized");
 		}
 
@@ -267,20 +271,32 @@ namespace Space_Impact.Screen
 				int? selectedPlayerId = Utility.SettingsLoad<int?>("selectedPlayer");
 				if (selectedPlayerId != null)
 				{
-					var player = db.Players.Where(p => p.Id == selectedPlayerId).First();
+					//If we used the lambda expression to get the first player, game could crash
+					//To be sure, we fix a possible problem by erasing the saved ID
+					if (db.Players.Count(p => p.Id == selectedPlayerId) != 1)
+					{
+						Utility.SettingsSave<int?>("selectedPlayer", null);
+						Log.e(this, "Wrong number of players with a requested ID! There are in total " + db.Players.Count().ToString() + " players in DB. Deleting setting choice.");
+						return;
+					}
+
+					Services.Entity.Player player = db.Players.Where(p => p.Id == selectedPlayerId).First();
+
+					//This is not expected to happen, so we log an error and fix a possible problem
 					if (player == null)
 					{
 						Utility.SettingsSave<int?>("selectedPlayer", null);
 						Log.e(this, "Player selection restored, but there was no such player in database. Deleting setting choice.");
+						return;
 					}
-					else
-					{
-						PlayersComboBox.SelectedItem = player;
-						Log.i(this, "Restored player selection choice to " + player.Name);
-					}
+
+					//Selects a Player for the first time
+					PlayersComboBox.SelectedItem = player;
+					Log.i(this, "Restored player selection choice to " + player.Name);
 				}
 				else
 				{
+					//By default, the Main Menu is in state of no Player being selected
 					Log.i(this, "There was no saved ID for selected Player");
 				}
 
@@ -290,6 +306,7 @@ namespace Space_Impact.Screen
 
 		/// <summary>
 		/// Updates all structures that work with Players.
+		/// Should be called when the Database state changes.
 		/// </summary>
 		/// <param name="players">current list of players in the Database</param>
 		void UpdatePlayers(DbSet<Services.Entity.Player> players)
@@ -305,6 +322,25 @@ namespace Space_Impact.Screen
 		}
 
 		/// <summary>
+		/// Called after a new CheckBox choice of a current Player.
+		/// Takes care of persisting the choice.
+		/// Also enables or disables the New Game button.
+		/// </summary>
+		/// <param name="player">new current Player</param>
+		void AfterSelectedPlayer(Services.Entity.Player player)
+		{
+			PlayerController.Player = player;
+			if (player == null)
+			{
+				newGameButton.Style = (Style)Resources["NewGameButtonDisabled"];
+			}
+			else
+			{
+				newGameButton.Style = (Style)Resources["NewGameButtonEnabled"];
+			}
+		}
+
+		/// <summary>
 		/// Implicit (less efficient) overload of updating Players.
 		/// Downloads a current updated version of the Database.
 		/// </summary>
@@ -316,6 +352,20 @@ namespace Space_Impact.Screen
 				players = db.Players;
 			}
 			UpdatePlayers(players);
+		}
+
+		/// <summary>
+		/// Initializes the Debugging CheckBox to the current saved value.
+		/// </summary>
+		void LoadDebugSetting()
+		{
+			bool debug = Utility.SettingsLoad<bool>("debug");
+			Log.i(this, "Loading debugging state: " + debug);
+
+			//We don't want to trigger the onClick event
+			debuggingCheckBox.Click -= debuggingCheckBox_Click;
+			debuggingCheckBox.IsChecked = debug;
+			debuggingCheckBox.Click += debuggingCheckBox_Click;
 		}
 
 		void canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
@@ -436,7 +486,7 @@ namespace Space_Impact.Screen
 			Frame.Navigate(typeof(GameRound));
 		}
 
-		private void settingsButton_Click(object sender, RoutedEventArgs e)
+		void settingsButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Settings Button");
 
@@ -445,7 +495,7 @@ namespace Space_Impact.Screen
 			MainMenuSettingsGrid.Visibility = Visibility.Visible;
 		}
 
-		private void exitButton_Click(object sender, RoutedEventArgs e)
+		void exitButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Exit Game Button");
 
@@ -453,7 +503,7 @@ namespace Space_Impact.Screen
 			Application.Current.Exit();
 		}
 
-		private void settingsReturnButton_Click(object sender, RoutedEventArgs e)
+		void settingsReturnButton_Click(object sender, RoutedEventArgs e)
 		{
 			Log.i(this, "User clicked on Return to Main Menu Button");
 
@@ -475,7 +525,7 @@ namespace Space_Impact.Screen
 			LoadScreenResolution();
 		}
 
-		private void settingsResetToDefault_Click(object sender, RoutedEventArgs e)
+		void settingsResetToDefault_Click(object sender, RoutedEventArgs e)
 		{
 			//Saves invalid data to all fields
 			Utility.SettingsSave<object>("resolutionFullscreen", null);
@@ -488,12 +538,12 @@ namespace Space_Impact.Screen
 			LoadSoundVolume();
 		}
 
-		private void NewPlayerButton_Click(object sender, RoutedEventArgs e)
+		void NewPlayerButton_Click(object sender, RoutedEventArgs e)
 		{
 			Frame.Navigate(typeof(NewPlayer));
 		}
 
-		private async void DeletePlayerButton_Click(object sender, RoutedEventArgs e)
+		async void DeletePlayerButton_Click(object sender, RoutedEventArgs e)
 		{
 			var selectedItem = PlayersComboBox.SelectedItem as Services.Entity.Player;
 			if (selectedItem == null)
@@ -528,12 +578,12 @@ namespace Space_Impact.Screen
 				);
 		}
 
-		private void PlayersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		void PlayersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var player = PlayersComboBox.SelectedItem as Services.Entity.Player;
 
 			//If the player is not valid, overwrites the stored selected player value by null, otherwise saves him.
-			//This happens as a callback after player gets removed.
+			//This happens as a callback after player gets deleted, too.
 			if (player == null)
 			{
 				Utility.SettingsSave<int?>("selectedPlayer", null);
@@ -544,6 +594,42 @@ namespace Space_Impact.Screen
 				Utility.SettingsSave<int?>("selectedPlayer", player.Id);
 				Log.i(this, "Saved player selection choice");
 			}
+
+			AfterSelectedPlayer(player);
+		}
+
+		async void debuggingCheckBox_Click(object sender, RoutedEventArgs e)
+		{
+			bool? debugging = debuggingCheckBox.IsChecked;
+			Log.i(this, "Changed state of Debugging to " + debugging.ToString());
+			Utility.SettingsSave("debug", debugging);
+
+			//Offer the immediate change
+			await PopupDialog.ShowPopupDialog
+				(
+				"Change will take place after next restart.\nDo you want to exit the game now?"
+				, "Yes"
+				, () =>
+				{
+					Application.Current.Exit();
+				}
+				, "No"
+				, null
+				, false
+				, "Yes + schedule restart in 15 minutes"
+				, () =>
+				{
+					BackgroundTask.ScheduleOneTime("GameRestarter", 15);
+					Application.Current.Exit();
+				}
+				);
+		}
+
+		async void browseLogsButton_Click(object sender, RoutedEventArgs e)
+		{
+			string metroLogPath = Utility.LocalFolder.Path + @"\MetroLogs";
+			Log.i(this, "Opening Logs folder as requested by user. Full path is: " + metroLogPath);
+			await Windows.System.Launcher.LaunchFolderAsync(await Windows.Storage.StorageFolder.GetFolderFromPathAsync(metroLogPath));
 		}
 	}
 }

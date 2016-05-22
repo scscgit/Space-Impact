@@ -11,7 +11,7 @@ namespace Space_Impact.Services
 	/// <summary>
 	/// Persists Entities in the Database, just like JPA.
 	/// </summary>
-	public class Persistence: DbContext
+	public class Persistence : DbContext
 	{
 		//Configuration
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

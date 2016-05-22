@@ -7,13 +7,45 @@
 	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	  Unloaded="Page_Unloaded"
 	  mc:Ignorable="d">
+	<Page.Resources>
+		<!--  Brushes  -->
+		<LinearGradientBrush x:Key="NewGameButtonBackgroundEnabled" StartPoint="0.5,0" EndPoint="0.5,1">
+			<GradientStop Color="#FFA2FF1C" />
+			<GradientStop Offset="1" Color="#FF009121" />
+			<GradientStop Offset="0.383" Color="#7F007201" />
+		</LinearGradientBrush>
+		<SolidColorBrush x:Key="NewGameButtonBorderBrushEnabled" Color="#E500FF0C" />
+		<LinearGradientBrush x:Key="NewGameButtonBackgroundDisabled" StartPoint="0.5,0" EndPoint="0.5,1">
+			<GradientStop Color="Black" />
+			<GradientStop Offset="1" Color="Black" />
+			<GradientStop Offset="0.383" Color="#7F007201" />
+		</LinearGradientBrush>
+		<SolidColorBrush x:Key="NewGameButtonBorderBrushDisabled" Color="#99A00000" />
+
+		<!--  Styles  -->
+		<Style x:Key="NewGameButtonEnabled" TargetType="Button">
+			<Setter Property="IsHitTestVisible" Value="True" />
+			<Setter Property="BorderBrush" Value="{StaticResource NewGameButtonBorderBrushEnabled}" />
+			<Setter Property="Background" Value="{StaticResource NewGameButtonBackgroundEnabled}" />
+		</Style>
+		<Style x:Key="NewGameButtonDisabled" TargetType="Button">
+			<Setter Property="IsHitTestVisible" Value="False" />
+			<Setter Property="BorderBrush" Value="{StaticResource NewGameButtonBorderBrushDisabled}" />
+			<Setter Property="Background" Value="{StaticResource NewGameButtonBackgroundDisabled}" />
+		</Style>
+	</Page.Resources>
 
 	<!--  Main grid for content (stretched)  -->
 	<Viewbox Stretch="Fill">
 		<Grid Background="Black">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="17*" />
+				<RowDefinition Height="37*" />
+			</Grid.RowDefinitions>
 
 			<!--  Loading screen  -->
 			<Grid Name="MainMenuLoadingGrid"
+				  Grid.RowSpan="2"
 				  Margin="0"
 				  Background="Aquamarine"
 				  Padding="0,50"
@@ -40,7 +72,7 @@
 			<!--  End - Loading screen  -->
 
 			<!--  Main screen after loading finishes  -->
-			<Grid Name="MainMenuGrid">
+			<Grid Name="MainMenuGrid" Grid.RowSpan="2">
 
 				<canvas:CanvasAnimatedControl x:Name="canvas"
 											  Width="1920"
@@ -58,21 +90,13 @@
 							Margin="0,320,0,0"
 							HorizontalAlignment="Center"
 							VerticalAlignment="Top"
-							BorderBrush="#E500FF0C"
 							BorderThickness="5"
 							Click="newGameButton_Click"
 							Content="Start a New Game"
 							FontFamily="Comic Sans MS"
 							FontSize="96"
-							RequestedTheme="Dark">
-						<Button.Background>
-							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-								<GradientStop Color="#FFA2FF1C" />
-								<GradientStop Offset="1" Color="#FF009121" />
-								<GradientStop Offset="0.383" Color="#7F007201" />
-							</LinearGradientBrush>
-						</Button.Background>
-					</Button>
+							RequestedTheme="Dark"
+							Style="{StaticResource NewGameButtonDisabled}" />
 
 					<!--  Player selection  -->
 					<TextBlock Width="262"
@@ -92,7 +116,8 @@
 							  HorizontalAlignment="Left"
 							  VerticalAlignment="Top"
 							  Background="#4C6BFF6B"
-							  Foreground="Yellow" SelectionChanged="PlayersComboBox_SelectionChanged">
+							  Foreground="Yellow"
+							  SelectionChanged="PlayersComboBox_SelectionChanged">
 						<!--  Only name of the Player will be displayed even though the real item in the ComboBox is an instance of Player  -->
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
@@ -246,6 +271,23 @@
 									Click="settingsResetToDefault_Click"
 									Content="Reset to Default Settings"
 									FontSize="24" />
+
+							<!--  Debugging and Log viewing section  -->
+							<Grid HorizontalAlignment="Right" VerticalAlignment="Top">
+								<CheckBox x:Name="debuggingCheckBox"
+										  Margin="0"
+										  HorizontalAlignment="Center"
+										  VerticalAlignment="Top"
+										  Click="debuggingCheckBox_Click"
+										  Content="Debugging" />
+								<Button x:Name="browseLogsButton"
+										Width="150"
+										Margin="0,32,0,-32"
+										HorizontalAlignment="Left"
+										VerticalAlignment="Top"
+										Click="browseLogsButton_Click"
+										Content="Browse Logs" />
+							</Grid>
 
 						</StackPanel>
 					</ScrollViewer>

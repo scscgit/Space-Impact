@@ -86,7 +86,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
@@ -182,9 +183,11 @@
     <Compile Include="Screen\NewPlayer.xaml.cs">
       <DependentUpon>NewPlayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\BackgroundTask.cs" />
     <Compile Include="Services\Entity\Player.cs" />
     <Compile Include="Services\Entity\Score.cs" />
     <Compile Include="Services\Persistence.cs" />
+    <Compile Include="Services\PlayerController.cs" />
     <Compile Include="Support\AbstractAction.cs" />
     <Compile Include="Support\ActionQueue.cs" />
     <Compile Include="Support\Log.cs" />
