@@ -38,6 +38,7 @@ namespace Space_Impact.Screen
 	public sealed partial class MainMenu : Page, IField
 	{
 		const string PageMusic = "userspace"; //"vault";
+		private const double DEFAULT_SOUND_VOLUME = 80;
 
 		/// <summary>
 		/// Background class of the MainMenu.
@@ -60,6 +61,7 @@ namespace Space_Impact.Screen
 
 		IBackground BackgroundImage;
 		MediaElement Music;
+		BackgroundTaskStatus BackgroundTaskStatus;
 
 		//Represents if the screen is loaded (fully initialized) with all resources and can be safely navigated out from.
 		//The Settings Grid gets implicitly disabled each time the Field Loaded state changes.
@@ -172,6 +174,7 @@ namespace Space_Impact.Screen
 			//Cleaning up the Page to help the garbage collector
 			canvas.RemoveFromVisualTree();
 			canvas = null;
+
 			Log.i(this, "Page was fully unloaded");
 		}
 
@@ -237,14 +240,17 @@ namespace Space_Impact.Screen
 		{
 			double? resultVolume = Utility.SettingsLoad<double?>("resultVolume");
 
+			Log.i(this, "Loading sound volume choice from settings: " + (resultVolume == null ? ("failure, defaulting to " + DEFAULT_SOUND_VOLUME) : resultVolume.ToString()));
+
 			//Default value
 			if (resultVolume == null)
 			{
-				resultVolume = 80;
+				resultVolume = DEFAULT_SOUND_VOLUME;
 			}
 
-			settingsVolume.Value = resultVolume.Value;
+			//Registers the Value Changed event to modify Music volume in real time
 			settingsVolume.ValueChanged += (a, b) => LoadVolume();
+			settingsVolume.Value = resultVolume.Value;
 		}
 
 		void LoadVolume()
@@ -271,8 +277,8 @@ namespace Space_Impact.Screen
 				int? selectedPlayerId = Utility.SettingsLoad<int?>("selectedPlayer");
 				if (selectedPlayerId != null)
 				{
-					//If we used the lambda expression to get the first player, game could crash
-					//To be sure, we fix a possible problem by erasing the saved ID
+					//If we used the lambda expression to get the first player without making sure there is one, game could crash
+					//We fix the problem before announcing the error by erasing the saved ID
 					if (db.Players.Count(p => p.Id == selectedPlayerId) != 1)
 					{
 						Utility.SettingsSave<int?>("selectedPlayer", null);
@@ -280,9 +286,10 @@ namespace Space_Impact.Screen
 						return;
 					}
 
+					//Instance of the last selected Player
 					Services.Entity.Player player = db.Players.Where(p => p.Id == selectedPlayerId).First();
 
-					//This is not expected to happen, so we log an error and fix a possible problem
+					//This is not expected to happen, so we log an error and fix the problem
 					if (player == null)
 					{
 						Utility.SettingsSave<int?>("selectedPlayer", null);
@@ -299,9 +306,8 @@ namespace Space_Impact.Screen
 					//By default, the Main Menu is in state of no Player being selected
 					Log.i(this, "There was no saved ID for selected Player");
 				}
-
-				Log.i(this, "Players initialized");
 			}
+			Log.i(this, "Players initialized and loaded");
 		}
 
 		/// <summary>
@@ -322,27 +328,8 @@ namespace Space_Impact.Screen
 		}
 
 		/// <summary>
-		/// Called after a new CheckBox choice of a current Player.
-		/// Takes care of persisting the choice.
-		/// Also enables or disables the New Game button.
-		/// </summary>
-		/// <param name="player">new current Player</param>
-		void AfterSelectedPlayer(Services.Entity.Player player)
-		{
-			PlayerController.Player = player;
-			if (player == null)
-			{
-				newGameButton.Style = (Style)Resources["NewGameButtonDisabled"];
-			}
-			else
-			{
-				newGameButton.Style = (Style)Resources["NewGameButtonEnabled"];
-			}
-		}
-
-		/// <summary>
 		/// Implicit (less efficient) overload of updating Players.
-		/// Downloads a current updated version of the Database.
+		/// Downloads a current up-to-date version from the Database.
 		/// </summary>
 		void UpdatePlayers()
 		{
@@ -352,6 +339,33 @@ namespace Space_Impact.Screen
 				players = db.Players;
 			}
 			UpdatePlayers(players);
+		}
+
+		/// <summary>
+		/// Called after a new CheckBox choice of a current Player.
+		/// Takes care of persisting the choice.
+		/// Also enables or disables the New Game button.
+		/// </summary>
+		/// <param name="player">new current Player</param>
+		void AfterSelectedPlayer(Services.Entity.Player player)
+		{
+			//Storing the instance of the selected Player to the Singleton controller
+			PlayerController.Player = player;
+
+			//If the player is not valid, overwrites the stored selected player value by null, otherwise saves him
+			//Enables or disables the New Game button
+			if (player == null)
+			{
+				Utility.SettingsSave<int?>("selectedPlayer", null);
+				newGameButton.Style = (Style)Resources["NewGameButtonDisabled"];
+				Log.i(this, "Deleted player selection choice");
+			}
+			else
+			{
+				Utility.SettingsSave<int?>("selectedPlayer", player.Id);
+				newGameButton.Style = (Style)Resources["NewGameButtonEnabled"];
+				Log.i(this, "Saved player selection choice");
+			}
 		}
 
 		/// <summary>
@@ -373,20 +387,25 @@ namespace Space_Impact.Screen
 			if (FirstDraw)
 			{
 				FirstDraw = false;
-				OnFirstDraw();
+				BeforeFirstDraw();
 			}
 
 			BackgroundImage.Draw(args.DrawingSession);
+			BackgroundTaskStatus.Draw(args.DrawingSession);
 		}
 
 		//First Draw cycle of a Field calls this method
-		void OnFirstDraw()
+		void BeforeFirstDraw()
 		{
-			Log.i(this, "First draw started");
+			Log.i(this, "Operation before first draw started");
 
+			//Creating Background instance
 			BackgroundImage = new MainMenuBackground(this);
 
-			Log.i(this, "First draw finished");
+			//Initializing object for displaying current status of Background Tasks
+			BackgroundTaskStatus = new BackgroundTaskStatus(10, 5);
+
+			Log.i(this, "Operation before first draw finished");
 		}
 
 		void canvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
@@ -418,8 +437,8 @@ namespace Space_Impact.Screen
 				sender
 				//Increases progress bar percentage during loading
 				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
-				//Gets called back after loading gets finished
-				, AfterCreateTexturesAsyncFinished
+				//If not null, gets called back after loading gets finished
+				, null
 				//Only loads the required backgrounds for faster loading time
 				, MainMenuBackground.backgrounds
 			);
@@ -438,14 +457,6 @@ namespace Space_Impact.Screen
 			FieldLoaded = true;
 
 			Log.i(this, "CreateResourcesAsync finished");
-		}
-
-		//Called from within the TextureSetLoader after the resources fully load
-		void AfterCreateTexturesAsyncFinished()
-		{
-
-
-			Log.i(this, "AfterCreateTexturesAsyncFinished finished");
 		}
 
 		public void AddActor(IAct actor)
@@ -500,7 +511,7 @@ namespace Space_Impact.Screen
 			Log.i(this, "User clicked on Exit Game Button");
 
 			//Version that crashed the application with exception: Window.Current.CoreWindow.Close();
-			Application.Current.Exit();
+			Utility.ExitGame(this);
 		}
 
 		void settingsReturnButton_Click(object sender, RoutedEventArgs e)
@@ -540,6 +551,7 @@ namespace Space_Impact.Screen
 
 		void NewPlayerButton_Click(object sender, RoutedEventArgs e)
 		{
+			Log.i(this, "User clicked on New player Button");
 			Frame.Navigate(typeof(NewPlayer));
 		}
 
@@ -582,19 +594,7 @@ namespace Space_Impact.Screen
 		{
 			var player = PlayersComboBox.SelectedItem as Services.Entity.Player;
 
-			//If the player is not valid, overwrites the stored selected player value by null, otherwise saves him.
 			//This happens as a callback after player gets deleted, too.
-			if (player == null)
-			{
-				Utility.SettingsSave<int?>("selectedPlayer", null);
-				Log.i(this, "Deleted player selection choice");
-			}
-			else
-			{
-				Utility.SettingsSave<int?>("selectedPlayer", player.Id);
-				Log.i(this, "Saved player selection choice");
-			}
-
 			AfterSelectedPlayer(player);
 		}
 
@@ -606,12 +606,12 @@ namespace Space_Impact.Screen
 
 			//Offer the immediate change
 			await PopupDialog.ShowPopupDialog
-				(
+			(
 				"Change will take place after next restart.\nDo you want to exit the game now?"
 				, "Yes"
 				, () =>
 				{
-					Application.Current.Exit();
+					Utility.ExitGame(this);
 				}
 				, "No"
 				, null
@@ -619,17 +619,30 @@ namespace Space_Impact.Screen
 				, "Yes + schedule restart in 15 minutes"
 				, () =>
 				{
-					BackgroundTask.ScheduleOneTime("GameRestarter", 15);
-					Application.Current.Exit();
+					var restarter = BackgroundTask.ScheduleOneTime("GameRestarter", 15);
+					Utility.ExitGame(this);
 				}
-				);
+			);
 		}
 
 		async void browseLogsButton_Click(object sender, RoutedEventArgs e)
 		{
 			string metroLogPath = Utility.LocalFolder.Path + @"\MetroLogs";
 			Log.i(this, "Opening Logs folder as requested by user. Full path is: " + metroLogPath);
+
+			//Launching the folder using the default folder viewer (Explorer)
 			await Windows.System.Launcher.LaunchFolderAsync(await Windows.Storage.StorageFolder.GetFolderFromPathAsync(metroLogPath));
+		}
+
+		void removeTasksButton_Click(object sender, RoutedEventArgs e)
+		{
+			int taskCount = 0;
+			foreach (var task in BackgroundTaskRegistration.AllTasks)
+			{
+				task.Value.Unregister(true);
+				taskCount++;
+			}
+			Log.i(this, taskCount.ToString() + " tasks removed.");
 		}
 	}
 }

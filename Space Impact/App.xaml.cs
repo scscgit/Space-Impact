@@ -111,10 +111,11 @@ namespace Space_Impact
 
 		//EXPERIMENTAL, TODO: FIX OR DELETE
 		//On Activated by request using URI in event of application restart (and possibly later also for IPC)
-		protected override void OnActivated(IActivatedEventArgs args)
+		/*protected override void OnActivated(IActivatedEventArgs args)
 		{
 			//debug todo delete, trying to open a folder when the event fires and activates the app
 			Windows.System.Launcher.LaunchFolderAsync(Support.Utility.LocalFolder);
+			Support.Log.d(this, "OnActivated event");
 
 			ProtocolActivatedEventArgs paea = args as ProtocolActivatedEventArgs;
 
@@ -139,6 +140,6 @@ namespace Space_Impact
 
 			Window.Current.Activate();
 			base.OnActivated(args);
-		}
+		}*/
 	}
 }

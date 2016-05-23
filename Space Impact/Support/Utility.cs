@@ -12,6 +12,17 @@ namespace Space_Impact.Support
 	{
 		private static Random Random = new Random();
 
+		/// <summary>
+		/// Safely exists the Game, logging and flushing MetroLog in the process.
+		/// </summary>
+		/// <param name="context">object which requested the game exit, will be converted using ToString() for logging purposes</param>
+		public async static void ExitGame(object context)
+		{
+			Log.i(context, "Exiting Game");
+			await MetroLog.LazyFlushManager.FlushAllAsync(new MetroLog.LogWriteContext());
+			Windows.UI.Xaml.Application.Current.Exit();
+		}
+
 		public static float NormalizeDegreeAngle(float angle)
 		{
 			angle %= 360;
@@ -45,7 +56,7 @@ namespace Space_Impact.Support
 			Windows.Storage.StorageFolder folder;
 			Windows.Storage.StorageFile musicFile;
 			string path = @"Assets\Music";
-			if(additionalPath != null)
+			if (additionalPath != null)
 			{
 				path += @"\" + additionalPath;
 			}

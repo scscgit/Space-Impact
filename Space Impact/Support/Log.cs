@@ -62,6 +62,7 @@ namespace Space_Impact.Support
 				LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal, new MetroLog.Targets.StreamingFileTarget());
 			}
 
+			//The GlobalCrashHandler can be used to ensure that a FATAL log entry is written if an unhandled exception occurs
 			GlobalCrashHandler.Configure();
 		}
 

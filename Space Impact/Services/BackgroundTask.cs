@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Microsoft.Graphics.Canvas;
+using Space_Impact.Graphics;
 
 namespace Space_Impact.Services
 {
@@ -23,13 +25,13 @@ namespace Space_Impact.Services
 			//Thread will run until the deferral gets marked as completed
 			TaskDeferral = taskInstance.GetDeferral();
 
+			Log.d(this, "Test of logging from async task");
+
 			//Running the game using SIP (Space Impact Protocol)
 			Windows.System.LauncherOptions options = new Windows.System.LauncherOptions();
 			//Use FamilyName of the current application in case there are more games using the same protocol (wait, what?)
 			options.TargetApplicationPackageFamilyName = Windows.ApplicationModel.Package.Current.Id.FamilyName;
 			await Windows.System.Launcher.LaunchUriAsync(new Uri("spaceimpact:"), options);
-
-			Log.d(this, "Test of logging from async task");
 
 			//Marking async tasks as completed
 			TaskDeferral.Complete();
@@ -49,13 +51,10 @@ namespace Space_Impact.Services
 			}
 
 			//Checking for duplicate tasks
-			foreach (var task in BackgroundTaskRegistration.AllTasks)
+			if (GetTask(taskName) != null)
 			{
-				if (task.Value.Name.Equals(taskName))
-				{
-					Log.i(TAG, "The task " + taskName + " was already scheduled.");
-					return null;
-				}
+				Log.i(TAG, "The task " + taskName + " was already scheduled.");
+				return null;
 			}
 
 			var builder = new BackgroundTaskBuilder();
@@ -78,6 +77,109 @@ namespace Space_Impact.Services
 			}
 
 			return registered;
+		}
+
+		/// <summary>
+		/// Returns a currently scheduled task.
+		/// </summary>
+		/// <param name="taskName">name of the scheduled task</param>
+		/// <returns>task if it is scheduled, null if there is no such task</returns>
+		public static IBackgroundTaskRegistration GetTask(string taskName)
+		{
+			foreach (var task in BackgroundTaskRegistration.AllTasks)
+			{
+				if (task.Value.Name.Equals(taskName))
+				{
+					return task.Value;
+				}
+			}
+			return null;
+		}
+	}
+
+	public class BackgroundTaskStatus : IDrawable
+	{
+		/// <summary>
+		/// Prints text lines onto the canvas.
+		/// </summary>
+		private class Printer
+		{
+			BackgroundTaskStatus Owner;
+			float Y;
+			float RowHeight;
+			CanvasDrawingSession DrawSession;
+
+			public Printer(BackgroundTaskStatus owner, float rowHeight, CanvasDrawingSession drawSession)
+			{
+				Owner = owner;
+				Y = owner.Y;
+				RowHeight = rowHeight;
+				DrawSession = drawSession;
+			}
+
+			public void PrintLine(string line)
+			{
+				DrawSession.DrawText(line, new System.Numerics.Vector2(Owner.X, Y), color: Windows.UI.Colors.Yellow);
+				Y += RowHeight;
+			}
+		}
+
+		public float X;
+		public float Y;
+
+		private Dictionary<Guid, uint> Progress = new Dictionary<Guid, uint>();
+
+		public BackgroundTaskStatus(float x, float y)
+		{
+			X = x;
+			Y = y;
+		}
+
+		/// <summary>
+		/// Attach progress handler to a background task.
+		/// </summary>
+		/// <param name="task">The task to attach progress handler to.</param>
+		private void AttachProgressHandler(IBackgroundTaskRegistration task)
+		{
+			task.Progress += new BackgroundTaskProgressEventHandler(OnProgress);
+		}
+
+		/// <summary>
+		/// Handle background task progress.
+		/// </summary>
+		/// <param name="task">The task that is reporting progress.</param>
+		/// <param name="e">Arguments of the progress report.</param>
+		private void OnProgress(IBackgroundTaskRegistration task, BackgroundTaskProgressEventArgs args)
+		{
+			Progress[task.TaskId] = args.Progress;
+		}
+
+		public void Draw(CanvasDrawingSession draw)
+		{
+			var printer = new Printer(this, 22, draw);
+			var tasks = BackgroundTaskRegistration.AllTasks;
+
+			var count = tasks.Count;
+			if (count == 0)
+			{
+				printer.PrintLine("There are no scheduled tasks.");
+			}
+			else
+			{
+				printer.PrintLine("There " + (count == 1 ? "is " : "are ") + tasks.Count.ToString() + " scheduled task" + (count == 1 ? "" : "s") + ":");
+			}
+
+			foreach (var task in tasks)
+			{
+				string progress = "";
+				if (this.Progress.ContainsKey(task.Value.TaskId))
+				{
+					progress = " => " + this.Progress[task.Value.TaskId].ToString();
+				}
+
+				printer.PrintLine(task.Value.Name + progress);
+				AttachProgressHandler(task.Value);
+			}
 		}
 	}
 }

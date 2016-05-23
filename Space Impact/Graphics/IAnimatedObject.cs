@@ -5,12 +5,10 @@ using Microsoft.Graphics.Canvas;
 
 namespace Space_Impact.Graphics
 {
-	public interface IAnimatedObject : IPlacedInSpace
+	public interface IAnimatedObject : IPlacedInSpace, IDrawable
 	{
 		int Frame { get; }
 		int AnimationSpeed { set; }
 		string[] Animation { set; }
-		
-		void Draw(CanvasDrawingSession draw);
 	}
 }
