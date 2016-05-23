@@ -94,8 +94,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +114,8 @@
     <Compile Include="Core\Game\IntersectStrategy\DelegateIntersect.cs" />
     <Compile Include="Core\Game\IntersectStrategy\IIntersectStrategy.cs" />
     <Compile Include="Core\Game\IntersectStrategy\SquareIntersect.cs" />
+    <Compile Include="Core\Game\Level\AbstractLevel.cs" />
+    <Compile Include="Core\Game\Level\Level1.cs" />
     <Compile Include="Core\Game\Object\Collectable\WeaponUpgrade\UMultiBulletShooter.cs" />
     <Compile Include="Core\Game\Spawner\AbstractSpawner.cs" />
     <Compile Include="Core\Game\Spawner\DualSymmetrySpawner.cs" />
@@ -270,6 +270,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

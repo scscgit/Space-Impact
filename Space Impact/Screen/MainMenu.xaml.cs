@@ -617,8 +617,11 @@ namespace Space_Impact.Screen
 				, null
 				, false
 				, "Yes + schedule restart in 15 minutes"
-				, () =>
+				, async () =>
 				{
+					//Supposedly should be called before registering any background task, TODO: verify and integrate into schedule function
+					await BackgroundExecutionManager.RequestAccessAsync();
+
 					var restarter = BackgroundTask.ScheduleOneTime("GameRestarter", 15);
 					Utility.ExitGame(this);
 				}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Spawner
 {
-	public delegate void SpawnCallbackDelegate();
+	public delegate void SpawnCallbackDelegate(ISpawner spawner);
 
 	/// <summary>
 	/// Spawner is also like an Actor, but does not implement Actor interface, only Act.
@@ -26,6 +26,8 @@ namespace Space_Impact.Core.Game.Spawner
 		int RemainingEnemies { get; }
 		bool UnlimitedEnemies { get; }
 		bool Active { get; }
+
+		void PlaceActor(IActor actor);
 
 		void Spawn(SpawnCallbackDelegate spawnCallback);
 	}

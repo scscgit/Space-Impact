@@ -36,6 +36,7 @@ using Space_Impact.Core.Game.Spawner;
 using Space_Impact.Core.Graphics.Background;
 using Space_Impact.Core.Graphics.Background.Strategy;
 using Space_Impact.Core.Game.Spawner.Wrapper;
+using Space_Impact.Core.Game.Level;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -441,10 +442,8 @@ namespace Space_Impact.Screen
 			Player.X = (float)Size.Width / 2 - (float)Player.Width / 2;
 			Player.Y = (float)Size.Height / 2 - (float)Player.Height / 2;
 
-			//Initializing spawner
-			//ISpawner spawner = new DualSymmetrySpawner(y: 0);
-			ISpawner spawner = new DelayedStart(0, 10, new DualSymmetrySpawner(y: 0));
-			AddActor(spawner);
+			//Creating a Level
+			new Level1().AddToField(this);
 
 			//Also objects ad-hoc
 			//ICharacter doomday = new Doomday(Player);
@@ -504,8 +503,8 @@ namespace Space_Impact.Screen
 				sender
 				//Increases progress bar percentage during loading
 				, (increasePercentage) => { loadingProgressBar.Value += increasePercentage; }
-				//Gets called back after loading gets finished
-				, AfterCreateTexturesAsyncFinished
+				//If not null, gets called back after loading gets finished
+				, null
 				//Loads all textures implicitly
 				);
 
@@ -524,14 +523,6 @@ namespace Space_Impact.Screen
 			FieldLoaded = true;
 
 			Log.i(this, "CreateResourcesAsync finished");
-		}
-
-		//Called from within the TextureSetLoader after the resources fully load
-		void AfterCreateTexturesAsyncFinished()
-		{
-
-
-			Log.i(this, "AfterCreateTexturesAsyncFinished finished");
 		}
 
 		//Main game loop, should be fired 60 times per second

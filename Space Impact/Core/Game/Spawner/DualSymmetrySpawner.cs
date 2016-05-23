@@ -17,24 +17,54 @@ namespace Space_Impact.Core.Game.Spawner
 	/// </summary>
 	public class DualSymmetrySpawner : AbstractSpawner
 	{
-		//Constant settings
-		const int REMAINING_ENEMIES_LEFT = 10;
-		const int REMAINING_ENEMIES_RIGHT = 15;
-
 		//Symmetrical Spawners
 		HideAct LeftSpawner = null;
 		HideAct RightSpawner = null;
 
-		public DualSymmetrySpawner(float y) : base(0, y, REMAINING_ENEMIES_LEFT + REMAINING_ENEMIES_RIGHT)
+		//Settings
+		int RemainingEnemiesLeft;
+		int RemainingEnemiesRight;
+
+		SpawnCallbackDelegate LeftSpawnCallback;
+		SpawnCallbackDelegate RightSpawnCallback;
+
+		public DualSymmetrySpawner(float y, int remainingEnemiesLeft, int remainingEnemiesRight, SpawnCallbackDelegate leftSpawnCallback, SpawnCallbackDelegate rightSpawnCallback)
+			: base(0, y, remainingEnemiesLeft + remainingEnemiesRight)
 		{
+			RemainingEnemiesLeft = remainingEnemiesLeft;
+			RemainingEnemiesRight = remainingEnemiesRight;
+			SetSpawnCallback(leftSpawnCallback, rightSpawnCallback);
+		}
+
+		//Implicitly uses equal callback on both sides
+		public DualSymmetrySpawner(float y, int remainingEnemiesLeft, int remainingEnemiesRight, SpawnCallbackDelegate equalSpawnCallback)
+			: this(y, remainingEnemiesLeft, remainingEnemiesRight, equalSpawnCallback, equalSpawnCallback)
+		{
+		}
+
+		/// <summary>
+		/// Sets new Callbacks, overwriting old ones.
+		/// This is useful for delayed construction of the Spawner when its fields are required within the callback definition.
+		/// </summary>
+		/// <param name="leftSpawnCallback"></param>
+		/// <param name="rightSpawnCallback"></param>
+		public void SetSpawnCallback(SpawnCallbackDelegate leftSpawnCallback, SpawnCallbackDelegate rightSpawnCallback)
+		{
+			LeftSpawnCallback = leftSpawnCallback;
+			RightSpawnCallback = rightSpawnCallback;
+		}
+
+		public void SetSpawnCallback(SpawnCallbackDelegate equalSpawnCallback)
+		{
+			SetSpawnCallback(equalSpawnCallback, equalSpawnCallback);
 		}
 
 		public override void AddedToFieldHook()
 		{
 			base.AddedToFieldHook();
 
-			LeftSpawner = new HideAct(new EnemySpawner(0, Y, REMAINING_ENEMIES_LEFT, LeftSpawnCallback));
-			RightSpawner = new HideAct(new EnemySpawner((float)Field.Size.Width, Y, REMAINING_ENEMIES_RIGHT, RightSpawnCallback));
+			LeftSpawner = new HideAct(new EnemySpawner(0, Y, RemainingEnemiesLeft, LeftSpawnCallback));
+			RightSpawner = new HideAct(new EnemySpawner((float)Field.Size.Width, Y, RemainingEnemiesRight, RightSpawnCallback));
 
 			Field.AddActor(LeftSpawner);
 			Field.AddActor(RightSpawner);
@@ -51,34 +81,14 @@ namespace Space_Impact.Core.Game.Spawner
 			RightSpawner = null;
 		}
 
-		protected void LeftSpawnCallback()
-		{
-			Log.i(this, "LeftSpawnCallback() called");
-			IEnemy enemy = Utility.RandomBetween(0, 1) == 1 ? new Doomday(Field.Player) : null;
-			if (enemy == null) enemy = new Lakebeam();
-			enemy.X = LeftSpawner.Position.X;
-			enemy.Y = LeftSpawner.Position.Y;
-			Field.AddActor(enemy);
-		}
-
-		protected void RightSpawnCallback()
-		{
-			Log.i(this, "RightSpawnCallback() called");
-			IEnemy enemy = Utility.RandomBetween(0, 1) == 1 ? new Doomday(Field.Player) : null;
-			if (enemy == null) enemy = new Lakebeam();
-			enemy.X = RightSpawner.Position.X;
-			enemy.Y = RightSpawner.Position.Y;
-			Field.AddActor(enemy);
-		}
-
 		public override void Act()
 		{
 			base.Act();
-			if(LeftSpawner != null)
+			if (LeftSpawner != null)
 			{
 				LeftSpawner.HiddenAct();
 			}
-			if(RightSpawner != null)
+			if (RightSpawner != null)
 			{
 				RightSpawner.HiddenAct();
 			}

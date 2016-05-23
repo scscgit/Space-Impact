@@ -10,7 +10,7 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 	/// Strategy of a Spawner.
 	/// Should be only created on a Spawner that is already added to the Field.
 	/// </summary>
-	public abstract class AbstractSpawnerStrategy: ISpawnerStrategy
+	public abstract class AbstractSpawnerStrategy : ISpawnerStrategy
 	{
 		//Current spawner that is using the strategy
 		protected ISpawner Spawner;

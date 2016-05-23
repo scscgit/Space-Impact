@@ -25,8 +25,8 @@ namespace Space_Impact.Core.Game.Spawner
 			base.AddedToFieldHook();
 
 			//Strategies used within the Spawner
-			Strategies.Add(new EveryNActs(this, SpawnCallback, interval: 100));
-			Strategies.Add(new EveryNPercent(this, SpawnCallback, percent: 1));
+			Strategies.Add(new EveryNActs(this, SpawnCallback, interval: 20));
+			//Strategies.Add(new EveryNPercent(this, SpawnCallback, percent: 1));
 		}
 
 		public override void DeleteActorHook()
@@ -37,16 +37,6 @@ namespace Space_Impact.Core.Game.Spawner
 			Log.i(this, "Clearing strategies");
 			Strategies.Clear();
 		}
-
-		/*protected void SpawnCallback()
-		{
-			Log.i(this, "SpawnCallback() called");
-			IEnemy enemy = Utility.RandomBetween(0, 1) == 1 ? new Doomday(Field.Player) : null;
-			if (enemy == null) enemy = new Lakebeam();
-			enemy.X = Position.X;
-			enemy.Y = Position.Y;
-			Field.AddActor(enemy);
-		}*/
 
 		public override void Act()
 		{

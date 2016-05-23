@@ -120,6 +120,17 @@ namespace Space_Impact.Core.Game.Spawner
 		}
 
 		/// <summary>
+		/// Places actor to the Game Field on the required coordinates.
+		/// </summary>
+		/// <param name="actor">Actor to be placed in the Game Field.</param>
+		public void PlaceActor(IActor actor)
+		{
+			actor.X = X;
+			actor.Y = Y;
+			Field.AddActor(actor);
+		}
+
+		/// <summary>
 		/// Public spawn interface implementation, calls the callback of the subclasses.
 		/// Automatically removes the Spawner from the Field after it has no more enemies to produce because of the RemainingEnemies setter action.
 		/// </summary>
@@ -128,11 +139,11 @@ namespace Space_Impact.Core.Game.Spawner
 		{
 			if (UnlimitedEnemies)
 			{
-				spawnCallback();
+				spawnCallback(this);
 			}
 			else if (RemainingEnemies > 0)
 			{
-				spawnCallback();
+				spawnCallback(this);
 				RemainingEnemies--;
 			}
 		}

@@ -106,6 +106,11 @@ namespace Space_Impact.Core.Game.Spawner.Wrapper
 			Spawner.Act();
 		}
 
+		public void PlaceActor(IActor actor)
+		{
+			Spawner.PlaceActor(actor);
+		}
+
 		public virtual void Spawn(SpawnCallbackDelegate spawnCallback)
 		{
 			Spawner.Spawn(spawnCallback);
