@@ -52,11 +52,11 @@ namespace Space_Impact.Core.Graphics.Background.Strategy
 		{
 			if (Direction.Horizontal.Equals(SpaceDirection.HorizontalDirection.LEFT) && x < LeftMax)
 			{
-				Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, Direction.Vertical);
+				Direction = SpaceDirection.Get(SpaceDirection.HorizontalDirection.RIGHT, Direction.Vertical);
 			}
 			else if (Direction.Horizontal.Equals(SpaceDirection.HorizontalDirection.RIGHT) && x > RightMax)
 			{
-				Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT, Direction.Vertical);
+				Direction = SpaceDirection.Get(SpaceDirection.HorizontalDirection.LEFT, Direction.Vertical);
 			}
 			else
 			{
@@ -68,11 +68,11 @@ namespace Space_Impact.Core.Graphics.Background.Strategy
 		{
 			if (Direction.Vertical.Equals(SpaceDirection.VerticalDirection.UP) && y < TopMax)
 			{
-				Direction = SpaceDirection.get(Direction.Horizontal, SpaceDirection.VerticalDirection.DOWN);
+				Direction = SpaceDirection.Get(Direction.Horizontal, SpaceDirection.VerticalDirection.DOWN);
 			}
 			else if (Direction.Vertical.Equals(SpaceDirection.VerticalDirection.DOWN) && y > BottomMax)
 			{
-				Direction = SpaceDirection.get(Direction.Horizontal, SpaceDirection.VerticalDirection.UP);
+				Direction = SpaceDirection.Get(Direction.Horizontal, SpaceDirection.VerticalDirection.UP);
 			}
 			else
 			{
@@ -132,7 +132,7 @@ namespace Space_Impact.Core.Graphics.Background.Strategy
 					break;
 			}
 
-			Direction = SpaceDirection.get(horizontal, vertical);
+			Direction = SpaceDirection.Get(horizontal, vertical);
 		}
 	}
 }

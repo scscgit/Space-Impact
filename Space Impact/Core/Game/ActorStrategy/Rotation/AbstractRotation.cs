@@ -32,7 +32,12 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 		protected IActor Owner;
 
 		//Angle at which the character is rotated relative to his orientation direction
-		protected float CurrentRelativeAngleRadians = 0;
+		//Can be calculated from degrees, but is available as a getter for faster calculation purposes (but is not available using interface)
+		public float CurrentRelativeAngleRadians
+		{
+			get; protected set;
+		} = 0;
+
 		//Difference between each angle update
 		protected float DeltaAngle;
 		//Maximum rotation angle in absolute value
@@ -62,11 +67,11 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			//Angle can be initialized from the Actor's current state
 			if (owner is IAngle)
 			{
-				CurrentRelativeAngleRadians = DegreeToRadians(((IAngle)owner).Angle);
+				CurrentRelativeAngleRadians = DegreesToRadians(((IAngle)owner).Angle);
 			}
 
 			//Maximum rotation angle
-			MaxAngle = DegreeToRadians(maxAngleDegrees);
+			MaxAngle = DegreesToRadians(maxAngleDegrees);
 
 			//Delta is a fraction of MaxAngle
 			DeltaAngle = MaxAngle / angleDeltaCount;
@@ -115,14 +120,14 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			float remainingAngle = CurrentRelativeAngleRadians - angleRadians;
 			if (remainingAngle < 0)
 			{
-				remainingAngle += DegreeToRadians(360);
+				remainingAngle += DegreesToRadians(360);
 			}
 
 			//Rotates in counter-clockwise direction
-			if (remainingAngle >= DegreeToRadians(180))
+			if (remainingAngle >= DegreesToRadians(180))
 			{
 				//Increase value up to the needed value, but not more than that
-				if (DegreeToRadians(360) - remainingAngle <= DeltaAngle)
+				if (DegreesToRadians(360) - remainingAngle <= DeltaAngle)
 				{
 					CurrentRelativeAngleRadians = angleRadians;
 				}
@@ -158,9 +163,9 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			//Rotates in counter-clockwise direction
 			if
 			(
-				remainingAngle >= -DegreeToRadians(180) && remainingAngle < 0
+				remainingAngle >= -DegreesToRadians(180) && remainingAngle < 0
 				||
-				remainingAngle >= DegreeToRadians(180)
+				remainingAngle >= DegreesToRadians(180)
 			)
 			{
 				//Increase value up to the needed value, but not more than that
@@ -176,9 +181,9 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			//Rotates in clockwise direction
 			else if
 			(
-				remainingAngle > -DegreeToRadians(360) && remainingAngle < -DegreeToRadians(180)
+				remainingAngle > -DegreesToRadians(360) && remainingAngle < -DegreesToRadians(180)
 				||
-				remainingAngle > 0 && remainingAngle < DegreeToRadians(180)
+				remainingAngle > 0 && remainingAngle < DegreesToRadians(180)
 			)
 			{
 				//Decrease value down to the needed value, but not less than that
@@ -193,7 +198,7 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			}
 		}
 
-		public static float DegreeToRadians(float degrees)
+		public static float DegreesToRadians(float degrees)
 		{
 			return degrees * (float)Math.PI / 180;
 		}

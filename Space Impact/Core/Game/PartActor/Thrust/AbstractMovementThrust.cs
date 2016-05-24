@@ -11,8 +11,12 @@ namespace Space_Impact.Core.Game.PartActor.Thrust
 {
 	public abstract class AbstractMovementThrust : AbstractPartActor
 	{
-		//Variables
-		bool BlinkState = false;
+		//Fields
+		public bool IsTurnedOn
+		{
+			get; private set;
+		} = false;
+
 		int BlinkCounter = 0;
 		int BlinkPeriod;
 
@@ -74,8 +78,8 @@ namespace Space_Impact.Core.Game.PartActor.Thrust
 				if (++BlinkCounter > BlinkPeriod)
 				{
 					BlinkCounter = 0;
-					BlinkState = !BlinkState;
-					if (!BlinkState)
+					IsTurnedOn = !IsTurnedOn;
+					if (!IsTurnedOn)
 					{
 						bitmap = null;
 						return;

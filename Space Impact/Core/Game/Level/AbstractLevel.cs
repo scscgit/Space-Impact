@@ -41,7 +41,7 @@ namespace Space_Impact.Core.Game.Level
 
 		protected abstract void Construct();
 
-		protected void AddDualSpawner(float percentDelay, int enemies, SpawnCallbackDelegate spawnCallback)
+		protected void AddDualSpawner(float percentDelay, float y, int enemies, SpawnCallbackDelegate spawnCallback)
 		{
 			//Half the enemies for each side
 			int enemiesLeft = enemies / 2;
@@ -56,13 +56,19 @@ namespace Space_Impact.Core.Game.Level
 					, percentDelay: percentDelay
 					, spawner: new DualSymmetrySpawner
 					(
-						y: 0
+						y: y
 						, remainingEnemiesLeft: enemiesLeft
 						, remainingEnemiesRight: enemiesRight
 						, equalSpawnCallback: spawnCallback
 					)
 				)
 			);
+		}
+
+		//Implicitly spawns on top of the game field where y=0
+		protected void AddDualSpawner(float percentDelay, int enemies, SpawnCallbackDelegate spawnCallback)
+		{
+			AddDualSpawner(percentDelay, 0, enemies, spawnCallback);
 		}
 	}
 }

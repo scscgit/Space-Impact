@@ -50,7 +50,7 @@ namespace Space_Impact.Core.Game.Object.Weapon
 			set
 			{
 				this.angle = value;
-				Direction = SpaceDirection.getFromAngle(angle);
+				Direction = SpaceDirection.GetFromAngle(angle);
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace Space_Impact.Core.Game.Object.Weapon
 		{
 			base.DrawAbstractModification(ref bitmap, draw);
 
-			AbstractRotation.DrawModification(ref bitmap, draw, AbstractRotation.DegreeToRadians(Angle));
+			AbstractRotation.DrawModification(ref bitmap, draw, AbstractRotation.DegreesToRadians(Angle));
 		}
 
 		protected override void OnAnimationSet()

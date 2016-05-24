@@ -84,8 +84,8 @@ namespace Space_Impact.Support
 		/// <summary>
 		/// Returns a number between (inclusively) the two numbers.
 		/// </summary>
-		/// <param name="a">first bound</param>
-		/// <param name="b">second bound</param>
+		/// <param name="a">First bound.</param>
+		/// <param name="b">Second bound.</param>
 		/// <returns></returns>
 		public static int RandomBetween(int a, int b)
 		{

@@ -8,5 +8,9 @@ namespace Space_Impact.Core.Game.PartActor.Thrust
 {
 	public interface IMovementThrust
 	{
+		bool IsTurnedOn
+		{
+			get;
+		}
 	}
 }

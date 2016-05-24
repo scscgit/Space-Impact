@@ -31,17 +31,17 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			//Angles are calculated from the 90 degree start point based on the texture, reversed vertically if the direction is DOWN
 			if (firstActorReversed)
 			{
-				atan = DegreeToRadians(90) - atan;
+				atan = DegreesToRadians(90) - atan;
 			}
 			else
 			{
-				atan = atan + DegreeToRadians(90);
+				atan = atan + DegreesToRadians(90);
 			}
 
 			//In the 2nd and 3rd quadrant add 180 degrees
 			if (deltaX < 0)
 			{
-				atan = atan + DegreeToRadians(180);
+				atan = atan + DegreesToRadians(180);
 			}
 
 			//In the 1st quadrant add 360 degrees if (deltaX >= 0 && deltaY < 0) implicitly by normalization

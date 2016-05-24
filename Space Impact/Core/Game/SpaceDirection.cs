@@ -59,6 +59,7 @@ namespace Space_Impact.Core.Game
 		}
 		*/
 
+		//Private constructor, instances should be received as a singleton
 		SpaceDirection(HorizontalDirection horizontal, VerticalDirection vertical)
 		{
 			Horizontal = horizontal;
@@ -66,7 +67,7 @@ namespace Space_Impact.Core.Game
 		}
 
 		//Direction seems a good reason for using a singleton
-		public static SpaceDirection get(HorizontalDirection horizontal, VerticalDirection vertical)
+		public static SpaceDirection Get(HorizontalDirection horizontal, VerticalDirection vertical)
 		{
 			if (horizontal == HorizontalDirection.LEFT)
 			{
@@ -83,50 +84,50 @@ namespace Space_Impact.Core.Game
 		}
 
 		//Overloads for convenience
-		public static SpaceDirection get(HorizontalDirection horizontal)
+		public static SpaceDirection Get(HorizontalDirection horizontal)
 		{
-			return get(horizontal, VerticalDirection.NONE);
+			return Get(horizontal, VerticalDirection.NONE);
 		}
-		public static SpaceDirection get(VerticalDirection vertical)
+		public static SpaceDirection Get(VerticalDirection vertical)
 		{
-			return get(HorizontalDirection.NONE, vertical);
+			return Get(HorizontalDirection.NONE, vertical);
 		}
 
 		//Conversion from angle
-		public static SpaceDirection getFromAngle(float angle)
+		public static SpaceDirection GetFromAngle(float angle)
 		{
 			angle = Utility.NormalizeDegreeAngle(angle);
 			if (angle > 0 && angle < 90)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, SpaceDirection.VerticalDirection.UP);
+				return Get(HorizontalDirection.RIGHT, VerticalDirection.UP);
 			}
 			else if (angle == 90)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT);
+				return Get(HorizontalDirection.RIGHT);
 			}
 			else if (angle > 90 && angle < 180)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.RIGHT, SpaceDirection.VerticalDirection.DOWN);
+				return Get(HorizontalDirection.RIGHT, VerticalDirection.DOWN);
 			}
 			else if (angle == 180)
 			{
-				return SpaceDirection.get(SpaceDirection.VerticalDirection.DOWN);
+				return Get(VerticalDirection.DOWN);
 			}
 			else if (angle > 180 && angle < 270)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT, SpaceDirection.VerticalDirection.DOWN);
+				return Get(HorizontalDirection.LEFT, VerticalDirection.DOWN);
 			}
 			else if (angle == 270)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT);
+				return Get(HorizontalDirection.LEFT);
 			}
 			else if (angle > 270 && angle < 360)
 			{
-				return SpaceDirection.get(SpaceDirection.HorizontalDirection.LEFT, SpaceDirection.VerticalDirection.UP);
+				return Get(HorizontalDirection.LEFT, VerticalDirection.UP);
 			}
 			else if (angle == 360 || angle == 0)
 			{
-				return SpaceDirection.get(SpaceDirection.VerticalDirection.UP);
+				return Get(VerticalDirection.UP);
 			}
 			throw new Exception("Fatal error: Angle for conversion in SpaceDirection was not normalized.");
 		}
@@ -135,17 +136,17 @@ namespace Space_Impact.Core.Game
 		{
 			//Opposite directions cancel out
 			if
-				(
+			(
 				horizontal == HorizontalDirection.LEFT && direction.Horizontal == HorizontalDirection.RIGHT
 				||
 				horizontal == HorizontalDirection.RIGHT && direction.Horizontal == HorizontalDirection.LEFT
-				)
+			)
 			{
-				return get(HorizontalDirection.NONE, direction.Vertical);
+				return Get(HorizontalDirection.NONE, direction.Vertical);
 			}
 			else
 			{
-				return get(horizontal, direction.Vertical);
+				return Get(horizontal, direction.Vertical);
 			}
 		}
 
@@ -153,17 +154,17 @@ namespace Space_Impact.Core.Game
 		{
 			//Opposite directions cancel out
 			if
-				(
+			(
 				vertical == VerticalDirection.UP && direction.Vertical == VerticalDirection.DOWN
 				||
 				vertical == VerticalDirection.DOWN && direction.Vertical == VerticalDirection.UP
-				)
+			)
 			{
-				return get(direction.Horizontal, VerticalDirection.NONE);
+				return Get(direction.Horizontal, VerticalDirection.NONE);
 			}
 			else
 			{
-				return get(direction.Horizontal, vertical);
+				return Get(direction.Horizontal, vertical);
 			}
 		}
 
@@ -172,21 +173,21 @@ namespace Space_Impact.Core.Game
 			//Same directions cancel out
 			if (direction.Horizontal == horizontal)
 			{
-				return get(HorizontalDirection.NONE, direction.Vertical);
+				return Get(HorizontalDirection.NONE, direction.Vertical);
 			}
 			//Direction can be reversed using unary minus operator
 			else if (direction.Horizontal == HorizontalDirection.NONE && horizontal == HorizontalDirection.LEFT)
 			{
-				return get(HorizontalDirection.RIGHT, direction.Vertical);
+				return Get(HorizontalDirection.RIGHT, direction.Vertical);
 			}
 			else if (direction.Horizontal == HorizontalDirection.NONE && horizontal == HorizontalDirection.RIGHT)
 			{
-				return get(HorizontalDirection.LEFT, direction.Vertical);
+				return Get(HorizontalDirection.LEFT, direction.Vertical);
 			}
 			//Adding two directions (double negation) is a neutral operation
 			else
 			{
-				return get(direction.Horizontal, direction.Vertical);
+				return Get(direction.Horizontal, direction.Vertical);
 			}
 		}
 
@@ -195,21 +196,21 @@ namespace Space_Impact.Core.Game
 			//Same directions cancel out
 			if (direction.Vertical == vertical)
 			{
-				return get(direction.Horizontal, VerticalDirection.NONE);
+				return Get(direction.Horizontal, VerticalDirection.NONE);
 			}
 			//Direction can be reversed using unary minus operator
 			else if (direction.Vertical == VerticalDirection.NONE && vertical == VerticalDirection.DOWN)
 			{
-				return get(direction.Horizontal, VerticalDirection.UP);
+				return Get(direction.Horizontal, VerticalDirection.UP);
 			}
 			else if (direction.Vertical == VerticalDirection.NONE && vertical == VerticalDirection.UP)
 			{
-				return get(direction.Horizontal, VerticalDirection.DOWN);
+				return Get(direction.Horizontal, VerticalDirection.DOWN);
 			}
 			//Adding two directions (double negation) is a neutral operation
 			else
 			{
-				return get(direction.Horizontal, direction.Vertical);
+				return Get(direction.Horizontal, direction.Vertical);
 			}
 		}
 

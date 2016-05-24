@@ -115,6 +115,7 @@
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
     <Compile Include="Core\Game\Character\Enemy\Venomflare.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Waveghost.cs" />
     <Compile Include="Core\Game\IAct.cs" />
     <Compile Include="Core\Game\IntersectStrategy\AbstractIntersectStrategy.cs" />
     <Compile Include="Core\Game\IntersectStrategy\DelegateIntersect.cs" />

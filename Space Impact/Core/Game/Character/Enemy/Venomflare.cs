@@ -26,7 +26,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			}
 		}
 
-		TargetActorAngleRotation TargetRotationStrategy;
+		TargetAngleRotation TargetRotationStrategy;
 
 		public Venomflare() : base("Venomflare", score: 100)
 		{
@@ -38,29 +38,44 @@ namespace Space_Impact.Core.Game.Character.Enemy
 		{
 			base.AddedToFieldHook();
 
-			TargetRotationStrategy = new TargetActorAngleRotation
+			//Strategy that does not automatically rotate but instead, needs to be rotated manually
+			TargetRotationStrategy = new TargetAngleRotation
 			(
 				owner: this
-				, target: Field.Player
 				, verticalOrientation: Direction.Vertical
-				, angleDeltaCount: 30
+				, angleDeltaCount: 45
 				, maxAngleDegrees: 160
 			);
 
-			//Every N acts looks at the Player's position and rotates towards him
+			//Every N acts looks at the Player's position and rotates towards approximately towards him
 			AddStrategy(new EveryNActs
 			(
 				callback: () =>
 				{
-					TargetRotationStrategy.TargetAngleRadians = TargetActorAngleRotation.AngleBetweenActorsRadians(this, Field.Player, true);
+					float angle = TargetActorAngleRotation.AngleBetweenActorsRadians(this, Field.Player, true);
+
+					//Some additional variance
+					angle += AbstractRotation.DegreesToRadians(Utility.RandomBetween(-30, 30));
+
+					TargetRotationStrategy.TargetAngleRadians = angle;
 				}
-				, interval: 100
+				, interval: 40
 			));
 
 			AddStrategy(TargetRotationStrategy);
 
 			//Custom Thrust
 			new Thrust(this);
+
+			//Starts moving in the opposite direction than where he spawned from
+			if (X < Field.Size.Width / 2)
+			{
+				Direction += SpaceDirection.HorizontalDirection.RIGHT;
+			}
+			else
+			{
+				Direction += SpaceDirection.HorizontalDirection.LEFT;
+			}
 		}
 
 		protected override ICollectable DropLoot()

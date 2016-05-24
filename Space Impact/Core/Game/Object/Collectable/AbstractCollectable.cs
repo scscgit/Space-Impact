@@ -11,7 +11,7 @@ namespace Space_Impact.Core.Game.Object.Collectable
 	{
 		protected AbstractCollectable(string name) : base(name)
 		{
-			Direction = SpaceDirection.get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.DOWN);
+			Direction = SpaceDirection.Get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.DOWN);
 		}
 
 		/// <summary>

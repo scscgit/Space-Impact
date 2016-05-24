@@ -95,7 +95,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			if (Target != null)
 			{
 				//Starts the movement towards the target
-				Owner.Direction = SpaceDirection.get(HorizontalDirectionToTarget(), VerticalDirectionToTarget());
+				Owner.Direction = SpaceDirection.Get(HorizontalDirectionToTarget(), VerticalDirectionToTarget());
 			}
 			else
 			//Target is lost from the world

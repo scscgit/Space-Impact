@@ -100,6 +100,15 @@ namespace Space_Impact.Core.Game.Level
 					)
 				)
 			);
+
+			//Waveghosts that will rotate around
+			AddDualSpawner
+			(
+				percentDelay: 20
+				, y: (float)Field.Size.Height / 2
+				, enemies: 2
+				, spawnCallback: spawner => spawner.PlaceActor(new Waveghost())
+			);
 		}
 	}
 }
