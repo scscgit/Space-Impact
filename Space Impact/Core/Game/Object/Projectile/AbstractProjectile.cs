@@ -10,7 +10,7 @@ using Space_Impact.Core.Game.Character;
 using Space_Impact.Graphics;
 using Space_Impact.Core.Game.ActorStrategy.Rotation;
 
-namespace Space_Impact.Core.Game.Object.Weapon
+namespace Space_Impact.Core.Game.Object.Projectile
 {
 	public abstract class AbstractProjectile : AbstractObject, IProjectile
 	{

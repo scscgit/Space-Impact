@@ -1,5 +1,6 @@
 ﻿using Space_Impact.Core.Game.Character;
-using Space_Impact.Core.Game.Player.Bullet;
+using Space_Impact.Core.Game.Object.Projectile;
+using Space_Impact.Core.Game.Object.Projectile.Bullet;
 using Space_Impact.Graphics;
 using Space_Impact.Support;
 using System;
@@ -10,16 +11,22 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Weapon
 {
-	public class MultiBulletShooter : AbstractWeapon
+	public delegate IProjectile NewProjectileCallback(ICharacter character, Position position, float angle);
+
+	public class MultiProjectileShooter : AbstractWeapon
 	{
 		//Fields
 		int MultiShot;
 		float Dispersion;
 
-		public MultiBulletShooter(int multiShot, float dispersion)
+		NewProjectileCallback NewProjectileCallback;
+
+		public MultiProjectileShooter(int multiShot, float dispersion, NewProjectileCallback newProjectileCallback)
 		{
 			MultiShot = multiShot;
 			Dispersion = dispersion;
+
+			NewProjectileCallback = newProjectileCallback;
 		}
 
 		public override bool Shot(ICharacter character, Position position, float angle)
@@ -27,8 +34,8 @@ namespace Space_Impact.Core.Game.Weapon
 			//Prevention against division by zero
 			if (MultiShot <= 1)
 			{
-				HeroBullet bullet = new HeroBullet(character, position, angle);
-				character.Field.AddActor(bullet);
+				IProjectile projectile = NewProjectileCallback(character, position, angle);
+				character.Field.AddActor(projectile);
 			}
 			//When the MultiShot is an even number, neither shot can go to the original angle direction
 			else
@@ -37,8 +44,8 @@ namespace Space_Impact.Core.Game.Weapon
 				{
 					float shotAngle = angle - Dispersion / 2 + ((float)shotNumber / (MultiShot - 1)) * Dispersion;
 
-					HeroBullet bullet = new HeroBullet(character, position, shotAngle);
-					character.Field.AddActor(bullet);
+					IProjectile projectile = NewProjectileCallback(character, position, shotAngle);
+					character.Field.AddActor(projectile);
 				}
 			}
 

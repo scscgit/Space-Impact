@@ -17,12 +17,11 @@ namespace Space_Impact.Core.Game.Object.Collectable
 		/// <summary>
 		/// Object gets collected by a player.
 		/// </summary>
-		/// <param name="player">Player who picked the collectable object</param>
+		/// <param name="player">Player who picked the collectable object.</param>
 		public abstract void CollectBy(IPlayer player);
 
 		public override void Act()
 		{
-			base.Act();
 			Field.ForEachActor<IPlayer>
 			(
 				player =>
@@ -34,6 +33,8 @@ namespace Space_Impact.Core.Game.Object.Collectable
 					return false;
 				}
 			);
+
+			base.Act();
 		}
 	}
 }

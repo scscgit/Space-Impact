@@ -6,14 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Space_Impact.Support;
-using Space_Impact.Core.Game.Player.Bullet;
-using Microsoft.Graphics.Canvas.Effects;
-using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Core.Game.PartActor.Thrust;
 using Space_Impact.Core.Game.Character.Enemy.Bomb;
 using Space_Impact.Core.Game.IntersectStrategy;
 using Space_Impact.Core.Game.Weapon;
 using Space_Impact.Core.Game.ActorStrategy.Rotation;
+using Space_Impact.Core.Game.Object.Projectile.Bullet;
 
 namespace Space_Impact.Core.Game.Player
 {
@@ -62,7 +60,7 @@ namespace Space_Impact.Core.Game.Player
 			MaxHealth = HERO_HEALTH;
 			Health = HERO_HEALTH;
 			Speed = HERO_SPEED;
-			ShootingInterval = 50;
+			ShootingStrategy.ShootingInterval = 50;
 
 			AddStrategy(new FlyingDirectionRotation
 			(
@@ -73,7 +71,13 @@ namespace Space_Impact.Core.Game.Player
 			));
 
 			//Default weapon
-			Weapon = new MultiBulletShooter(1, 20);
+			Weapon = new MultiProjectileShooter
+			(
+				multiShot: 1
+				, dispersion: 20
+				, newProjectileCallback: (character, position, angle) =>
+				new HeroBullet(character, position, angle)
+			);
 
 			//He is composed of the thrust
 			new MovementThrust(this);
@@ -114,7 +118,6 @@ namespace Space_Impact.Core.Game.Player
 			}
 			else
 			{
-				Health--; //debug TODO remove
 				Log.i(this, "X=" + X + " Y=" + Y +
 					" HP=" + Health + "/" + MaxHealth +
 					" Angle=" + Angle +

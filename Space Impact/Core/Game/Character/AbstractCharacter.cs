@@ -8,6 +8,7 @@ using Microsoft.Graphics.Canvas.Brushes;
 using Windows.UI;
 using Space_Impact.Support;
 using Space_Impact.Core.Game.Weapon;
+using Space_Impact.Graphics;
 
 namespace Space_Impact.Core.Game.Character
 {
@@ -151,6 +152,20 @@ namespace Space_Impact.Core.Game.Character
 		public override bool CollidesWith(IActor actor)
 		{
 			return true;
+		}
+
+		//Getter that a Projectile can use to see where it should be created
+		//Can be overridden to change its starting position, this is a default implementation
+		public virtual Position BulletFocusPosition
+		{
+			get
+			{
+				Position position = new Position();
+				//Moves to the player's center coordinates
+				position.X = X + (float)Width / 2;
+				position.Y = Y + (float)Height / 2;
+				return position;
+			}
 		}
 
 		/// <summary>

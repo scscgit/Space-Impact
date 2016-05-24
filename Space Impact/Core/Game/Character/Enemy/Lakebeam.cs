@@ -11,6 +11,9 @@ using Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade;
 using Space_Impact.Support;
 using Space_Impact.Core.Game.ActorStrategy.Rotation;
 using Space_Impact.Core.Game.PartActor.Thrust;
+using Space_Impact.Core.Game.Weapon;
+using Space_Impact.Core.Game.Object.Projectile.Bullet;
+using Space_Impact.Core.Game.Player;
 
 namespace Space_Impact.Core.Game.Character.Enemy
 {
@@ -31,20 +34,42 @@ namespace Space_Impact.Core.Game.Character.Enemy
 		{
 			Animation = TextureSetLoader.SHIP2_BASE;
 			Direction = SpaceDirection.None + SpaceDirection.VerticalDirection.DOWN;
+
+			Weapon = new MultiProjectileShooter
+			(
+				multiShot: 0
+				, dispersion: 0
+				, newProjectileCallback: (character, position, angle) =>
+				new FireBullet<IPlayer>(character, position, angle, speed: 5, damage: 5)
+			);
 		}
 
 		public override void AddedToFieldHook()
 		{
 			base.AddedToFieldHook();
 
-			AddStrategy(new TargetActorAngleRotation
+			TargetActorAngleRotation rotationStrategy = new TargetActorAngleRotation
 			(
 				owner: this
 				, target: Field.Player
 				, verticalOrientation: Direction.Vertical
 				, angleDeltaCount: 100
 				, maxAngleDegrees: 120
-			));
+			);
+			AddStrategy(rotationStrategy);
+
+			//Initialization of the default Shooting parameters via strategy
+			AddStrategy(new Shooting
+			(
+				owner: this
+				, shootingInterval: 20
+				, weaponCallback: () => Weapon
+				, bulletFocusPosition: () => BulletFocusPosition
+				, angleCallback: () => rotationStrategy.CurrentAngleDegrees
+			)
+			{
+				IsShooting = true
+			});
 
 			AddStrategy(new Acceleration
 			(

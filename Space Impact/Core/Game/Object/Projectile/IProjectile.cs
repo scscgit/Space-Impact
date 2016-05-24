@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core.Game.Object.Weapon
+namespace Space_Impact.Core.Game.Object.Projectile
 {
 	public interface IProjectile : IObject, IAngle
 	{

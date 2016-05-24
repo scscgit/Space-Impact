@@ -1,6 +1,4 @@
-﻿using Space_Impact.Core.Game.Character.Enemy;
-using Space_Impact.Core.Game.Object.Weapon;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

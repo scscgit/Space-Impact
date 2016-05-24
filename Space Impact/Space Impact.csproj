@@ -112,6 +112,7 @@
     <Compile Include="Core\Game\ActorStrategy\Rotation\TargetAngleRotation.cs" />
     <Compile Include="Core\Game\ActorStrategy\Rotation\FlyingDirectionRotation.cs" />
     <Compile Include="Core\Game\ActorStrategy\Rotation\AbstractRotation.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Shooting.cs" />
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
     <Compile Include="Core\Game\Character\Enemy\Venomflare.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Core\Game\Level\Level1.cs" />
     <Compile Include="Core\Game\Object\Collectable\PowerUp.cs" />
     <Compile Include="Core\Game\Object\Collectable\WeaponUpgrade\UMultiBulletShooter.cs" />
+    <Compile Include="Core\Game\Object\Projectile\Bullet\FireBullet.cs" />
     <Compile Include="Core\Game\Spawner\AbstractSpawner.cs" />
     <Compile Include="Core\Game\Spawner\DualSymmetrySpawner.cs" />
     <Compile Include="Core\Game\Spawner\EnemySpawner.cs" />
@@ -168,7 +170,7 @@
     <Compile Include="Core\Game\Spawner\Wrapper\HideAct.cs" />
     <Compile Include="Core\Game\Weapon\AbstractWeapon.cs" />
     <Compile Include="Core\Game\Weapon\IWeapon.cs" />
-    <Compile Include="Core\Game\Weapon\MultiBulletShooter.cs" />
+    <Compile Include="Core\Game\Weapon\MultiProjectileShooter.cs" />
     <Compile Include="Graphics\Background\AbstractBackground.cs" />
     <Compile Include="Graphics\Background\IBackground.cs" />
     <Compile Include="Graphics\Background\Strategy\IBackgroundStrategy.cs" />
