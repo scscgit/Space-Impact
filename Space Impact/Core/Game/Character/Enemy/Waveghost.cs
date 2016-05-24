@@ -64,7 +64,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 				multiShot: 1
 				, dispersion: 20
 				, newProjectileCallback: (character, position, angle) =>
-				new FireBullet<IPlayer>(character, position, angle, speed: 3, damage: 3)
+				new FireBullet<IPlayer>(character, position, angle, speed: 6, damage: 5)
 			);
 		}
 

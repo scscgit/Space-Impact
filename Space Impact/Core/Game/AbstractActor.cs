@@ -256,15 +256,9 @@ namespace Space_Impact.Core
 				{
 					float angle = ((IAngle)this).Angle;
 
-					//Hotfix, there is probably need to reimplement angle representation definition
-					if ((this is IPlayer || this is Game.Object.Projectile.Bullet.HeroBullet) && CanMoveY(Y - VerticalSpeed(angle)))
+					if (CanMoveY(Y - VerticalSpeed(angle)))
 					{
 						Y = Y - VerticalSpeed(angle);
-					}
-					else
-					if (CanMoveY(Y + VerticalSpeed(angle)))
-					{
-						Y = Y + VerticalSpeed(angle);
 					}
 				}
 				else
@@ -286,8 +280,7 @@ namespace Space_Impact.Core
 					{
 						Y = Y + VerticalSpeed(angle);
 					}
-					else
-					if (CanMoveY(Y - VerticalSpeed(angle)))
+					else if (CanMoveY(Y - VerticalSpeed(angle)))
 					{
 						Y = Y - VerticalSpeed(angle);
 					}
