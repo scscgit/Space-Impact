@@ -94,6 +94,18 @@ namespace Space_Impact.Core.Game.Character
 		{
 			base.DrawAbstractModification(ref bitmap, draw);
 
+			//Debugging information about characters
+			if (Utility.SettingsLoad<bool>("debug") && this is IAngle)
+			{
+				//Current angle in degrees
+				draw.DrawText
+				(
+					(int)(this as IAngle).Angle + "°"
+					, new System.Numerics.Vector2(X + (float)Width - 30, Y + (float)Height / 2)
+					, Colors.FloralWhite
+				);
+			}
+
 			//Draws a healthbar above the character
 			var rectangleHeight = Width / 30;
 

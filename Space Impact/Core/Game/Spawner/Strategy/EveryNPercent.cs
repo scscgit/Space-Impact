@@ -11,7 +11,7 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 		float StartPercent;
 		float IntervalPercent;
 
-		public EveryNPercent(ISpawner spawner, SpawnCallbackDelegate spawnCallback, float percent): base(spawner, spawnCallback)
+		public EveryNPercent(ISpawner spawner, SpawnCallbackDelegate spawnCallback, float percent) : base(spawner, spawnCallback)
 		{
 			this.IntervalPercent = percent;
 			this.StartPercent = Spawner.Field.Percent;
@@ -21,7 +21,7 @@ namespace Space_Impact.Core.Game.Spawner.Strategy
 		{
 			base.Act();
 
-			if(Spawner.Field.Percent > StartPercent + IntervalPercent)
+			if (Spawner.Field.Percent > StartPercent + IntervalPercent)
 			{
 				StartPercent += IntervalPercent;
 				Spawn();

@@ -13,16 +13,17 @@ using Space_Impact.Core.Game.PartActor.Thrust;
 using Space_Impact.Core.Game.Character.Enemy.Bomb;
 using Space_Impact.Core.Game.IntersectStrategy;
 using Space_Impact.Core.Game.Weapon;
+using Space_Impact.Core.Game.ActorStrategy.Rotation;
 
 namespace Space_Impact.Core.Game.Player
 {
 	public class Hero : AbstractPlayer, IClickable, IAffectedByBombExplosion
 	{
 		//Constants
-		public const int HERO_SPEED = 7;
+		public const int HERO_SPEED = 8;
 		public const int HERO_HEALTH = 500;
 
-		//Hero's thrust, class definion
+		//Hero's thrust, class definition
 		public class MovementThrust : AbstractMovementThrust
 		{
 			public const int BLINK_PERIOD = 5;
@@ -36,7 +37,7 @@ namespace Space_Impact.Core.Game.Player
 		int temporary_log_counter = 0;
 
 		//Access to hero's strategy, should be only used for DrawModification purposes of other classes because Act() would collide
-		public FlyingRotation RotationStrategy
+		public FlyingDirectionRotation RotationStrategy
 		{
 			get; private set;
 		}
@@ -63,7 +64,13 @@ namespace Space_Impact.Core.Game.Player
 			Speed = HERO_SPEED;
 			ShootingInterval = 50;
 
-			AddStrategy(new FlyingRotation(this, verticalOrientation: SpaceDirection.VerticalDirection.UP, angleDeltaCount: 20, maxAngleDegrees: 75));
+			AddStrategy(new FlyingDirectionRotation
+			(
+				owner: this
+				, verticalOrientation: SpaceDirection.VerticalDirection.UP
+				, angleDeltaCount: 35
+				, maxAngleDegrees: 75
+			));
 
 			//Default weapon
 			Weapon = new MultiBulletShooter(1, 20);

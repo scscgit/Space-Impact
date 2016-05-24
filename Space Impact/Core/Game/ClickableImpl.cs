@@ -11,7 +11,7 @@ namespace Space_Impact.Core.Game
 	/// <summary>
 	/// Implements clickability support.
 	/// </summary>
-	public class ClickableImpl: IClickable
+	public class ClickableImpl : IClickable
 	{
 		public bool Clicked
 		{
@@ -38,7 +38,7 @@ namespace Space_Impact.Core.Game
 
 		public void ClickMove(float x, float y)
 		{
-			if(Clicked && !this.collidesOn(x, y))
+			if (Clicked && !this.collidesOn(x, y))
 			{
 				Clicked = false;
 			}
@@ -46,7 +46,7 @@ namespace Space_Impact.Core.Game
 
 		public void ClickRelease()
 		{
-			if(Clicked)
+			if (Clicked)
 			{
 				Clicked = false;
 			}

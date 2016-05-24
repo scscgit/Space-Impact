@@ -125,8 +125,8 @@ namespace Space_Impact.Core.Game.Spawner
 		/// <param name="actor">Actor to be placed in the Game Field.</param>
 		public void PlaceActor(IActor actor)
 		{
-			actor.X = X;
-			actor.Y = Y;
+			actor.X = X - (float)actor.Width;
+			actor.Y = Y - (float)actor.Height;
 			Field.AddActor(actor);
 		}
 

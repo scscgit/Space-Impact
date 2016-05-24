@@ -23,20 +23,10 @@ namespace Space_Impact.Core.Game.Object
 			return true;
 		}
 
-		bool OutOfFieldBounds()
+		//All objects disappear when they leave the Field
+		protected override bool OutOfFieldBounds()
 		{
-			return X < -Width || X > Field.Size.Width || Y < -Height || Y > Field.Size.Height;
-		}
-
-		public override void Act()
-		{
-			base.Act();
-
-			if (OutOfFieldBounds())
-			{
-				DeleteActor();
-				Log.i(this, Name + " outside of the map, removed");
-			}
+			return X < -Field.Size.Width || X > Field.Size.Width || Y < -Field.Size.Height || Y > Field.Size.Height;
 		}
 	}
 }

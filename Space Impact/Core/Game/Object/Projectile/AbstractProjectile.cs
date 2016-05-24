@@ -8,6 +8,7 @@ using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Support;
 using Space_Impact.Core.Game.Character;
 using Space_Impact.Graphics;
+using Space_Impact.Core.Game.ActorStrategy.Rotation;
 
 namespace Space_Impact.Core.Game.Object.Weapon
 {
@@ -84,7 +85,7 @@ namespace Space_Impact.Core.Game.Object.Weapon
 		{
 			base.DrawAbstractModification(ref bitmap, draw);
 
-			FlyingRotation.DrawModification(ref bitmap, draw, FlyingRotation.DegreeToRadians(Angle));
+			AbstractRotation.DrawModification(ref bitmap, draw, AbstractRotation.DegreeToRadians(Angle));
 		}
 
 		protected override void OnAnimationSet()

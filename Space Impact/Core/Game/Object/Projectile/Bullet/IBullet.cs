@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Player.Bullet
 {
-	public interface IBullet: IProjectile
+	public interface IBullet : IProjectile
 	{
 	}
 }

@@ -158,6 +158,11 @@ namespace Space_Impact.Core
 			return false;
 		}
 
+		protected virtual bool OutOfFieldBounds()
+		{
+			return false;
+		}
+
 		//Current speed in a chosen direction based on angular calculations
 		float HorizontalSpeed(float Angle)
 		{
@@ -253,6 +258,14 @@ namespace Space_Impact.Core
 		public virtual void Act()
 		{
 			MoveHorizontalAndVertical();
+
+			//Every actor can choose to implement his bounds of lifetime
+			if (OutOfFieldBounds())
+			{
+				DeleteActor();
+				Log.i(this, Name + " outside of the map, removed");
+				return;
+			}
 
 			//Moving hero's objects together with him.
 			//All actors that this actor is composed of always get their coordinates updated to be the same.

@@ -177,5 +177,11 @@ namespace Space_Impact.Core.Game.Character.Enemy.Bomb
 		{
 			Health -= bomb.Damage;
 		}
+
+		//Bomb follows the target until either of them dies
+		protected override bool OutOfFieldBounds()
+		{
+			return false;
+		}
 	}
 }

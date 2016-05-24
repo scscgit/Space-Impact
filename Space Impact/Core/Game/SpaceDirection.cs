@@ -70,11 +70,11 @@ namespace Space_Impact.Core.Game
 		{
 			if (horizontal == HorizontalDirection.LEFT)
 			{
-				return vertical==VerticalDirection.UP ? LEFT_UP : vertical == VerticalDirection.DOWN ? LEFT_DOWN : LEFT_NONE;
+				return vertical == VerticalDirection.UP ? LEFT_UP : vertical == VerticalDirection.DOWN ? LEFT_DOWN : LEFT_NONE;
 			}
 			else if (horizontal == HorizontalDirection.RIGHT)
 			{
-				return vertical == VerticalDirection.UP? RIGHT_UP : vertical == VerticalDirection.DOWN ? RIGHT_DOWN : RIGHT_NONE;
+				return vertical == VerticalDirection.UP ? RIGHT_UP : vertical == VerticalDirection.DOWN ? RIGHT_DOWN : RIGHT_NONE;
 			}
 			else
 			{

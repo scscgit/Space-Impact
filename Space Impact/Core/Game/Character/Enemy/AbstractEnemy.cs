@@ -36,6 +36,18 @@ namespace Space_Impact.Core.Game.Enemy
 			Score = score;
 		}
 
+		//Enemies implicitly fall out of the visible zone
+		protected override bool CanMoveY(float y)
+		{
+			return true;
+		}
+
+		//Enemies implicitly disappear after they fall below the visible zone
+		protected override bool OutOfFieldBounds()
+		{
+			return Y > Field.Size.Height;
+		}
+
 		/// <summary>
 		/// Subclass may implement loot to be dropped on death.
 		/// </summary>

@@ -106,7 +106,10 @@
     <Compile Include="Core\Game\ActorStrategy\IDrawModificationStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\IStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\NullActStrategy.cs" />
-    <Compile Include="Core\Game\ActorStrategy\FlyingRotation.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Rotation\TargetActorAngleRotation.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Rotation\TargetAngleRotation.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Rotation\FlyingDirectionRotation.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Rotation\AbstractRotation.cs" />
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
     <Compile Include="Core\Game\IAct.cs" />

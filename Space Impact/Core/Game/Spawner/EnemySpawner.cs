@@ -25,7 +25,7 @@ namespace Space_Impact.Core.Game.Spawner
 			base.AddedToFieldHook();
 
 			//Strategies used within the Spawner
-			Strategies.Add(new EveryNActs(this, SpawnCallback, interval: 20));
+			Strategies.Add(new EveryNActs(this, SpawnCallback, interval: 80));
 			//Strategies.Add(new EveryNPercent(this, SpawnCallback, percent: 1));
 		}
 

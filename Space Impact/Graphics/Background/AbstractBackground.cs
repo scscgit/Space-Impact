@@ -48,7 +48,7 @@ namespace Space_Impact.Core.Graphics.Background
 		protected override void OnAnimationSet()
 		{
 			base.OnAnimationSet();
-			foreach(IBackgroundStrategy strategy in Strategies)
+			foreach (IBackgroundStrategy strategy in Strategies)
 			{
 				strategy.OnAnimationSet(Field);
 			}

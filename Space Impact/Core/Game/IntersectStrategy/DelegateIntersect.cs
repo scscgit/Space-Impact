@@ -42,7 +42,7 @@ namespace Space_Impact.Core.Game.IntersectStrategy
 			IntersectsWithinCurrent = intersectsWithin;
 		}
 
-		public DelegateIntersect(IPlacedInSpace actor, IntersectsOnDelegate intersectsOn): base(actor)
+		public DelegateIntersect(IPlacedInSpace actor, IntersectsOnDelegate intersectsOn) : base(actor)
 		{
 			IntersectsActorCurrent = base.IntersectsActor;
 			IntersectsOnCurrent = intersectsOn;

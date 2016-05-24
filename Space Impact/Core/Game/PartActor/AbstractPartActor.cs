@@ -37,7 +37,7 @@ namespace Space_Impact.Core.Game.PartActor
 			this.containedInLists.AddLast(containedInList);
 
 			//If the part is added to an Actor contained in Field, the part will be expected to be in the same Field too
-			if(containedInActor.Field != null)
+			if (containedInActor.Field != null)
 			{
 				containedInActor.Field.AddActor(this);
 			}
@@ -46,7 +46,7 @@ namespace Space_Impact.Core.Game.PartActor
 		//Unregisters Part from all currently registered lists of Parts
 		public void UnregisterPart()
 		{
-			foreach(LinkedList<IActorCompositePart> listOfParts in this.containedInLists)
+			foreach (LinkedList<IActorCompositePart> listOfParts in this.containedInLists)
 			{
 				listOfParts.Remove(this);
 			}

@@ -10,6 +10,7 @@ using Space_Impact.Core.Game.ActorStrategy;
 using Space_Impact.Core.Game.Object.Collectable;
 using Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade;
 using Space_Impact.Support;
+using Space_Impact.Core.Game.ActorStrategy.Rotation;
 
 namespace Space_Impact.Core.Game.Character.Enemy
 {
@@ -19,17 +20,37 @@ namespace Space_Impact.Core.Game.Character.Enemy
 		{
 			Animation = TextureSetLoader.SHIP2_BASE;
 			Direction = SpaceDirection.None + SpaceDirection.VerticalDirection.DOWN;
+		}
 
-			AddStrategy(new FlyingRotation(this, SpaceDirection.VerticalDirection.DOWN, 50, 120));
+		public override void AddedToFieldHook()
+		{
+			base.AddedToFieldHook();
 
+			AddStrategy(new TargetActorAngleRotation
+			(
+				owner: this
+				, target: Field.Player
+				, verticalOrientation: Direction.Vertical
+				, angleDeltaCount: 100
+				, maxAngleDegrees: 120
+			));
 
-			Direction += SpaceDirection.HorizontalDirection.RIGHT;
-
+			//Starts moving in the opposite direction than where he spawned from
+			if (X < Field.Size.Width / 2)
+			{
+				Direction += SpaceDirection.HorizontalDirection.RIGHT;
+			}
+			else
+			{
+				Direction += SpaceDirection.HorizontalDirection.LEFT;
+			}
 		}
 
 		protected override void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
 		{
 			base.DrawModification(ref bitmap, draw);
+
+
 		}
 
 		protected override ICollectable DropLoot()

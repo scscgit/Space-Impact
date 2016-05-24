@@ -9,7 +9,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 	/// <summary>
 	/// Supports modification of the Act content.
 	/// </summary>
-	public interface IActStrategy: IStrategy
+	public interface IActStrategy : IStrategy
 	{
 		void Act();
 	}

@@ -19,9 +19,20 @@ namespace Space_Impact.Core.Game.Level
 
 		private void FirstWave()
 		{
+			Spawners.Add
+			(
+				new EnemySpawner
+				(
+					x: (float)Field.Size.Width / 2
+					, y: 0
+					, remainingEnemies: 1
+					, spawnCallback: spawner => spawner.PlaceActor(new Lakebeam())
+				)
+			);
+
 			AddDualSpawner
 			(
-				percentDelay: 3
+				percentDelay: 2
 				, enemies: 1
 				, spawnCallback: spawner =>
 				{
@@ -33,7 +44,7 @@ namespace Space_Impact.Core.Game.Level
 			AddDualSpawner
 			(
 				percentDelay: 7
-				, enemies: 3
+				, enemies: 4
 				, spawnCallback: spawner =>
 				{
 					var enemy = new Lakebeam();

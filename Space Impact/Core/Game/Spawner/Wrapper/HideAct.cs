@@ -9,7 +9,7 @@ namespace Space_Impact.Core.Game.Spawner.Wrapper
 	/// <summary>
 	/// Hides the Act, modifying behavior of a Spawner by providing an external control over calling the real Act().
 	/// </summary>
-	public class HideAct: AbstractSpawnerWrapper
+	public class HideAct : AbstractSpawnerWrapper
 	{
 		public HideAct(ISpawner spawner) : base(spawner)
 		{

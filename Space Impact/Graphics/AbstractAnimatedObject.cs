@@ -21,7 +21,7 @@ namespace Space_Impact.Graphics
 		{
 			AnimationSpeed = DEFAULT_ANIMATION_SPEED;
 		}
-		
+
 		//Space coordinate location in a Field, don't forget C# isn't virtual implicitly
 		public float X
 		{

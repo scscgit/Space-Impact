@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Object
 {
-	public interface IObject: IActor
+	public interface IObject : IActor
 	{
 	}
 }
