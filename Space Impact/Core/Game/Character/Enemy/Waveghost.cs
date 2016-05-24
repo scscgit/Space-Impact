@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Space_Impact.Core.Game.Character.Enemy
 {
-	public class Waveghost : AbstractEnemy, IAngle
+	public class Waveghost : AbstractEnemy//, IAngle
 	{
 		//Custom thrust, class definition
 		public class Thrust : AbstractMovementThrust
@@ -29,7 +29,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 		const int COUNTERCLOCKWISE = 1;
 
 		//Constants
-		const float WAVEGHOST_SPEED = 5;
+		const float WAVEGHOST_SPEED = 3;
 
 		Thrust WaveghostThrust;
 
@@ -41,10 +41,10 @@ namespace Space_Impact.Core.Game.Character.Enemy
 		//Rotational direction
 		int RotationDirection;
 
-		public float Angle
-		{
-			get; set;
-		}
+		//public float Angle
+		//{
+		//	get; set;
+		//}
 
 		public Waveghost() : base("Waveghost", score: 150)
 		{
@@ -65,7 +65,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			(
 				owner: this
 				, verticalOrientation: Direction.Vertical
-				, angleDeltaCount: 200
+				, angleDeltaCount: 320
 				, maxAngleDegrees: 360
 			);
 
@@ -77,12 +77,18 @@ namespace Space_Impact.Core.Game.Character.Enemy
 
 		protected override ICollectable DropLoot()
 		{
+			//50% chance of PowerUp
+			if (Utility.RandomBetween(0, 1) == 0)
+			{
+				return new PowerUp();
+			}
 			return null;
 		}
 
 		public override void Act()
 		{
-			Direction = SpaceDirection.GetFromAngle(Angle);
+			//Calculates the direction based on the angle (with a 40 degree shift for better effect)
+			Direction = SpaceDirection.GetFromAngle(TargetRotationStrategy.CurrentAngleDegrees + RotationDirection * 40);
 
 			//Always rotates
 			TargetRotationStrategy.TargetAngleRadians = TargetRotationStrategy.CurrentRelativeAngleRadians + RotationDirection;

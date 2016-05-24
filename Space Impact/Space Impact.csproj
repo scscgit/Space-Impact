@@ -123,6 +123,7 @@
     <Compile Include="Core\Game\IntersectStrategy\SquareIntersect.cs" />
     <Compile Include="Core\Game\Level\AbstractLevel.cs" />
     <Compile Include="Core\Game\Level\Level1.cs" />
+    <Compile Include="Core\Game\Object\Collectable\PowerUp.cs" />
     <Compile Include="Core\Game\Object\Collectable\WeaponUpgrade\UMultiBulletShooter.cs" />
     <Compile Include="Core\Game\Spawner\AbstractSpawner.cs" />
     <Compile Include="Core\Game\Spawner\DualSymmetrySpawner.cs" />

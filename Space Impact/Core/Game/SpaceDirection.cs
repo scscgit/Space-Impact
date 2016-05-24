@@ -94,38 +94,38 @@ namespace Space_Impact.Core.Game
 		}
 
 		//Conversion from angle
-		public static SpaceDirection GetFromAngle(float angle)
+		public static SpaceDirection GetFromAngle(float angleDegrees)
 		{
-			angle = Utility.NormalizeDegreeAngle(angle);
-			if (angle > 0 && angle < 90)
+			angleDegrees = Utility.NormalizeDegreeAngle(angleDegrees);
+			if (angleDegrees > 0 && angleDegrees < 90)
 			{
 				return Get(HorizontalDirection.RIGHT, VerticalDirection.UP);
 			}
-			else if (angle == 90)
+			else if (angleDegrees == 90)
 			{
 				return Get(HorizontalDirection.RIGHT);
 			}
-			else if (angle > 90 && angle < 180)
+			else if (angleDegrees > 90 && angleDegrees < 180)
 			{
 				return Get(HorizontalDirection.RIGHT, VerticalDirection.DOWN);
 			}
-			else if (angle == 180)
+			else if (angleDegrees == 180)
 			{
 				return Get(VerticalDirection.DOWN);
 			}
-			else if (angle > 180 && angle < 270)
+			else if (angleDegrees > 180 && angleDegrees < 270)
 			{
 				return Get(HorizontalDirection.LEFT, VerticalDirection.DOWN);
 			}
-			else if (angle == 270)
+			else if (angleDegrees == 270)
 			{
 				return Get(HorizontalDirection.LEFT);
 			}
-			else if (angle > 270 && angle < 360)
+			else if (angleDegrees > 270 && angleDegrees < 360)
 			{
 				return Get(HorizontalDirection.LEFT, VerticalDirection.UP);
 			}
-			else if (angle == 360 || angle == 0)
+			else if (angleDegrees == 360 || angleDegrees == 0)
 			{
 				return Get(VerticalDirection.UP);
 			}

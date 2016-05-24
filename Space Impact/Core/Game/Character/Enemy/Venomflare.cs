@@ -85,6 +85,11 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			{
 				return new UMultiBulletShooter();
 			}
+			//Additional 1:3 chance of PowerUp
+			else if (Utility.RandomBetween(0, 2) == 0)
+			{
+				return new PowerUp();
+			}
 			return null;
 		}
 	}

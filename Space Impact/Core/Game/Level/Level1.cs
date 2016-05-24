@@ -19,7 +19,7 @@ namespace Space_Impact.Core.Game.Level
 
 		private void FirstWave()
 		{
-			//First greeting enemy
+			//First greeting enemy (plan is to display a greeting message using black_old_face.png within the UI)
 			Spawners.Add
 			(
 				new EnemySpawner
@@ -46,7 +46,7 @@ namespace Space_Impact.Core.Game.Level
 			//Wave of Lakebeams for the opportunity of quickly upgrading the basic weapon
 			AddDualSpawner
 			(
-				percentDelay: 7
+				percentDelay: 6
 				, enemies: 4
 				, spawnCallback: spawner =>
 				{
@@ -58,7 +58,7 @@ namespace Space_Impact.Core.Game.Level
 			//Wave of bombs
 			AddDualSpawner
 			(
-				percentDelay: 12
+				percentDelay: 16
 				, enemies: 5
 				, spawnCallback: spawner =>
 				{
@@ -73,7 +73,7 @@ namespace Space_Impact.Core.Game.Level
 				new DelayedStart
 				(
 					actsDelay: 0
-					, percentDelay: 15
+					, percentDelay: 26
 					, spawner: new EnemySpawner
 					(
 						//Spawns in the 1/3 of the Field
@@ -89,7 +89,7 @@ namespace Space_Impact.Core.Game.Level
 				new DelayedStart
 				(
 					actsDelay: 0
-					, percentDelay: 15
+					, percentDelay: 26
 					, spawner: new EnemySpawner
 					(
 						//Spawns in the 2/3 of the Field
@@ -104,9 +104,42 @@ namespace Space_Impact.Core.Game.Level
 			//Waveghosts that will rotate around
 			AddDualSpawner
 			(
-				percentDelay: 20
+				percentDelay: 36
 				, y: (float)Field.Size.Height / 2
 				, enemies: 2
+				, spawnCallback: spawner => spawner.PlaceActor(new Waveghost())
+			);
+
+			//Larger wave of Lakebeams
+			AddDualSpawner
+			(
+				percentDelay: 50
+				, enemies: 8
+				, spawnCallback: spawner =>
+				{
+					var enemy = new Lakebeam();
+					spawner.PlaceActor(enemy);
+				}
+			);
+
+			//Last small wave of bombs
+			AddDualSpawner
+			(
+				percentDelay: 60
+				, enemies: 4
+				, spawnCallback: spawner =>
+				{
+					var enemy = new Doomday(Field.Player);
+					spawner.PlaceActor(enemy);
+				}
+			);
+
+			//Final battle before boss appears
+			AddDualSpawner
+			(
+				percentDelay: 75
+				, y: (float)Field.Size.Height / 2
+				, enemies: 4
 				, spawnCallback: spawner => spawner.PlaceActor(new Waveghost())
 			);
 		}

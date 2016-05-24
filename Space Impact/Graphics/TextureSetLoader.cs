@@ -52,6 +52,9 @@ namespace Space_Impact.Graphics
 		//Bullets
 		public static string[] FIRE = { "fire_1.png", "fire_2.png" };
 
+		//Objects
+		public static string[] HOT_SIDE_OBJECT = { "hot_side_object.png" };
+
 		//Delegates
 		public delegate void IncreaseLoadedPercentageDelegate(float percent);
 		public delegate void OnCreateResourcesAsyncFinished();
@@ -111,7 +114,10 @@ namespace Space_Impact.Graphics
 				DOOMDAY,
 
 				//Bullets
-				FIRE
+				FIRE,
+
+				//Objects
+				HOT_SIDE_OBJECT
 			};
 
 			await CreateResourcesAsync(sender, increaseLoadedPercentage, onFinished, textureSets);
