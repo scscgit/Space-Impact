@@ -101,6 +101,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Game\AbstractActor.cs" />
+    <Compile Include="Core\Game\ActorStrategy\Acceleration.cs" />
+    <Compile Include="Core\Game\ActorStrategy\EveryNActs.cs" />
     <Compile Include="Core\Game\ActorStrategy\Follower.cs" />
     <Compile Include="Core\Game\ActorStrategy\IActStrategy.cs" />
     <Compile Include="Core\Game\ActorStrategy\IDrawModificationStrategy.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Core\Game\ActorStrategy\Rotation\AbstractRotation.cs" />
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
+    <Compile Include="Core\Game\Character\Enemy\Venomflare.cs" />
     <Compile Include="Core\Game\IAct.cs" />
     <Compile Include="Core\Game\IntersectStrategy\AbstractIntersectStrategy.cs" />
     <Compile Include="Core\Game\IntersectStrategy\DelegateIntersect.cs" />

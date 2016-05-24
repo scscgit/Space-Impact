@@ -75,9 +75,6 @@ namespace Space_Impact.Core.Game.Player
 			//Default weapon
 			Weapon = new MultiBulletShooter(1, 20);
 
-			//Hero uses our implementation of clickable event receiver
-			Clickable = new ClickableImpl(IntersectsOn);
-
 			//He is composed of the thrust
 			new MovementThrust(this);
 
@@ -86,6 +83,9 @@ namespace Space_Impact.Core.Game.Player
 			{
 				Percent = 60
 			};
+
+			//Hero uses our implementation of clickable event receiver
+			Clickable = new ClickableImpl(IntersectsOn);
 
 			//TODO fix this and implement ellipse intersect collision instead of default square
 			/*IntersectStrategy = new DelegateIntersect
@@ -124,6 +124,9 @@ namespace Space_Impact.Core.Game.Player
 					(Direction.Vertical == SpaceDirection.VerticalDirection.UP ? "Up" : (Direction.Vertical == SpaceDirection.VerticalDirection.DOWN ? "Down" : "None")));
 				temporary_log_counter = 0;
 			}
+
+			//Act operation of the Clickable implementation
+			Clickable.Act();
 
 			//Changes speed based on strong will of the user, he can click on the hero to give him a morale boost
 			if (Clicked)

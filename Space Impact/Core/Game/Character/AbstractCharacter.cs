@@ -107,6 +107,15 @@ namespace Space_Impact.Core.Game.Character
 			}
 
 			//Draws a healthbar above the character
+			DrawHealthbar(draw);
+		}
+
+		/// <summary>
+		/// Draws a healthbar above the character.
+		/// </summary>
+		/// <param name="draw">Canvas session to be used for drawing the rectangle and other decorative stuff.</param>
+		void DrawHealthbar(CanvasDrawingSession draw)
+		{
 			var rectangleHeight = Width / 30;
 
 			var rect = new Windows.Foundation.Rect();
@@ -136,6 +145,12 @@ namespace Space_Impact.Core.Game.Character
 			rect.Width = ((float)healthPercent / 100) * Width;
 
 			draw.FillRoundedRectangle(rect, 5, 5, brush);
+		}
+
+		//Characters do implicitly collide with all other actors
+		public override bool CollidesWith(IActor actor)
+		{
+			return true;
 		}
 
 		/// <summary>

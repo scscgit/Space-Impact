@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Space_Impact.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,9 @@ namespace Space_Impact.Core.Game
 		{
 			get; private set;
 		} = false;
-		CollidesOn collidesOn;
+
+		CollidesOn CollidesOn;
+		Position LastClick;
 
 		/// <summary>
 		/// Implements clickability support for any IPlacedInSpace object.
@@ -25,12 +28,14 @@ namespace Space_Impact.Core.Game
 		/// <param name="collidesOn">Delegate that checks if a click on the coordinates causes the object to become clicked</param>
 		public ClickableImpl(CollidesOn collidesOn)
 		{
-			this.collidesOn = collidesOn;
+			this.CollidesOn = collidesOn;
 		}
 
 		public void Click(float x, float y)
 		{
-			if (this.collidesOn(x, y))
+			LastClick.X = x;
+			LastClick.Y = y;
+			if (this.CollidesOn(x, y))
 			{
 				Clicked = true;
 			}
@@ -38,7 +43,9 @@ namespace Space_Impact.Core.Game
 
 		public void ClickMove(float x, float y)
 		{
-			if (Clicked && !this.collidesOn(x, y))
+			LastClick.X = x;
+			LastClick.Y = y;
+			if (Clicked && !this.CollidesOn(x, y))
 			{
 				Clicked = false;
 			}
@@ -47,6 +54,18 @@ namespace Space_Impact.Core.Game
 		public void ClickRelease()
 		{
 			if (Clicked)
+			{
+				Clicked = false;
+			}
+		}
+
+		/// <summary>
+		/// Supporting periodical operations required for the proper functioning of Clicked field.
+		/// </summary>
+		public void Act()
+		{
+			//If the user does not move the mouse, but it is still Clicked, last click position is used to check for the validity of the click
+			if (Clicked && !this.CollidesOn(LastClick.X, LastClick.Y))
 			{
 				Clicked = false;
 			}

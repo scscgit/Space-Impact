@@ -29,8 +29,11 @@ namespace Space_Impact.Core
 
 		float Speed
 		{
-			get;
+			get; set;
 		}
+
+		//Defines possible collision interaction with some other actor
+		bool CollidesWith(IActor actor);
 
 		//Strategies of the Actor
 		LinkedList<IActStrategy> ActStrategies

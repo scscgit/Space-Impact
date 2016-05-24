@@ -16,5 +16,10 @@ namespace Space_Impact.Core.Game
 		void Click(float x, float y);
 		void ClickMove(float x, float y);
 		void ClickRelease();
+
+		/// <summary>
+		/// Supporting periodical operations required for the proper functioning of Clicked field.
+		/// </summary>
+		void Act();
 	}
 }

@@ -28,5 +28,11 @@ namespace Space_Impact.Core.Game.Object
 		{
 			return X < -Field.Size.Width || X > Field.Size.Width || Y < -Field.Size.Height || Y > Field.Size.Height;
 		}
+
+		//Objects implicitly do not collide unless explicitly overridden
+		public override bool CollidesWith(IActor actor)
+		{
+			return false;
+		}
 	}
 }

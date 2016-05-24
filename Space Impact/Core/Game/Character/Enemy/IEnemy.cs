@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core.Game.Enemy
+namespace Space_Impact.Core.Game.Character.Enemy
 {
 	public interface IEnemy : ICharacter
 	{

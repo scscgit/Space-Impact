@@ -1,6 +1,5 @@
 ﻿using Space_Impact.Core.Game.Character.Enemy;
 using Space_Impact.Core.Game.Character.Enemy.Bomb;
-using Space_Impact.Core.Game.Enemy;
 using Space_Impact.Core.Game.Object;
 using Space_Impact.Core.Game.Spawner.Wrapper;
 using Space_Impact.Support;
@@ -46,8 +45,8 @@ namespace Space_Impact.Core.Game.Spawner
 		/// Sets new Callbacks, overwriting old ones.
 		/// This is useful for delayed construction of the Spawner when its fields are required within the callback definition.
 		/// </summary>
-		/// <param name="leftSpawnCallback"></param>
-		/// <param name="rightSpawnCallback"></param>
+		/// <param name="leftSpawnCallback">callback used in the left Spawner</param>
+		/// <param name="rightSpawnCallback">callback used in the right Spawner</param>
 		public void SetSpawnCallback(SpawnCallbackDelegate leftSpawnCallback, SpawnCallbackDelegate rightSpawnCallback)
 		{
 			LeftSpawnCallback = leftSpawnCallback;

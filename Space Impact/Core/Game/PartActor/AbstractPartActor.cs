@@ -54,5 +54,11 @@ namespace Space_Impact.Core.Game.PartActor
 			//Re-initializes the list, assuming the Part can be re-registered again later.
 			this.containedInLists = new LinkedList<LinkedList<IActorCompositePart>>();
 		}
+
+		//Parts do never collide
+		public override bool CollidesWith(IActor actor)
+		{
+			return false;
+		}
 	}
 }

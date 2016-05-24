@@ -1,4 +1,4 @@
-﻿using Space_Impact.Core.Game.Enemy;
+﻿using Space_Impact.Core.Game.Character.Enemy;
 using Space_Impact.Core.Game.Object.Weapon;
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,9 @@ namespace Space_Impact.Core.Game.Character.Enemy.Bomb
 			get;
 		}
 
+		/// <summary>
+		/// Damage that the bomb deals on the explosion.
+		/// </summary>
 		int Damage
 		{
 			get;

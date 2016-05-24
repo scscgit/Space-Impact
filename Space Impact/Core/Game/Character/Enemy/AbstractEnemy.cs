@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Space_Impact.Core.Game.Enemy
+namespace Space_Impact.Core.Game.Character.Enemy
 {
 	public abstract class AbstractEnemy : AbstractCharacter, IEnemy
 	{
@@ -36,7 +36,11 @@ namespace Space_Impact.Core.Game.Enemy
 			Score = score;
 		}
 
-		//Enemies implicitly fall out of the visible zone
+		//Enemies can implicitly fall out of the visible zone
+		protected override bool CanMoveX(float x)
+		{
+			return true;
+		}
 		protected override bool CanMoveY(float y)
 		{
 			return true;
@@ -71,7 +75,7 @@ namespace Space_Impact.Core.Game.Enemy
 			}
 			else
 			{
-				Log.d(this, Name + " died without any loot");
+				Log.i(this, Name + " died without any loot");
 			}
 			RemoveFromField();
 		}

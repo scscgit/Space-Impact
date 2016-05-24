@@ -198,6 +198,9 @@ namespace Space_Impact.Core.Game.Spawner
 		}
 		public virtual void DeleteActorHook()
 		{
+			//Delete strategies from the Spawner
+			Log.i(this, "Clearing strategies");
+			Strategies.Clear();
 		}
 	}
 }

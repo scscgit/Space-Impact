@@ -1,4 +1,4 @@
-﻿using Space_Impact.Core.Game.Enemy;
+﻿using Space_Impact.Core.Game.Character.Enemy;
 using Space_Impact.Core.Game.Object.Weapon;
 using Space_Impact.Support;
 using System;
@@ -176,6 +176,12 @@ namespace Space_Impact.Core.Game.Character.Enemy.Bomb
 		public void OnBombExplosion(IBomb bomb)
 		{
 			Health -= bomb.Damage;
+		}
+
+		//Bomb can implicitly go through all other actors, as it's supposed to be very small
+		public override bool CollidesWith(IActor actor)
+		{
+			return false;
 		}
 
 		//Bomb follows the target until either of them dies

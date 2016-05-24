@@ -42,10 +42,32 @@ namespace Space_Impact.Core
 			get; set;
 		}
 
+		private float speed;
 		public float Speed
 		{
-			get; protected set;
+			get
+			{
+				return speed;
+			}
+			set
+			{
+				if (value >= 0)
+				{
+					speed = value;
+				}
+				else
+				{
+					speed = 0;
+				}
+			}
 		}
+
+		/// <summary>
+		/// Subclass has to implement its choice of collision targets or ignored collision mechanism.
+		/// </summary>
+		/// <param name="actor">Actor to be collided with.</param>
+		/// <returns>true if the actor can cause collision.</returns>
+		public abstract bool CollidesWith(IActor actor);
 
 		/// <summary>
 		/// Current intersect strategy of the actor.
@@ -173,8 +195,20 @@ namespace Space_Impact.Core
 			return Speed * (float)Math.Cos((Angle / 180) * Math.PI);
 		}
 
+		/// <summary>
+		/// Tries to do a movement in the required direction.
+		/// Rolls back changes when the movement causes collision.
+		/// </summary>
 		void MoveHorizontalAndVertical()
 		{
+			//Stores the old position for a possible later rollback
+			Position oldPosition = new Position();
+			oldPosition.X = X;
+			oldPosition.Y = Y;
+
+			//If already collides, we no longer care about the collision and we just want to prevent getting stuck
+			bool alreadyInCollision = RollbackIfCollision(oldPosition);
+
 			//Updating X coordinate if within bounds
 			if (Direction.Horizontal == SpaceDirection.HorizontalDirection.LEFT)
 			{
@@ -250,6 +284,66 @@ namespace Space_Impact.Core
 					}
 				}
 			}
+
+			//If the actor weren't in collision before, we want to rollback a possible collision
+			if (!alreadyInCollision)
+			{
+				float newX = X;
+				float newY = Y;
+
+				//We allow a single-directional movement in case it lets the Actor do at least some movement
+				if (RollbackIfCollision(oldPosition))
+				{
+					X = newX;
+					if (RollbackIfCollision(oldPosition))
+					{
+						Y = newY;
+						RollbackIfCollision(oldPosition);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns back to old position if the actor currently collides other actor.
+		/// </summary>
+		/// <param name="oldPosition">Previous position before the movement started, will be rolled back to on collision.</param>
+		/// <returns>true if there is a collision and the position was rolled back.</returns>
+		bool RollbackIfCollision(Position oldPosition)
+		{
+			bool rolledBack = false;
+
+			//Position rollback on collision
+			Field.ForEachActor<IActor>
+			(
+				actor =>
+				{
+					if
+					(
+						//Does not collide with self
+						actor != this
+						&&
+						//If there is mutual collision acceptance
+						actor.CollidesWith(this) && CollidesWith(actor)
+						&&
+						//Returns true if positional intersection happened
+						IntersectsActor(actor)
+					)
+					{
+						//Rolls back the old position of the current Actor
+						X = oldPosition.X;
+						Y = oldPosition.Y;
+
+						//Marks the outer function to also return true
+						rolledBack = true;
+						//Stops iterating over other Actors
+						return true;
+					}
+					return false;
+				}
+			);
+
+			return rolledBack;
 		}
 
 		/// <summary>

@@ -20,16 +20,16 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			Target = target;
 		}
 
-		public override void Act()
+		public static float AngleBetweenActorsRadians(IActor first, IActor second, bool firstActorReversed)
 		{
-			double deltaX = Target.X - Owner.X;
-			double deltaY = Target.Y - Owner.Y;
+			double deltaX = second.X - first.X;
+			double deltaY = second.Y - first.Y;
 
 			//Division by zero could destroy the universe as we know it
 			float atan = (deltaX == 0 ? 0 : (float)Math.Atan(deltaY / deltaX));
 
 			//Angles are calculated from the 90 degree start point based on the texture, reversed vertically if the direction is DOWN
-			if (VerticalOrientation == SpaceDirection.VerticalDirection.DOWN)
+			if (firstActorReversed)
 			{
 				atan = DegreeToRadians(90) - atan;
 			}
@@ -44,8 +44,18 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 				atan = atan + DegreeToRadians(180);
 			}
 
-			//In the 1st quadrant add 360 degrees if (deltaX >= 0 && deltaY < 0) implicitly by normalization 
-			TargetAngleRadians = Utility.NormalizeRadianAngle(atan);
+			//In the 1st quadrant add 360 degrees if (deltaX >= 0 && deltaY < 0) implicitly by normalization
+			return Utility.NormalizeRadianAngle(atan);
+		}
+
+		public override void Act()
+		{
+			TargetAngleRadians = AngleBetweenActorsRadians
+			(
+				first: Owner
+				, second: Target
+				, firstActorReversed: VerticalOrientation == SpaceDirection.VerticalDirection.DOWN
+			);
 
 			//Implicit Act
 			base.Act();

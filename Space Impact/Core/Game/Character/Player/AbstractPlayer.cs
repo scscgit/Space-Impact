@@ -80,6 +80,12 @@ namespace Space_Impact.Core.Game.Player
 			return false;
 		}
 
+		//Collisions don't work quite as well as I expected, so the currently used implementation only influences NPCs
+		public override bool CollidesWith(IActor actor)
+		{
+			return false;
+		}
+
 		public override void Act()
 		{
 			base.Act();

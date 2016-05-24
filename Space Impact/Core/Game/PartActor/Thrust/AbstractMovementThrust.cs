@@ -26,7 +26,7 @@ namespace Space_Impact.Core.Game.PartActor.Thrust
 		}
 
 		/// <summary>
-		/// Represents backwards movement of an Actor
+		/// Represents backwards movement of an Actor.
 		/// </summary>
 		/// <returns>true if the Actor is moving backwards</returns>
 		bool IsMovingBack()
@@ -65,11 +65,11 @@ namespace Space_Impact.Core.Game.PartActor.Thrust
 			//If there is no relative movement, or a weak backwards movement with a sideways movement, thrust will blink
 			//(it is always implicitly moving forward... this may be wrong in a boss battle in the case of a static background)
 			if
-				(
+			(
 				Owner.Direction == SpaceDirection.None
 				||
 				IsMovingBack() && Owner.Direction.Horizontal != SpaceDirection.HorizontalDirection.NONE
-				)
+			)
 			{
 				if (++BlinkCounter > BlinkPeriod)
 				{

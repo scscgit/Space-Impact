@@ -19,17 +19,19 @@ namespace Space_Impact.Core.Game.Level
 
 		private void FirstWave()
 		{
+			//First greeting enemy
 			Spawners.Add
 			(
 				new EnemySpawner
 				(
 					x: (float)Field.Size.Width / 2
-					, y: 0
+					, y: 20
 					, remainingEnemies: 1
 					, spawnCallback: spawner => spawner.PlaceActor(new Lakebeam())
 				)
 			);
 
+			//First Bomb to give Player some small target to fire on
 			AddDualSpawner
 			(
 				percentDelay: 2
@@ -41,6 +43,7 @@ namespace Space_Impact.Core.Game.Level
 				}
 			);
 
+			//Wave of Lakebeams for the opportunity of quickly upgrading the basic weapon
 			AddDualSpawner
 			(
 				percentDelay: 7
@@ -52,6 +55,7 @@ namespace Space_Impact.Core.Game.Level
 				}
 			);
 
+			//Wave of bombs
 			AddDualSpawner
 			(
 				percentDelay: 12
@@ -61,6 +65,40 @@ namespace Space_Impact.Core.Game.Level
 					var enemy = new Doomday(Field.Player);
 					spawner.PlaceActor(enemy);
 				}
+			);
+
+			//Two Venomflares to make it more interesting
+			Spawners.Add
+			(
+				new DelayedStart
+				(
+					actsDelay: 0
+					, percentDelay: 15
+					, spawner: new EnemySpawner
+					(
+						//Spawns in the 1/3 of the Field
+						x: (float)Field.Size.Width / 3
+						, y: 0
+						, remainingEnemies: 1
+						, spawnCallback: spawner => spawner.PlaceActor(new Venomflare())
+					)
+				)
+			);
+			Spawners.Add
+			(
+				new DelayedStart
+				(
+					actsDelay: 0
+					, percentDelay: 15
+					, spawner: new EnemySpawner
+					(
+						//Spawns in the 2/3 of the Field
+						x: 2 * (float)Field.Size.Width / 3
+						, y: 0
+						, remainingEnemies: 1
+						, spawnCallback: spawner => spawner.PlaceActor(new Venomflare())
+					)
+				)
 			);
 		}
 	}

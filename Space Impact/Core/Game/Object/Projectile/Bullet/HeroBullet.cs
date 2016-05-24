@@ -1,5 +1,5 @@
 ﻿using Space_Impact.Core.Game.Character;
-using Space_Impact.Core.Game.Enemy;
+using Space_Impact.Core.Game.Character.Enemy;
 using Space_Impact.Core.Game.IntersectStrategy;
 using Space_Impact.Core.Game.Player.Bullet;
 using Space_Impact.Graphics;
