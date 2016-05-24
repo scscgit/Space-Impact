@@ -665,7 +665,6 @@ namespace Space_Impact.Screen
 		//Manipulation with available actors that are currently registered using Observer pattern for receiving events
 		public void AddActor(IAct actor)
 		{
-			Log.i(this, "Adding actor " + actor.ToString());
 			if (actor != null)
 			{
 				if (actor is IPlacedInField)
@@ -681,7 +680,6 @@ namespace Space_Impact.Screen
 		}
 		public void RemoveActor(IAct actor)
 		{
-			Log.i(this, "Removing actor " + actor.ToString());
 			ActorList.Remove(actor);
 		}
 

@@ -37,10 +37,10 @@ namespace Space_Impact.Core.Game.Character.Enemy
 
 			Weapon = new MultiProjectileShooter
 			(
-				multiShot: 0
+				multiShot: 1
 				, dispersion: 0
 				, newProjectileCallback: (character, position, angle) =>
-				new FireBullet<IPlayer>(character, position, angle, speed: 5, damage: 5)
+				new FireBullet<IPlayer>(character, position, angle, speed: 6, damage: 8)
 			);
 		}
 
@@ -62,7 +62,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			AddStrategy(new Shooting
 			(
 				owner: this
-				, shootingInterval: 20
+				, shootingInterval: 30
 				, weaponCallback: () => Weapon
 				, bulletFocusPosition: () => BulletFocusPosition
 				, angleCallback: () => rotationStrategy.CurrentAngleDegrees

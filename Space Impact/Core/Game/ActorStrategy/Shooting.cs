@@ -81,8 +81,7 @@ namespace Space_Impact.Core.Game.ActorStrategy
 			{
 				//Creates a new projectile
 				//Fired when player is shooting, limited by the ShootingInterval property.
-				bool shotResult = Shot();
-				Log.i(this, "Shot() call has finished, result is " + (shotResult ? "true" : "false"));
+				Shot();
 
 				//Resets cooldown
 				ShootingCooldown = ShootingInterval;

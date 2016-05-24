@@ -21,7 +21,7 @@ namespace Space_Impact.Core.Game.Object.Collectable
 			Animation = TextureSetLoader.HOT_SIDE_OBJECT;
 
 			//Random health bonus
-			HealthBoost = Utility.RandomBetween(50, 300);
+			HealthBoost = Utility.RandomBetween(150, 350);
 		}
 
 		public override void CollectBy(IPlayer player)

@@ -12,6 +12,7 @@ using Space_Impact.Core.Game.IntersectStrategy;
 using Space_Impact.Core.Game.PartActor;
 using Space_Impact.Core.Game.ActorStrategy;
 using Microsoft.Graphics.Canvas;
+using Space_Impact.Core.Game.ActorStrategy.Rotation;
 
 namespace Space_Impact.Core
 {
@@ -188,11 +189,11 @@ namespace Space_Impact.Core
 		//Current speed in a chosen direction based on angular calculations
 		float HorizontalSpeed(float Angle)
 		{
-			return Speed * (float)Math.Sin((Angle / 180) * Math.PI);
+			return Speed * (float)Math.Sin(AbstractRotation.DegreesToRadians(Utility.NormalizeDegreeAngle(Angle)));
 		}
 		float VerticalSpeed(float Angle)
 		{
-			return Speed * (float)Math.Cos((Angle / 180) * Math.PI);
+			return Speed * (float)Math.Cos(AbstractRotation.DegreesToRadians(Utility.NormalizeDegreeAngle(Angle)));
 		}
 
 		/// <summary>
@@ -233,6 +234,7 @@ namespace Space_Impact.Core
 				if (this is IAngle)
 				{
 					float angle = ((IAngle)this).Angle;
+
 					if (CanMoveX(X + HorizontalSpeed(angle)))
 					{
 						X = X + HorizontalSpeed(angle);
@@ -253,9 +255,16 @@ namespace Space_Impact.Core
 				if (this is IAngle)
 				{
 					float angle = ((IAngle)this).Angle;
-					if (CanMoveY(Y - VerticalSpeed(angle)))
+
+					//Hotfix, there is probably need to reimplement angle representation definition
+					if ((this is IPlayer || this is Game.Object.Projectile.Bullet.HeroBullet) && CanMoveY(Y - VerticalSpeed(angle)))
 					{
 						Y = Y - VerticalSpeed(angle);
+					}
+					else
+					if (CanMoveY(Y + VerticalSpeed(angle)))
+					{
+						Y = Y + VerticalSpeed(angle);
 					}
 				}
 				else
@@ -271,9 +280,16 @@ namespace Space_Impact.Core
 				if (this is IAngle)
 				{
 					float angle = ((IAngle)this).Angle;
-					if (CanMoveY(Y + VerticalSpeed(angle)))
+
+					//Hotfix, there is probably need to reimplement angle representation definition
+					if ((this is IPlayer || this is Game.Object.Projectile.Bullet.HeroBullet) && CanMoveY(Y + VerticalSpeed(angle)))
 					{
 						Y = Y + VerticalSpeed(angle);
+					}
+					else
+					if (CanMoveY(Y - VerticalSpeed(angle)))
+					{
+						Y = Y - VerticalSpeed(angle);
 					}
 				}
 				else
@@ -357,7 +373,6 @@ namespace Space_Impact.Core
 			if (OutOfFieldBounds())
 			{
 				DeleteActor();
-				Log.i(this, Name + " outside of the map, removed");
 				return;
 			}
 
@@ -447,7 +462,6 @@ namespace Space_Impact.Core
 				Field.RemoveActor(this);
 				Field = null;
 				DeleteActorHook();
-				Log.i(this, "Removed actor");
 			}
 		}
 		public virtual void DeleteActorHook()
@@ -457,7 +471,7 @@ namespace Space_Impact.Core
 		/// <summary>
 		/// AddActor that adds other Actor to the same coordinates on the same Field, centering it in the process.
 		/// </summary>
-		/// <param name="actor">Actor that is to be added to the same coordinates</param>
+		/// <param name="actor">Actor that is to be added to the same coordinates.</param>
 		protected void AddActorToSameCoordinates(IActor actor)
 		{
 			actor.X = X + (float)Width / 2 - (float)actor.Width / 2;

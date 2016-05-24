@@ -24,7 +24,7 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 				{
 					degrees = 180 - degrees;
 				}
-				return degrees;
+				return Utility.NormalizeDegreeAngle(degrees);
 			}
 		}
 
@@ -32,7 +32,7 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 		protected IActor Owner;
 
 		//Angle at which the character is rotated relative to his orientation direction
-		//Can be calculated from degrees, but is available as a getter for faster calculation purposes (but is not available using interface)
+		//Internal relative value, can be accessed directly for special purposes
 		public float CurrentRelativeAngleRadians
 		{
 			get; protected set;

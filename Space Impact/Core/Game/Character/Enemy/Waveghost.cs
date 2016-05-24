@@ -1,6 +1,10 @@
-﻿using Space_Impact.Core.Game.ActorStrategy.Rotation;
+﻿using Space_Impact.Core.Game.ActorStrategy;
+using Space_Impact.Core.Game.ActorStrategy.Rotation;
 using Space_Impact.Core.Game.Object.Collectable;
+using Space_Impact.Core.Game.Object.Projectile.Bullet;
 using Space_Impact.Core.Game.PartActor.Thrust;
+using Space_Impact.Core.Game.Player;
+using Space_Impact.Core.Game.Weapon;
 using Space_Impact.Graphics;
 using Space_Impact.Support;
 using System;
@@ -54,6 +58,14 @@ namespace Space_Impact.Core.Game.Character.Enemy
 
 			//Random rotation direction
 			RotationDirection = Utility.RandomBetween(0, 1) == 0 ? CLOCKWISE : COUNTERCLOCKWISE;
+
+			Weapon = new MultiProjectileShooter
+			(
+				multiShot: 1
+				, dispersion: 20
+				, newProjectileCallback: (character, position, angle) =>
+				new FireBullet<IPlayer>(character, position, angle, speed: 3, damage: 3)
+			);
 		}
 
 		public override void AddedToFieldHook()
@@ -68,6 +80,19 @@ namespace Space_Impact.Core.Game.Character.Enemy
 				, angleDeltaCount: 320
 				, maxAngleDegrees: 360
 			);
+
+			//Initialization of the default Shooting parameters via strategy
+			AddStrategy(new Shooting
+			(
+				owner: this
+				, shootingInterval: 5
+				, weaponCallback: () => Weapon
+				, bulletFocusPosition: () => BulletFocusPosition
+				, angleCallback: () => TargetRotationStrategy.CurrentAngleDegrees
+			)
+			{
+				IsShooting = true
+			});
 
 			AddStrategy(TargetRotationStrategy);
 
@@ -92,8 +117,6 @@ namespace Space_Impact.Core.Game.Character.Enemy
 
 			//Always rotates
 			TargetRotationStrategy.TargetAngleRadians = TargetRotationStrategy.CurrentRelativeAngleRadians + RotationDirection;
-			//Doesn't work from degrees, but why???:
-			//TargetRotationStrategy.TargetAngleRadians = AbstractRotation.DegreeToRadians(Angle + RotationDirection);
 
 			//Initializing Speed
 			Speed = RealSpeed;
