@@ -1,0 +1,901 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Space_Impact.Core.AbstractActor">
+    <Position X="21.5" Y="23.25" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AQGEAQUACAAQAABACCAABAQHIAAIASQAAIIAAAAJgEA=</HashCode>
+      <FileName>Core\Game\AbstractActor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Acceleration" BaseTypeListCollapsed="true">
+    <Position X="56" Y="13" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAIAUA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Acceleration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.EveryNActs" BaseTypeListCollapsed="true">
+    <Position X="52" Y="14" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAABAAAIAQAACAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\EveryNActs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Follower" BaseTypeListCollapsed="true">
+    <Position X="63.5" Y="10.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAgAABAIAAAACAACAAAAAAAAAAAAABAAAAIEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Follower.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.NullActStrategy" BaseTypeListCollapsed="true">
+    <Position X="61" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\NullActStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Shooting" BaseTypeListCollapsed="true">
+    <Position X="58.5" Y="22" Width="9.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAAACAAAMAgAAAACAAAAAAAAgIAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Shooting.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Rotation.AbstractRotation">
+    <Position X="5.5" Y="16.5" Width="7" />
+    <TypeIdentifier>
+      <HashCode>CAAAIACAABQAAABAEAAAAAAAAQBQAACAAAQAIAAAIQA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Rotation\AbstractRotation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Rotation.FlyingDirectionRotation">
+    <Position X="3" Y="25" Width="7.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQIAABAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Rotation\FlyingDirectionRotation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Rotation.TargetActorAngleRotation">
+    <Position X="11.25" Y="27" Width="8.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAQAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Rotation\TargetActorAngleRotation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ActorStrategy.Rotation.TargetAngleRotation">
+    <Position X="5.5" Y="22" Width="7.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Rotation\TargetAngleRotation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.ClickableImpl" BaseTypeListCollapsed="true">
+    <Position X="64.5" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAQAAAAAAACAAAAAEAAAABkA=</HashCode>
+      <FileName>Core\Game\ClickableImpl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.SpaceDirection">
+    <Position X="47.25" Y="27.5" Width="5.5" />
+    <NestedTypes>
+      <Enum Name="Space_Impact.Core.Game.SpaceDirection.HorizontalDirection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\SpaceDirection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Space_Impact.Core.Game.SpaceDirection.VerticalDirection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\SpaceDirection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gAEAAAAABAJAAABEQAEAAAIIAAQAAAAAAAEAAgECAAA=</HashCode>
+      <FileName>Core\Game\SpaceDirection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.AbstractCharacter">
+    <Position X="25.75" Y="31.75" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAASAAIAAAACAAAAAAABIAACAAIABgAAAAAAQEAAAg=</HashCode>
+      <FileName>Core\Game\Character\AbstractCharacter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.AbstractEnemy">
+    <Position X="30.25" Y="36.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAgAACCIAIAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\AbstractEnemy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.Lakebeam">
+    <Position X="33" Y="40.75" Width="2.25" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Core.Game.Character.Enemy.Lakebeam.Thrust" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Character\Enemy\Lakebeam.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Lakebeam.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.Venomflare">
+    <Position X="36" Y="40.75" Width="3.25" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Core.Game.Character.Enemy.Venomflare.Thrust" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Character\Enemy\Venomflare.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAACAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Venomflare.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.Waveghost">
+    <Position X="29" Y="41" Width="3.25" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Core.Game.Character.Enemy.Waveghost.Thrust" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Character\Enemy\Waveghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAEEAACAQAAAEAAAEACAAAAAAAEAAEA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Waveghost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.Bomb.AbstractBomb">
+    <Position X="24" Y="39.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACACAAAAAAgAAAABIgAAAAAAAAiAAIICACAAEg=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Bomb\AbstractBomb.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Character.Enemy.Bomb.Doomday">
+    <Position X="25" Y="44.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Bomb\Doomday.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Player.AbstractPlayer">
+    <Position X="19.25" Y="36.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAIAAABIAAgAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Player\AbstractPlayer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Player.Hero">
+    <Position X="18" Y="40.5" Width="5.25" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Core.Game.Player.Hero.MovementThrust" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Character\Player\Hero.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAhAAAAAIAAAAAAAACAAAAAEAYIABkg=</HashCode>
+      <FileName>Core\Game\Character\Player\Hero.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.IntersectStrategy.AbstractIntersectStrategy">
+    <Position X="36" Y="15.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAQAAAAAgAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\IntersectStrategy\AbstractIntersectStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.IntersectStrategy.DelegateIntersect">
+    <Position X="35.75" Y="18.25" Width="9.75" />
+    <NestedTypes>
+      <Delegate Name="Space_Impact.Core.Game.IntersectStrategy.DelegateIntersect.IntersectsActorDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\IntersectStrategy\DelegateIntersect.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="Space_Impact.Core.Game.IntersectStrategy.DelegateIntersect.IntersectsOnDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\IntersectStrategy\DelegateIntersect.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="Space_Impact.Core.Game.IntersectStrategy.DelegateIntersect.IntersectsWithinDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\IntersectStrategy\DelegateIntersect.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEAAIQAAAAAAAAAAAAIAAAAAAAAAAhAAIAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\IntersectStrategy\DelegateIntersect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.IntersectStrategy.SquareIntersect">
+    <Position X="30.75" Y="18.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>EAEAAAQAAAAAACAAAAAAAAAAAAAAABAAAAAAiAAQAAA=</HashCode>
+      <FileName>Core\Game\IntersectStrategy\SquareIntersect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Level.AbstractLevel">
+    <Position X="14.25" Y="21.5" Width="6.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAggAAAAEAAAAAAAAAAAAAAAAAAAAAQgAA=</HashCode>
+      <FileName>Core\Game\Level\AbstractLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Level.Level1">
+    <Position X="16.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Level\Level1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.AbstractObject">
+    <Position X="10.25" Y="31.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAACAABAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\AbstractObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Collectable.AbstractCollectable">
+    <Position X="11.75" Y="34.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\AbstractCollectable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Collectable.PowerUp">
+    <Position X="8.75" Y="37" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\PowerUp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade.AbstractWeaponUpgrade">
+    <Position X="11.75" Y="37" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAACAAAAAAgAAAAAAQAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\WeaponUpgrade\AbstractWeaponUpgrade.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade.UMultiBulletShooter">
+    <Position X="13.5" Y="40" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\WeaponUpgrade\UMultiBulletShooter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Projectile.AbstractProjectile">
+    <Position X="2.5" Y="34.5" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACAEAAAgAAAAAAAAAAAAAAAAAAAAEAAARBACAA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\AbstractProjectile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Projectile.Bullet.AbstractBullet">
+    <Position X="2.75" Y="38.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\Bullet\AbstractBullet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Projectile.Bullet.FireBullet&lt;Enemy&gt;">
+    <Position X="2.75" Y="40.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\Bullet\FireBullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Object.Projectile.Bullet.HeroBullet">
+    <Position X="3.25" Y="43" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAIAAA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\Bullet\HeroBullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.PartActor.AbstractPartActor">
+    <Position X="34.75" Y="32" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAACAAAAAAAAAAAAABAAAAAAAAAAAAAAAEABAAAA=</HashCode>
+      <FileName>Core\Game\PartActor\AbstractPartActor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.PartActor.Thrust.AbstractMovementThrust">
+    <Position X="34" Y="36" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAQAAABAAQAAAAAAIAAIAA=</HashCode>
+      <FileName>Core\Game\PartActor\Thrust\AbstractMovementThrust.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.AbstractSpawner">
+    <Position X="39.25" Y="3" Width="3.75" />
+    <NestedTypes>
+      <Delegate Name="Space_Impact.Core.Game.Spawner.AbstractSpawner.IsActiveDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Spawner\AbstractSpawner.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAARQAAAACgCAEAAEAGAIAAEAAgEAAAABAA4UA=</HashCode>
+      <FileName>Core\Game\Spawner\AbstractSpawner.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.DualSymmetrySpawner">
+    <Position X="32.5" Y="9.75" Width="10.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAYAAAAAAAAAAAAgAAAASAACAIAAAAAAACEAAAEA=</HashCode>
+      <FileName>Core\Game\Spawner\DualSymmetrySpawner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.EnemySpawner">
+    <Position X="43.75" Y="9.75" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Spawner\EnemySpawner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Strategy.AbstractSpawnerStrategy">
+    <Position X="31" Y="24.75" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\Spawner\Strategy\AbstractSpawnerStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Strategy.EveryNActs">
+    <Position X="28" Y="27.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\Spawner\Strategy\EveryNActs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Strategy.EveryNPercent">
+    <Position X="34" Y="27.75" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEA=</HashCode>
+      <FileName>Core\Game\Spawner\Strategy\EveryNPercent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Wrapper.AbstractSpawnerWrapper">
+    <Position X="24.25" Y="4.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAARAQAAACgCAEAAEAGAAAAAAAgAAAAABAA4EA=</HashCode>
+      <FileName>Core\Game\Spawner\Wrapper\AbstractSpawnerWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Wrapper.DelayedStart">
+    <Position X="22.5" Y="10.25" Width="4.25" />
+    <NestedTypes>
+      <Delegate Name="Space_Impact.Core.Game.Spawner.Wrapper.DelayedStart.ActivatedDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Core\Game\Spawner\Wrapper\DelayedStart.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAACAEQACQAABAAEAAQAAAAAAAEAAAAAAEA=</HashCode>
+      <FileName>Core\Game\Spawner\Wrapper\DelayedStart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Spawner.Wrapper.HideAct">
+    <Position X="27.5" Y="10.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAEA=</HashCode>
+      <FileName>Core\Game\Spawner\Wrapper\HideAct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Weapon.AbstractWeapon">
+    <Position X="4" Y="28.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Weapon\AbstractWeapon.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Game.Weapon.MultiProjectileShooter">
+    <Position X="3" Y="30.5" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAIAABAAAAAAAAQAAA=</HashCode>
+      <FileName>Core\Game\Weapon\MultiProjectileShooter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Graphics.AbstractAnimatedObject">
+    <Position X="23.5" Y="17.5" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAJEQAAgBgiAAAAEAAAAAAAAAAAAAgAQAAYAE=</HashCode>
+      <FileName>Graphics\AbstractAnimatedObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Graphics.TextureSetLoader">
+    <Position X="41.25" Y="34.25" Width="11.5" />
+    <NestedTypes>
+      <Delegate Name="Space_Impact.Graphics.TextureSetLoader.IncreaseLoadedPercentageDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Graphics\TextureSetLoader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="Space_Impact.Graphics.TextureSetLoader.OnCreateResourcesAsyncFinished" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Graphics\TextureSetLoader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAATAAYgAIIAIghICIAEAAGQgAAIBEEAYAACQIABAAg=</HashCode>
+      <FileName>Graphics\TextureSetLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Core.Graphics.Background.AbstractBackground">
+    <Position X="41.25" Y="26.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAgAAAAAAABAIAAAAAAAAIAAAAAgAA=</HashCode>
+      <FileName>Graphics\Background\AbstractBackground.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Space_Impact.Core.Graphics.Background.Strategy.MovingUp" BaseTypeListCollapsed="true">
+    <Position X="56" Y="16" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAgAAAAAAA=</HashCode>
+      <FileName>Graphics\Background\Strategy\MovingUp.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Core.Graphics.Background.Strategy.RandomMovement" BaseTypeListCollapsed="true">
+    <Position X="53.75" Y="22.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAgADAAAAAAAAAAAAAABAAkAAAAAAY=</HashCode>
+      <FileName>Graphics\Background\Strategy\RandomMovement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Screen.GameRound" BaseTypeListCollapsed="true">
+    <Position X="54" Y="32.25" Width="6.5" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Screen.GameRound.GameRoundBackground" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Screen\GameRound.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>xSAElEEgCABoggHAAAgAAEIQAAIEAAlBKCAAaQEUCEw=</HashCode>
+      <FileName>Screen\GameRound.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Screen.MainMenu" BaseTypeListCollapsed="true">
+    <Position X="61.5" Y="34.5" Width="6.5" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Screen.MainMenu.MainMenuBackground" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Screen\MainMenu.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gAAAhEFgAQBQgADAAAgACEIWAkAQAAkAyiAAGYICAEQ=</HashCode>
+      <FileName>Screen\MainMenu.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Screen.NewPlayer" BaseTypeListCollapsed="true">
+    <Position X="48.25" Y="24.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Screen\NewPlayer.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Services.BackgroundTask" BaseTypeListCollapsed="true">
+    <Position X="62.5" Y="19" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAASAAAAAAAAAAACAAAAAAAAAAEAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Services\BackgroundTask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Services.BackgroundTaskStatus" BaseTypeListCollapsed="true">
+    <Position X="61.5" Y="6.5" Width="6" />
+    <NestedTypes>
+      <Class Name="Space_Impact.Services.BackgroundTaskStatus.Printer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Services\BackgroundTask.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAQAAAAEAAAAAAAAAAAACAYAA=</HashCode>
+      <FileName>Services\BackgroundTask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Space_Impact.Services.Persistence">
+    <Position X="51.25" Y="3.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAgAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Persistence.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Services.PlayerController">
+    <Position X="60.75" Y="10.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Services\PlayerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Services.Entity.Player">
+    <Position X="61.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Entity\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Services.Entity.Score">
+    <Position X="56" Y="8" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Services\Entity\Score.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Support.AbstractAction&lt;Input, Output&gt;">
+    <Position X="51.5" Y="10.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAgAAAAAAAAAAAAAAIAAACAAAAAAAAAA=</HashCode>
+      <FileName>Support\AbstractAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Support.ActionQueue&lt;Input, Output&gt;">
+    <Position X="56.5" Y="18.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAAAAAEAAAAgA=</HashCode>
+      <FileName>Support\ActionQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Support.Log">
+    <Position X="52.5" Y="17.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAQAAAAAAAAAAAAACAAAQAAAAgAGYAAAAAAABQA=</HashCode>
+      <FileName>Support\Log.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Support.PopupDialog">
+    <Position X="53.75" Y="26.5" Width="12.5" />
+    <NestedTypes>
+      <Delegate Name="Space_Impact.Support.PopupDialog.PopupDialogActionDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Support\PopupDialog.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Support\PopupDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.Support.Utility">
+    <Position X="61.75" Y="29.75" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAiEAAEAQAQAAAAAgAIBAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Support\Utility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Space_Impact.App" BaseTypeListCollapsed="true">
+    <Position X="55" Y="29.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAIAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Struct Name="Space_Impact.Graphics.Position">
+    <Position X="51.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Graphics\Position.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Space_Impact.Core.IActor">
+    <Position X="8.75" Y="6.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAQACAAAAAAAACAABAQBAAAAAAQAAIAAAAAAgAA=</HashCode>
+      <FileName>Core\Game\IActor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.IField">
+    <Position X="63.25" Y="14.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>gAAAhEAgAAAAgAAAAAAAAAIAAAAAAAAAACAACQAAAEA=</HashCode>
+      <FileName>Core\Game\IField.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.IPlacedInField">
+    <Position X="5.75" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAACAAAAAAGAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\IPlacedInField.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.ActorStrategy.IActStrategy">
+    <Position X="14.5" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\IActStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.ActorStrategy.IDrawModificationStrategy">
+    <Position X="16.75" Y="19" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\IDrawModificationStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.ActorStrategy.IStrategy">
+    <Position X="17.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\IStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.IAct">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Core\Game\IAct.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.IAngle">
+    <Position X="5.5" Y="10.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\IAngle.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.IClickable">
+    <Position X="58.5" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAABkA=</HashCode>
+      <FileName>Core\Game\IClickable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Character.ICharacter">
+    <Position X="17" Y="10.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\ICharacter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Character.Enemy.IEnemy">
+    <Position X="19.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\IEnemy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Character.Enemy.Bomb.IAffectedByBombExplosion">
+    <Position X="58.25" Y="5.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Bomb\IAffectedByBombExplosion.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Character.Enemy.Bomb.IBomb">
+    <Position X="19" Y="15.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Core\Game\Character\Enemy\Bomb\IBomb.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Player.IPlayer">
+    <Position X="15.5" Y="13.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Character\Player\IPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.IntersectStrategy.IIntersectStrategy">
+    <Position X="48.5" Y="21.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\IntersectStrategy\IIntersectStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Object.IObject">
+    <Position X="9.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\IObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Object.Collectable.ICollectable">
+    <Position X="12" Y="12.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\ICollectable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Object.Collectable.WeaponUpgrade.IWeaponUpgrade">
+    <Position X="12" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Collectable\WeaponUpgrade\IWeaponUpgrade.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Object.Projectile.IProjectile">
+    <Position X="6.75" Y="12.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\IProjectile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Object.Projectile.Bullet.IBullet">
+    <Position X="6.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Object\Projectile\Bullet\IBullet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.PartActor.IActorCompositePart">
+    <Position X="9.25" Y="12.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Core\Game\PartActor\IActorCompositePart.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.PartActor.Thrust.IMovementThrust">
+    <Position X="56" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\PartActor\Thrust\IMovementThrust.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Spawner.ISpawner">
+    <Position X="9.25" Y="2.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAACgAAEAAAAAAAAAAAAgAAAAABAAgAA=</HashCode>
+      <FileName>Core\Game\Spawner\ISpawner.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Spawner.Strategy.ISpawnerStrategy">
+    <Position X="24.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Spawner\Strategy\ISpawnerStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Game.Weapon.IWeapon">
+    <Position X="51.25" Y="6" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Weapon\IWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Graphics.IAnimatedObject">
+    <Position X="15.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAgAAAAAAE=</HashCode>
+      <FileName>Graphics\IAnimatedObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Graphics.IDrawable">
+    <Position X="14" Y="2" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphics\IDrawable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Graphics.IPlacedInSpace">
+    <Position X="17.75" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Graphics\IPlacedInSpace.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Graphics.Background.IBackground">
+    <Position X="15" Y="6.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Graphics\Background\IBackground.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Space_Impact.Core.Graphics.Background.Strategy.IBackgroundStrategy">
+    <Position X="52.25" Y="7.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphics\Background\Strategy\IBackgroundStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="Space_Impact.Core.ActorAction&lt;ActorType&gt;">
+    <Position X="56" Y="10.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Core\Game\IField.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.ActorStrategy.StrategyCallback">
+    <Position X="58.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\EveryNActs.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.ActorStrategy.WeaponCallback">
+    <Position X="61.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Shooting.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.ActorStrategy.BulletFocusPositionCallback">
+    <Position X="53.5" Y="9.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Shooting.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.ActorStrategy.AngleCallback">
+    <Position X="61" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ActorStrategy\Shooting.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.CollidesOn">
+    <Position X="61.25" Y="17" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\ClickableImpl.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.Spawner.SpawnCallbackDelegate">
+    <Position X="56" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Game\Spawner\ISpawner.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Space_Impact.Core.Game.Weapon.NewProjectileCallback">
+    <Position X="58.5" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAQAAAAAAACAAA=</HashCode>
+      <FileName>Core\Game\Weapon\MultiProjectileShooter.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
