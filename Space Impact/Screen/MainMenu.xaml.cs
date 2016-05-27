@@ -579,6 +579,15 @@ namespace Space_Impact.Screen
 							return;
 						}
 
+						var scores = db.Scores;
+
+						//Removes scores of the player
+						scores
+						.Where(score => score.Player.Id == selectedItem.Id)
+						.ToList()
+						.ForEach(score => scores.Remove(score));
+
+						//Removes the player
 						players.Remove(selectedItem);
 						db.SaveChanges();
 						UpdatePlayers(players);

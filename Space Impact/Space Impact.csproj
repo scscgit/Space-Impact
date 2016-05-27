@@ -115,6 +115,7 @@
     <Compile Include="Core\Game\ActorStrategy\Rotation\AbstractRotation.cs" />
     <Compile Include="Core\Game\ActorStrategy\Shooting.cs" />
     <Compile Include="Core\Game\Character\AbstractCharacter.cs" />
+    <Compile Include="Core\Game\Character\Enemy\DarkspringTheTwisted.cs" />
     <Compile Include="Core\Game\Character\Enemy\Lakebeam.cs" />
     <Compile Include="Core\Game\Character\Enemy\Venomflare.cs" />
     <Compile Include="Core\Game\Character\Enemy\Waveghost.cs" />

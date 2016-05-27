@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="9f171323-aa2e-48e8-8db3-f6e731308ec7" Publisher="CN=Steve" Version="1.0.0.0" />
+  <Identity Name="SI-9f171323-aa2e-48e8-8db3-f6e731308ec7" Publisher="CN=Steve" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="9f171323-aa2e-48e8-8db3-f6e731308ec7" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Space Impact</DisplayName>
@@ -27,6 +27,12 @@
         </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="spaceimpact" DesiredView="default">
+            <uap:Logo>Assets\StoreLogo.png</uap:Logo>
+            <uap:DisplayName>SIP: Space Impact Protocol</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
         <Extension Category="windows.backgroundTasks" EntryPoint="Space_Impact.Services.BackgroundTask">
           <BackgroundTasks>
             <Task Type="general" />
@@ -34,12 +40,6 @@
             <Task Type="timer" />
           </BackgroundTasks>
         </Extension>
-        <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="spaceimpact" DesiredView="default">
-            <uap:Logo>Assets\StoreLogo.png</uap:Logo>
-            <uap:DisplayName>SIP: Space Impact Protocol</uap:DisplayName>
-          </uap:Protocol>
-        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>

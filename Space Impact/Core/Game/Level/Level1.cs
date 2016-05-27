@@ -142,6 +142,29 @@ namespace Space_Impact.Core.Game.Level
 				, enemies: 4
 				, spawnCallback: spawner => spawner.PlaceActor(new Waveghost())
 			);
+
+			//The Boss
+			Spawners.Add
+			(
+				new DelayedStart
+				(
+					actsDelay: 0
+					, percentDelay: 95
+					, spawner: new EnemySpawner
+					(
+						x: (float)Field.Size.Width / 2
+						, y: 0
+						, remainingEnemies: 1
+						, spawnCallback: spawner =>
+						{
+							var boss = new DarkspringTheTwisted();
+							spawner.PlaceActor(boss);
+							//Boss will be spawned outside of the field and comes in afterwards
+							boss.Y -= (float)boss.Height / 2;
+						}
+					)
+				)
+			);
 		}
 	}
 }

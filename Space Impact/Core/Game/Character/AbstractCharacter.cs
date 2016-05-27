@@ -122,7 +122,7 @@ namespace Space_Impact.Core.Game.Character
 			var rect = new Windows.Foundation.Rect();
 			rect.X = X;
 			rect.Width = Width;
-			rect.Y = Y - rectangleHeight;
+			rect.Y = Y - rectangleHeight / 2;
 			rect.Height = rectangleHeight;
 
 			int healthPercent = Health * 100 / MaxHealth;

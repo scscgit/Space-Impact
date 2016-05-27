@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Space_Impact.Core.Game.Player;
+using Space_Impact.Services;
 
 namespace Space_Impact.Core.Game.Character.Enemy
 {
@@ -77,6 +79,14 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			{
 				Log.i(this, Name + " died without any loot");
 			}
+
+			//If the game is not lost, the Player will get the credit for the kill
+			if (Field.GameRunning)
+			{
+				//The thread will run in parallel for lesser lags (does not work, is still lagging)
+				PlayerController.AddScore(Score).GetAwaiter();
+			}
+
 			RemoveFromField();
 		}
 	}

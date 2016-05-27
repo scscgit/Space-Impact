@@ -58,7 +58,29 @@ namespace Space_Impact.Core.Game.Player
 		/// </summary>
 		public override void OnDeath()
 		{
-			Field.GameOver();
+			//If there is still the way to lose, player loses
+			if (Field.GameRunning)
+			{
+				//Display a message and stop the game-flow
+				Field.MessageBroadcastText = "Game Over,\nYou've lost!";
+				Field.GameOver();
+
+				//Falls out of the universe in shame
+				Direction = SpaceDirection.Get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.DOWN);
+			}
+		}
+
+		protected override bool CanMoveY(float y)
+		{
+			if (Field.GameRunning)
+			{
+				return base.CanMoveY(y);
+			}
+			else
+			{
+				//Player can fly out of the screen when the game ends
+				return true;
+			}
 		}
 
 		//Collisions don't work quite as well as I expected, so the currently used implementation only influences NPCs

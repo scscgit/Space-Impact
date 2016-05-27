@@ -37,6 +37,8 @@ using Space_Impact.Core.Graphics.Background;
 using Space_Impact.Core.Graphics.Background.Strategy;
 using Space_Impact.Core.Game.Spawner.Wrapper;
 using Space_Impact.Core.Game.Level;
+using Space_Impact.Core.Game.Character.Enemy;
+using Space_Impact.Services;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -145,8 +147,8 @@ namespace Space_Impact.Screen
 		int LastLogCountLimit { get; set; } = 20;
 
 		//Message for user
-		public int MessageBroadcastCounter { get; set; } = 220;
-		public int MessageBroadcastTime { get; set; } = 220;
+		public int MessageBroadcastCounter { get; set; } = 400;
+		public int MessageBroadcastTime { get; set; } = 400;
 		string messageBroadcastText = "";
 		public string MessageBroadcastText
 		{
@@ -352,6 +354,9 @@ namespace Space_Impact.Screen
 					break;
 
 				//Debug
+				case VirtualKey.H:
+					Player.Health = Player.MaxHealth;
+					break;
 				case VirtualKey.J:
 					Music.Play();
 					break;
@@ -606,6 +611,14 @@ namespace Space_Impact.Screen
 				MessageBroadcastCounter++;
 			}
 
+			//Draws current Score
+			{
+				var format = new Microsoft.Graphics.Canvas.Text.CanvasTextFormat();
+				format.FontSize = 30;
+				format.FontFamily = "Arial";
+				args.DrawingSession.DrawText("Score: " + PlayerController.SumScore(), new Vector2(15, 15), Colors.ForestGreen, format);
+			}
+
 			//Calling actions expected after first draw finishes
 			if (FirstDraw)
 			{
@@ -803,15 +816,36 @@ namespace Space_Impact.Screen
 			this.Focus(FocusState.Keyboard);
 		}
 
+		/// <summary>
+		/// Game has ended, by winning or losing.
+		/// </summary>
 		public void GameOver()
 		{
-			//Display a message and stop the game-flow
-			MessageBroadcastText = "Game Over,\nYou've lost!";
 			GameRunning = false;
 			ResetUserInput();
 
+			//Kills all enemies
+			ForEachActor<IEnemy>
+			(
+				enemy =>
+				{
+					enemy.Health = 0;
+					return false;
+				}
+			);
 
-			//todo pause and then get back to previous screen, TODO WHEN TO PREVIOUS SCREEN (will use ExitScreen method)
+			//Removes all spawners
+			ForEachActor<ISpawner>
+			(
+				spawner =>
+				{
+					spawner.DeleteActor();
+					return false;
+				}
+			);
+
+			//Implicitly assumes the player has won, so he starts moving upwards victoriously
+			Player.Direction = SpaceDirection.Get(SpaceDirection.HorizontalDirection.NONE, SpaceDirection.VerticalDirection.UP);
 		}
 
 		//The exit point of the page

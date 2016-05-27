@@ -30,7 +30,7 @@ namespace Space_Impact.Core.Game.Spawner.Wrapper
 			set
 			{
 				//On activation, runs activated events
-				if (value == false)
+				if (value == false && ActivatedEvent != null)
 				{
 					ActivatedEvent();
 					ActivatedEvent = null;
