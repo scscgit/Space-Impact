@@ -227,11 +227,7 @@
     <Content Include="Assets\fire_2.png" />
     <Content Include="Assets\hot_side_object.png" />
     <Content Include="Assets\Music\core.mp3" />
-    <Content Include="Assets\Music\Sounds\alarm_to_the_extreme.mp3" />
-    <Content Include="Assets\Music\Sounds\efecto_laser_2.mp3" />
-    <Content Include="Assets\Music\Sounds\tim_tum.mp3" />
     <Content Include="Assets\Music\userspace.mp3" />
-    <Content Include="Assets\Music\vault.mp3" />
     <Content Include="Assets\ship10_base.png" />
     <Content Include="Assets\ship10_thrust.png" />
     <Content Include="Assets\ship11_base.png" />

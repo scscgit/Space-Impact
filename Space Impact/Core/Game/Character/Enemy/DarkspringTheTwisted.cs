@@ -81,7 +81,7 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			(
 				owner: this
 				, verticalOrientation: Direction.Vertical
-				, angleDeltaCount: 0
+				, angleDeltaCount: 1
 				, maxAngleDegrees: 0
 			)
 			{

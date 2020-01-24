@@ -83,8 +83,8 @@ namespace Space_Impact.Core.Game.Character.Enemy
 			//If the game is not lost, the Player will get the credit for the kill
 			if (Field.GameRunning)
 			{
-				//The thread will run in parallel for lesser lags (does not work, is still lagging)
-				PlayerController.AddScore(Score).GetAwaiter();
+				//The thread will run in parallel, and we won't query the database in a game loop, so there won't be lags
+				PlayerController.AddScore(Score);
 			}
 
 			RemoveFromField();

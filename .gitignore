@@ -11,6 +11,10 @@
 # Commit gitignore
 !/.gitignore
 
+# Commit project description
+!/README.md
+!/LICENSE
+
 # Ignore project builds
 /Space Impact/bin
 /Space Impact/obj

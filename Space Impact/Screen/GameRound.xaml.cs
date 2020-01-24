@@ -616,7 +616,7 @@ namespace Space_Impact.Screen
 				var format = new Microsoft.Graphics.Canvas.Text.CanvasTextFormat();
 				format.FontSize = 30;
 				format.FontFamily = "Arial";
-				args.DrawingSession.DrawText("Score: " + PlayerController.SumScore(), new Vector2(15, 15), Colors.ForestGreen, format);
+				args.DrawingSession.DrawText("Score: " + PlayerController.CacheScore(), new Vector2(15, 15), Colors.ForestGreen, format);
 			}
 
 			//Calling actions expected after first draw finishes

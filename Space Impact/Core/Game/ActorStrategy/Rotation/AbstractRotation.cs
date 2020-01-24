@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
@@ -61,6 +62,10 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 		{
 			Owner = owner;
 			VerticalOrientation = verticalOrientation;
+			if (angleDeltaCount == 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(angleDeltaCount), "Value of zero required acts isn't supported due to division. Did you mean one?");
+			}
 			AngleDeltaCount = angleDeltaCount;
 			MaxAngleDegrees = maxAngleDegrees;
 
@@ -118,6 +123,11 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 
 			//Angle difference between the current and expected angle
 			float remainingAngle = CurrentRelativeAngleRadians - angleRadians;
+			if (remainingAngle == 0)
+			{
+				// Prevent wasteful computation
+				return;
+			}
 			if (remainingAngle < 0)
 			{
 				remainingAngle += DegreesToRadians(360);
@@ -207,27 +217,23 @@ namespace Space_Impact.Core.Game.ActorStrategy.Rotation
 			return radians * 180 / (float)Math.PI;
 		}
 
-		//Rotates the bitmap by repeatedly applying up to 45 degree effect
+		//Rotates the bitmap
 		public static void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw, float angleRadians)
 		{
-			float maxStep = (float)Math.PI / 4;
-
 			angleRadians = Utility.NormalizeRadianAngle(angleRadians);
-
-			for (float remainingAngleRadians = angleRadians; remainingAngleRadians > 0; remainingAngleRadians -= maxStep)
+			if (angleRadians == 0)
 			{
-				StraightenEffect rotate = new StraightenEffect();
-				rotate.Source = bitmap;
-				if (remainingAngleRadians > maxStep)
-				{
-					rotate.Angle = maxStep;
-				}
-				else
-				{
-					rotate.Angle = remainingAngleRadians;
-				}
-				bitmap = rotate;
+				return;
 			}
+			var size = ((CanvasBitmap)bitmap).Size;
+			bitmap = new Transform2DEffect
+			{
+				Source = bitmap,
+				TransformMatrix = Matrix3x2.CreateRotation(
+					angleRadians,
+					new Vector2((float) size.Width / 2, (float) size.Height / 2)
+				)
+			};
 		}
 
 		public void DrawModification(ref ICanvasImage bitmap, CanvasDrawingSession draw)
